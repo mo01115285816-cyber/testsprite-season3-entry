@@ -6,6 +6,19 @@
 
 ## ✅ What I already did (environment is ready)
 
+### 0. API key connected & verified ✅
+- Key verified against `https://api.testsprite.com` (production env).
+- Account: **MOHAMED SAYED** (mo01115285816@gmail.com).
+- Scopes granted: `read:projects, read:tests, read:me, write:tests, run:tests, write:projects`.
+- Current plan: **Free** (150 credits ≈ 75 frontend runs). Upgrade with promo code for hackathon.
+- Stored in protected `.env.local` (chmod 600, never committed).
+- Ran `testsprite setup --from-env --yes --agent claude` → installed:
+  - `.claude/skills/testsprite-verify/SKILL.md`
+  - `.claude/skills/testsprite-onboard/SKILL.md`
+- The agent (me) now knows exactly how to drive the loop: draft plan.json
+  (frontend) or Python+requests (backend), `test create --run --wait`, pull
+  failure bundle, fix, `test rerun`.
+
 ### 1. Verified the local toolchain
 | Tool      | Version   | Required?         | Status |
 |-----------|-----------|-------------------|--------|
