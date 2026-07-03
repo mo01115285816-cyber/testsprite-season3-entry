@@ -52,3 +52,9 @@ prompt
 server.log
 # Skills directory
 /skills/
+
+# TestSprite — never commit credentials or local artifacts
+.testsprite/
+.testsprite-credentials.json
+testsprite_tests/local/
+.env.testsprite

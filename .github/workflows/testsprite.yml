@@ -1,0 +1,62 @@
+# TestSprite CLI — CI/CD verification loop
+# Gates a GitHub Actions pipeline on TestSprite: every PR/push reruns the
+# durable test suite and fails the build if anything breaks.
+# Worth +5 Innovation points in TestSprite Hackathon Season 3.
+#
+# Setup (one-time):
+#   1. In your repo Settings → Secrets and variables → Actions, add:
+#        TESTSPRITE_API_KEY   = your TestSprite API key (sk-...)
+#        TESTSPRITE_PROJECT_ID = your project id (proj_xxxxxxxx)
+#   2. Make sure your live app URL is reachable from the public internet
+#      (the CLI tests in the cloud — no localhost).
+#   3. Push. Every pull request will now be gated on TestSprite.
+
+name: TestSprite Verify
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch: # allow manual runs from the Actions tab
+
+# Cancel any in-flight run for the same ref when a new commit lands.
+concurrency:
+  group: testsprite-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TESTSPRITE_API_KEY: ${{ secrets.TESTSPRITE_API_KEY }}
+  PROJECT_ID: ${{ secrets.TESTSPRITE_PROJECT_ID }}
+
+jobs:
+  verify:
+    name: Run TestSprite test suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install TestSprite CLI
+        run: npm install -g @testsprite/testsprite-cli
+
+      - name: Verify credentials resolve
+        run: testsprite auth status --output json
+
+      - name: Run full backend suite (wave-ordered)
+        # `--all --project` runs every test in the project in dependency wave
+        # order. `--wait` blocks until terminal. `--output json` gives a stable
+        # machine-readable contract. Non-zero exit fails the build.
+        run: |
+          testsprite test run --all --project "$PROJECT_ID" \
+            --wait --output json
+
+      # For frontend tests, target a specific test id instead of --all:
+      # - run: testsprite test run <test-id> --wait --output json
