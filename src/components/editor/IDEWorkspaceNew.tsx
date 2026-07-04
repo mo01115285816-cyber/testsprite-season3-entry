@@ -29,7 +29,12 @@ import {
   Layers,
   Check,
   X,
-  Database
+  Database,
+  Search,
+  Smile,
+  Save,
+  PanelRightOpen,
+  PanelRightClose
 } from "lucide-react";
 
 // Dynamically import Monaco Editor to avoid SSR issues
@@ -63,146 +68,85 @@ interface ChatMessage {
 
 const DEFAULT_FILES: VirtualFile[] = [
   {
-    path: "/README.md",
-    name: "README.md",
-    content: `# 🚀 Welcome to NEXUS IDE
-
-NEXUS IDE is a state-of-the-art, fully browser-persistent, AI-powered development environment designed for modern engineers.
-
-## 🛠️ Main Features
-1. **Monaco Code Editor**: Powered by the same engine that runs VS Code, complete with syntax highlighting, automatic indentation, and code folding.
-2. **Virtual File System**: Fully reactive left-hand explorer. Build, rename, and delete nested files or folders.
-3. **Interactive Terminal Emulator**: A fully integrated console. Execute real JavaScript, manipulate files via terminal commands, and talk directly to Gemini!
-4. **NEXUS AI Assistant**: Real server-side Gemini 3.5 Flash integration. Ask questions, auto-suggest inline completions, explain snippets, and patch bugs directly!
-5. **No Database Dependencies**: Zero-budget cloud setup. Fully persisted inside your browser's local sandbox state.
-
-## 💻 Interactive Terminal Commands
-Try typing these commands in the terminal panel at the bottom:
-- \`help\` : View available shell utilities
-- \`ls\` : List workspace files and directories
-- \`cat index.js\` : Output code content to console
-- \`node fibonacci.js\` : **Execute actual JavaScript** in-browser and see log output!
-- \`ai explain async functions\` : Chat with Gemini from the CLI
-- \`create test.js console.log("Nexus")\` : Build a new file directly via CLI
-
-## 🤖 AI Features inside Monaco
-- Select any code in the editor, and click **"Explain Code"** or **"Fix Bugs"** in the top bar or AI panel!
-- Use **"AI Inline Gen"** (Ctrl+K) to edit or generate code directly at your cursor position!
-`,
+    path: "/index.html",
+    name: "index.html",
+    content: `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #f0fdf4;
+            color: #14532d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+        }
+        h1 { margin-top: 0; color: #166534; font-size: 1.75rem; font-weight: 800; }
+        button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 0.85rem 2rem;
+            border-radius: 0.75rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>مرحباً بك في NEXUS</h1>
+        <button onclick="alert('الكود يعمل!')">اضغط للتجربة</button>
+    </div>
+</body>
+</html>`,
     isFolder: false,
-    language: "markdown",
+    language: "html",
   },
   {
-    path: "/index.js",
-    name: "index.js",
-    content: `// 💡 Welcome to NEXUS IDE! 
-// You can write JavaScript here and run it instantly in the terminal below.
-// Try typing 'node index.js' in the terminal or click the 'Run File' button.
-
-const nexusProject = {
-  name: "NEXUS IDE",
-  version: "1.0.0",
-  engine: "Monaco Core",
-  aiIntegrated: true,
-  isAwesome: true
-};
-
-function greetDeveloper(project) {
-  console.log("===============================");
-  console.log("Initializing " + project.name + " v" + project.version);
-  console.log("===============================");
-  console.log("🚀 All systems: ONLINE");
-  console.log("🤖 AI Copilot: CONNECTED");
-  console.log("💾 Storage Engine: PERSISTED");
-  
-  if (project.aiIntegrated) {
-    console.log("\\n💡 Tip: Select this code and press 'Explain Selected' to learn more!");
-  }
-}
-
-greetDeveloper(nexusProject);
-`,
+    path: "/style.css",
+    name: "style.css",
+    content: `/* NEXUS Stylesheet */
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #0f0f0f;
+  color: #f8f8f8;
+}`,
     isFolder: false,
-    language: "javascript",
+    language: "css",
   },
   {
-    path: "/fibonacci.js",
-    name: "fibonacci.js",
-    content: `// 🧮 Fibonacci sequence generator
-// Run this file using the "Run File" button or type: node fibonacci.js
-
-function getFibonacci(n) {
-  const seq = [0, 1];
-  for (let i = 2; i < n; i++) {
-    seq.push(seq[i - 1] + seq[i - 2]);
-  }
-  return seq;
-}
-
-const terms = 10;
-const result = getFibonacci(terms);
-
-console.log("🔢 Fibonacci Sequence (First " + terms + " terms):");
-console.log(JSON.stringify(result));
-console.log("\\n✨ Execution successful!");
-`,
+    path: "/app.js",
+    name: "app.js",
+    content: `// NEXUS JavaScript
+console.log('Hello from NEXUS!');`,
     isFolder: false,
     language: "javascript",
   },
-  {
-    path: "/config.json",
-    name: "config.json",
-    content: `{
-  "projectName": "NEXUS IDE Workspace",
-  "editor": {
-    "theme": "vs-dark",
-    "fontSize": 14,
-    "tabSize": 2,
-    "minimap": true
-  },
-  "terminal": {
-    "welcomeMessage": "Welcome to NEXUS Virtual Shell v1.0.0",
-    "defaultShell": "node-sandbox"
-  },
-  "ai": {
-    "defaultModel": "gemini-3.5-flash",
-    "temperature": 0.4
-  }
-}
-`,
-    isFolder: false,
-    language: "json",
-  },
-  {
-    path: "/src",
-    name: "src",
-    content: "",
-    isFolder: true,
-    isOpen: true,
-  },
-  {
-    path: "/src/utils.js",
-    name: "utils.js",
-    content: `// 🛠️ Helper utilities
-export function formatBytes(bytes) {
-  if (bytes === 0) return '0 Bytes';
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
-
-console.log("Utils library initialized!");
-`,
-    isFolder: false,
-    language: "javascript",
-  }
 ];
 
 export default function IDEWorkspaceNew() {
   // ----------------- State Managers -----------------
   const [files, setFiles] = useState<VirtualFile[]>([]);
-  const [activeFilePath, setActiveFilePath] = useState<string>("/README.md");
+  const [activeFilePath, setActiveFilePath] = useState<string>("/index.html");
   const [terminalDir, setTerminalDir] = useState<string>("/");
   const [terminalInput, setTerminalInput] = useState<string>("");
   const [terminalHistory, setTerminalHistory] = useState<string[]>([]);
@@ -239,7 +183,7 @@ export default function IDEWorkspaceNew() {
   const [editingNameValue, setEditingNameValue] = useState<string>("");
 
   // Tabs
-  const [openTabs, setOpenTabs] = useState<string[]>(["/README.md", "/index.js"]);
+  const [openTabs, setOpenTabs] = useState<string[]>(["/index.html"]);
 
   // Floating AI Prompt Bar (Ctrl + K)
   const [showPromptBar, setShowPromptBar] = useState<boolean>(false);
@@ -827,8 +771,8 @@ export default function IDEWorkspaceNew() {
       case "reset":
         if (confirm("Reset everything back to templates? This will delete your custom code.")) {
           saveFilesToStorage(DEFAULT_FILES);
-          setActiveFilePath("/README.md");
-          setOpenTabs(["/README.md", "/index.js"]);
+          setActiveFilePath("/index.html");
+          setOpenTabs(["/index.html"]);
           setTerminalLogs((prev) => [...prev, { type: "system", text: "🔄 System restored to defaults." }]);
         }
         break;
@@ -1321,65 +1265,121 @@ export default function IDEWorkspaceNew() {
   return (
     <div className="flex h-full w-full flex-col bg-brand-bg font-sans text-brand-text overflow-hidden">
       
-      {/* ----------------- Header Navigation ----------------- */}
-      <header className="flex h-12 w-full items-center justify-between border-b border-brand-accent/15 bg-brand-card px-4 shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-accent/10 border border-brand-accent text-brand-accent">
-            <Sparkles className="h-4 w-4 animate-pulse" />
-          </div>
-          <div>
-            <span className="font-semibold text-sm tracking-wide bg-gradient-to-r from-brand-accent to-brand-accent bg-clip-text text-transparent">
-              NEXUS
-            </span>
-            <span className="ml-2 font-mono text-[10px] text-zinc-500 bg-brand-accent/15 px-1.5 py-0.5 rounded border border-brand-accent/20">
-              v1.0.0 (Zero Budget)
-            </span>
-          </div>
-        </div>
-
-        {/* Selected file and top action toolbar */}
-        <div className="hidden md:flex items-center gap-2 bg-brand-bg px-3 py-1 rounded-md border border-brand-accent/15 text-xs">
-          <Layers className="h-3.5 w-3.5 text-brand-accent" />
-          <span className="text-zinc-400 font-mono text-[11px] max-w-xs truncate">
-            {activeFile ? activeFile.path : "No active file"}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {activeFile && activeFile.language === "javascript" && (
-            <button
-              onClick={runCurrentFile}
-              className="flex items-center gap-1.5 rounded-md bg-brand-accent px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-accent transition-colors shadow-sm shadow-emerald-900/40"
-              title="Run current file (Ctrl+P)"
-            >
-              <Play className="h-3.5 w-3.5" />
-              <span>Run File</span>
-            </button>
-          )}
-
+      {/* ----------------- شريط أدوات المحرر ----------------- */}
+      <div className="shrink-0 flex items-center justify-between h-9 bg-brand-bg border-b border-brand-accent/10 px-2">
+        <div className="flex items-center gap-1">
           <button
-            onClick={() => setShowPromptBar(true)}
-            className="flex items-center gap-1.5 rounded-md bg-brand-accent/15 border border-brand-accent/20 hover:border-brand-accent px-3 py-1.5 text-xs font-medium text-zinc-300 hover:text-brand-accent transition-all"
-            title="AI command insertion at cursor (Ctrl+K)"
+            type="button"
+            aria-label={isSidebarExpanded ? 'إخفاء الشريط الجانبي' : 'إظهار الشريط الجانبي'}
+            onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}
+            className="p-1.5 rounded hover:bg-brand-accent/10 text-zinc-400 hover:text-brand-accent transition-colors cursor-pointer"
           >
-            <Sparkles className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">AI Prompt (Ctrl+K)</span>
+            {isSidebarExpanded ? <PanelRightClose className="w-3.5 h-3.5" /> : <PanelRightOpen className="w-3.5 h-3.5" />}
           </button>
-
+          {activeFile && (
+            <span className="text-[10px] text-zinc-500 font-mono ml-2 truncate max-w-[200px]">
+              {activeFile.path}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-1">
           <button
+            type="button"
+            aria-label="بحث في الكود"
             onClick={() => {
-              if (confirm("Clear local storage workspace and restore initial templates?")) {
-                localStorage.clear();
-                window.location.reload();
+              const event = new KeyboardEvent('keydown', { key: 'f', ctrlKey: true, bubbles: true });
+              document.dispatchEvent(event);
+            }}
+            disabled={!activeFile}
+            className="p-1.5 rounded text-zinc-400 hover:text-brand-accent hover:bg-brand-accent/10 disabled:opacity-40 cursor-pointer"
+            title="بحث"
+          >
+            <Search className="w-3.5 h-3.5" />
+          </button>
+          <button
+            type="button"
+            aria-label="مكتبة الأيقونات"
+            onClick={() => setShowPromptBar(true)}
+            className="p-1.5 rounded text-zinc-400 hover:text-brand-accent hover:bg-brand-accent/10 cursor-pointer"
+            title="مكتبة الأيقونات"
+          >
+            <Smile className="w-3.5 h-3.5" />
+          </button>
+          <button
+            type="button"
+            aria-label="تنسيق الكود"
+            onClick={async () => {
+              if (!activeFile) return;
+              try {
+                const res = await fetch('/api/format', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ code: activeFile.content }),
+                });
+                const data = await res.json();
+                if (data.code) {
+                  handleUpdateContent(data.code);
+                }
+              } catch (e) {}
+            }}
+            disabled={!activeFile}
+            className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold text-zinc-300 hover:text-brand-accent hover:bg-brand-accent/10 disabled:opacity-40 cursor-pointer"
+          >
+            <Sparkles className="w-3 h-3" />
+            <span className="hidden md:inline">تنسيق</span>
+          </button>
+          <button
+            type="button"
+            aria-label="فحص الأمان"
+            onClick={async () => {
+              if (!activeFile) return;
+              try {
+                const res = await fetch('/api/lint', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ code: activeFile.content, isReact: activeFile.language === 'javascript' }),
+                });
+                const data = await res.json();
+                if (data.issues) {
+                  alert('تم العثور على ' + data.issues.length + ' مشكلة');
+                }
+              } catch (e) {}
+            }}
+            disabled={!activeFile}
+            className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold text-zinc-300 hover:text-brand-accent hover:bg-brand-accent/10 disabled:opacity-40 cursor-pointer"
+          >
+            <Bug className="w-3 h-3" />
+            <span className="hidden md:inline">فحص</span>
+          </button>
+          <button
+            type="button"
+            aria-label="حفظ الملف"
+            onClick={() => {
+              setTerminalLogs((prev) => [...prev, { type: "system", text: "تم الحفظ" }]);
+            }}
+            disabled={!activeFile}
+            className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold text-zinc-300 hover:text-brand-accent hover:bg-brand-accent/10 disabled:opacity-40 cursor-pointer"
+          >
+            <Save className="w-3 h-3" />
+            <span className="hidden md:inline">حفظ</span>
+          </button>
+          <button
+            type="button"
+            aria-label="مسح الكود"
+            onClick={() => {
+              if (!activeFile) return;
+              if (confirm('هل تريد مسح محتوى ' + activeFile.name + '؟')) {
+                handleUpdateContent('');
               }
             }}
-            className="rounded p-1 text-zinc-500 hover:text-red-400 hover:bg-brand-accent/15 transition-colors"
-            title="Reset Workspace"
+            disabled={!activeFile}
+            className="p-1.5 rounded text-zinc-400 hover:text-red-400 hover:bg-red-500/10 disabled:opacity-40 cursor-pointer"
+            title="مسح الكود"
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="w-3.5 h-3.5" />
           </button>
         </div>
-      </header>
+      </div>
 
       {/* ----------------- Floating Prompt Bar (Ctrl+K) ----------------- */}
       <AnimatePresence>
