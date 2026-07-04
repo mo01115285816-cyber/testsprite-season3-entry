@@ -21,6 +21,7 @@ import TestRunnerPanel from '../components/TestRunnerPanel';
 import IconHelperModal from '../components/IconHelperModal';
 import InspectPanel, { SelectedElement } from '../components/InspectPanel';
 import CodeEditor from '../components/CodeEditor';
+import IDEWorkspace from '../components/editor/IDEWorkspace';
 import { CompressModal } from '../components/CompressModal';
 
 export default function HTMLPreviewApp() {
@@ -1378,7 +1379,6 @@ ${lang === 'html' ? `
               width={28}
               height={28}
               className="w-7 h-7 object-contain drop-shadow-[0_0_8px_rgba(93,214,44,0.4)]"
-              priority
             />
           </div>
           <div className="flex flex-col text-right justify-center">
@@ -1502,47 +1502,24 @@ ${lang === 'html' ? `
                 transition={{ duration: 0.15 }}
                 className="flex-1 min-h-0 flex flex-row overflow-hidden relative"
               >
-                <CodeEditor
-                  code={code}
-                  setCode={setCode}
-                  formatCode={formatCode}
-                  isFormatting={isFormatting}
-                  setIsIconModalOpen={setIsIconModalOpen}
-                  isConfirmingClear={isConfirmingClear}
-                  setIsConfirmingClear={setIsConfirmingClear}
-                  isReactActive={isReactActive}
+                <IDEWorkspace
                   lintIssues={lintIssues}
                   deepIssues={deepIssues}
-                  textareaRef={textareaRef}
-                  sidebarRef={sidebarRef}
-                  isLintPanelOpen={isLintPanelOpen}
-                  setIsLintPanelOpen={setIsLintPanelOpen}
-                  currentLine={currentLine}
-                  setCurrentLine={setCurrentLine}
-                  currentCol={currentCol}
-                  setCurrentCol={setCurrentCol}
-                  editorScrollTop={editorScrollTop}
-                  setEditorScrollTop={setEditorScrollTop}
-                  editorHeight={editorHeight}
-                  setEditorHeight={setEditorHeight}
-                  onTriggerAiGeneration={handleTriggerAiFromEditor}
-                  isAgentThinking={isAgentThinking}
-                />
-
-                {/* Sliding Diagnostics sidebar */}
-                <LinterPanel
                   isLintPanelOpen={isLintPanelOpen}
                   setIsLintPanelOpen={setIsLintPanelOpen}
                   activeLintTab={activeLintTab}
                   setActiveLintTab={setActiveLintTab}
-                  lintIssues={lintIssues}
-                  deepIssues={deepIssues}
                   code={code}
+                  setCode={setCode}
                   isDeepLinting={isDeepLinting}
                   deepLintSummary={deepLintSummary}
                   runDeepLint={runDeepLint}
                   applyQuickFix={applyQuickFix}
                   textareaRef={textareaRef}
+                  onTriggerAiGeneration={handleTriggerAiFromEditor}
+                  isAgentThinking={isAgentThinking}
+                  isFormatting={isFormatting}
+                  formatCode={formatCode}
                 />
               </motion.div>
             )}
