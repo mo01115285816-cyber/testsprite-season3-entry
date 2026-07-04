@@ -1,0 +1,11 @@
+{
+  "projectId": "901c0484-6b26-4058-8060-da3cfa6702e8",
+  "type": "frontend",
+  "name": "Landing page loads and shows logo",
+  "description": "When a visitor opens the site root, the page renders successfully and the logo is visible.",
+  "priority": "p0",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "assertion", "description": "Verify the page loads without errors and a logo image is visible on the page" }
+  ]
+}

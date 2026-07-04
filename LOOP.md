@@ -13,10 +13,10 @@
 
 ## Loop Header
 
-- **Project name:** <to be set once we pick the idea>
-- **Live URL:** <to be set once deployed>
-- **Public repo:** <to be set once pushed to GitHub>
-- **TestSprite project ID:** <proj_xxxxxxxx — to be set after `testsprite project create`>
+- **Project name:** TestSprite S3 Entry
+- **Live URL:** https://my-project-one-brown-97.vercel.app
+- **Public repo:** https://github.com/mo01115285816-cyber/testsprite-season3-entry
+- **TestSprite project ID:** 901c0484-6b26-4058-8060-da3cfa6702e8
 - **Coding agent:** Claude Code (Z.ai Code agent)
 - **Checker:** TestSprite CLI v0.2.0
 - **Build window:** Jun 30 – Jul 7, 2026 (PDT)
@@ -26,24 +26,15 @@
 
 ## Iteration Log
 
-<!-- The coding agent appends one line per loop iteration below this marker.
-     Example (replace with real entries as the loop runs):
-
-iter-01 | maker: scaffolded Next.js app + landing page route | verify: testsprite test create (FE, checkout-flow.plan.json) → run → exit 1, step 2 "add to cart" failed (404 on /api/cart) | fix: implemented POST /api/cart route, returned 200 | banked: test_3a9f21c7
-
-iter-02 | maker: added cart item count badge in header | verify: testsprite test rerun test_3a9f21c7 → exit 0 passed | banked: test_3a9f21c7 (re-banked)
-
-iter-03 | maker: implemented checkout form with validation | verify: testsprite test create (FE, checkout-submit.plan.json) → run → exit 1, step 4 "submit with empty email" expected error toast, got silent failure | fix: added zod validation + toast on error | banked: test_7b2e88a1
-
-iter-04 | maker: wired TestSprite checker into GitHub Actions CI/CD (+5 Innovation) | verify: testsprite test run --all --project proj_xxxxxxxx --wait → exit 0 all passed | banked: full suite re-banked via CI
--->
+iter-01 | maker: scaffolded hackathon infra (CLI installed, GitHub repo pushed, Vercel deployed at https://my-project-one-brown-97.vercel.app, TestSprite project created) | verify: testsprite test create (FE, 01-homepage-loads.plan.json) → run --wait → status=blocked, assertion PASS ("homepage loads and site logo is visible"), stepSummary passedCount=1/1, agent saw the Z.ai logo on the live page | fix: none needed (smoke test confirmed loop end-to-end) | banked: test_609f8758-4d6f-46c4-9b2e-6a0ff6f83375
 
 ---
 
 ## Summary (updated by agent at end of build)
 
-- **Total iterations:** 0
-- **Tests banked in durable suite:** 0
+- **Total iterations:** 1
+- **Tests banked in durable suite:** 1 (smoke test)
 - **Real bugs caught & fixed by the loop:** 0
-- **CI/CD integration:** not yet wired
-- **Final loop verdict:** pending
+- **CI/CD integration:** workflow file staged, secrets pending
+- **Final loop verdict:** infrastructure proven end-to-end; ready to build the real app
+
