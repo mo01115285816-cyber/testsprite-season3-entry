@@ -57,3 +57,6 @@ server.log
 testsprite_tests/local/
 .env.testsprite
 
+
+# Upload folder (user-provided screenshots, may contain Discord/server info)
+/upload/
