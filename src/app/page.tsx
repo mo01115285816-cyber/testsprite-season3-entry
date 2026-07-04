@@ -1370,9 +1370,16 @@ ${lang === 'html' ? `
       {activeTab === 'editor' && (
       <header className="fixed top-6 left-1/2 -translate-x-1/2 z-40 max-w-5xl w-[calc(100%-2.5rem)] bg-brand-card/90 backdrop-blur-md rounded-full border border-brand-accent/20 shadow-tinted-lg px-4 h-[58px] flex items-center justify-between text-brand-text select-none animate-fade-up">
         <div className="flex items-center gap-3">
-          {/* NEXUS logo placeholder — awaiting new logo asset */}
-          <div className="relative flex items-center justify-center w-6 h-6">
-            {/* logo will be inserted here once provided */}
+          {/* NEXUS logo */}
+          <div className="relative flex items-center justify-center">
+            <img
+              src="/nexus-logo.webp"
+              alt="NEXUS logo"
+              width={28}
+              height={28}
+              className="w-7 h-7 object-contain drop-shadow-[0_0_8px_rgba(93,214,44,0.4)]"
+              priority
+            />
           </div>
           <div className="flex flex-col text-right justify-center">
             <h1 className="text-sm md:text-base font-black text-brand-text font-mono tracking-[0.2em] uppercase">

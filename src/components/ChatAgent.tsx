@@ -387,9 +387,15 @@ export default function ChatAgent({
             
             {/* الشعار المبتكر والاحترافي لـ NEXUS */}
             <div className="flex items-center gap-3">
-              {/* NEXUS logo placeholder — awaiting new logo asset */}
-              <div className="relative flex items-center justify-center w-5.5 h-5.5">
-                {/* logo will be inserted here once provided */}
+              {/* NEXUS logo */}
+              <div className="relative flex items-center justify-center">
+                <img
+                  src="/nexus-logo.webp"
+                  alt="NEXUS logo"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6 object-contain drop-shadow-[0_0_6px_rgba(93,214,44,0.5)]"
+                />
               </div>
 
               {/* النص المكتوب للشعار الإنجليزي الفخم */}
