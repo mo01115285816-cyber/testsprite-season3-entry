@@ -62,3 +62,17 @@ testsprite_tests/local/
 /upload/
 /demo/*.webm
 /demo/*.mp4
+
+# Local-only docs (contain personal setup notes, not for public repo)
+SETUP_STATUS.md
+
+# Sandbox infra (not part of the hackathon project)
+Caddyfile
+.zscripts/
+download/
+examples/
+mini-services/
+
+# Local SQLite DB (dev-only, auto-created by Prisma)
+db/custom.db
+
