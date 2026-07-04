@@ -35,14 +35,14 @@ NEXUS is an Arabic-first browser IDE built around the write → verify → fix �
 • Premium taste-skills design system (5 skills from tasteskill.dev applied)
 
 🔁 The loop:
-• 16 iterations in LOOP.md
+• 18 iterations in LOOP.md
 • 13 tests banked in the durable TestSprite suite
 • 1 real accessibility bug caught by the loop, fixed, and verified by rerun
 • 8 clean passes
 • CI/CD wired into GitHub Actions (+5 Innovation) — last run succeeded
 
 🆕 Original features built for the hackathon (not in the transferred codebase):
-• Loop Dashboard — visualizes all 16 iterations with stats + expandable cards
+• Loop Dashboard — visualizes all 18 iterations with stats + expandable cards
 • Test Runner Panel — run TestSprite tests against the live app from inside NEXUS
 
 Built by MOAAMN SAYED. Build the Loop. ✨
@@ -61,7 +61,7 @@ An Arabic-first AI IDE with:
 • 3-mode streaming AI agent
 • Premium taste-skills design
 
-16 loop iterations, 13 tests banked, 1 real bug caught & fixed.
+18 loop iterations, 13 tests banked, 1 real bug caught & fixed.
 
 Live: https://my-project-one-brown-97.vercel.app
 Repo: https://github.com/mo01115285816-cyber/testsprite-season3-entry
@@ -76,7 +76,7 @@ Repo: https://github.com/mo01115285816-cyber/testsprite-season3-entry
 ```
 Built NEXUS for the @Test_Sprite S3 hackathon — an AI-powered Arabic IDE where the TestSprite CLI caught a real accessibility bug in my code and I fixed it live. That's the loop. 🔁
 
-16 iterations, 13 tests, 1 bug fixed, CI/CD live.
+18 iterations, 13 tests, 1 bug fixed, CI/CD live.
 
 #BuildTheLoop #TestSprite
 ```
@@ -97,7 +97,7 @@ Be constructive in `#hackathon-qa` — +2 engagement points for helping others.
 
 - [x] Live URL reachable (HTTP 200)
 - [x] Public repo with full commit history
-- [x] LOOP.md with 16 iterations, agent-written
+- [x] LOOP.md with 18 iterations, agent-written
 - [x] README with app + live URL + what the loop covered
 - [x] TestSprite account matches the one that banked the tests (moaamnsayed560@gmail.com)
 - [x] CI/CD workflow live and succeeding
