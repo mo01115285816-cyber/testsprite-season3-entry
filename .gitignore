@@ -60,3 +60,5 @@ testsprite_tests/local/
 
 # Upload folder (user-provided screenshots, may contain Discord/server info)
 /upload/
+/demo/*.webm
+/demo/*.mp4
