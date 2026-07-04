@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { PanelRightOpen, PanelRightClose, Bug, Sparkles, Save } from 'lucide-react';
+import { PanelRightOpen, PanelRightClose, Bug, Sparkles, Save, Smile, Trash2, Search, HelpCircle } from 'lucide-react';
 import { useFileSystem } from '@/hooks/useFileSystem';
 import { preprocessArabicCode, preprocessReactCode, isReactCode } from '@/lib/diagnostics';
 import FileExplorer from '@/components/filesystem/FileExplorer';
@@ -29,6 +29,10 @@ interface IDEWorkspaceProps {
   isAgentThinking?: boolean;
   isFormatting: boolean;
   formatCode: () => Promise<void>;
+  // Restored toolbar props
+  setIsIconModalOpen: (open: boolean) => void;
+  isConfirmingClear: boolean;
+  setIsConfirmingClear: (val: boolean) => void;
 }
 
 export default function IDEWorkspace({
@@ -36,6 +40,7 @@ export default function IDEWorkspace({
   activeLintTab, setActiveLintTab, isDeepLinting, deepLintSummary,
   runDeepLint, applyQuickFix, textareaRef, onTriggerAiGeneration,
   isAgentThinking, isFormatting, formatCode,
+  setIsIconModalOpen, isConfirmingClear, setIsConfirmingClear,
   // NOTE: code + setCode come from parent but we override with file-system active content
   code: _parentCode, setCode: _parentSetCode,
 }: IDEWorkspaceProps) {
@@ -134,6 +139,29 @@ export default function IDEWorkspace({
           <div className="flex items-center gap-1">
             <button
               type="button"
+              aria-label="بحث في الكود (Ctrl+F)"
+              onClick={() => {
+                // Monaco handles Ctrl+F internally; this button is a hint
+                const event = new KeyboardEvent('keydown', { key: 'f', ctrlKey: true, bubbles: true });
+                document.dispatchEvent(event);
+              }}
+              disabled={!fs.activeFile}
+              className="magnetic p-1.5 rounded text-zinc-400 hover:text-brand-accent hover:bg-brand-accent/10 disabled:opacity-40 cursor-pointer"
+              title="بحث (Ctrl+F)"
+            >
+              <Search className="w-3.5 h-3.5" />
+            </button>
+            <button
+              type="button"
+              aria-label="مكتبة الأيقونات"
+              onClick={() => setIsIconModalOpen(true)}
+              className="magnetic p-1.5 rounded text-zinc-400 hover:text-brand-accent hover:bg-brand-accent/10 cursor-pointer"
+              title="مكتبة الأيقونات"
+            >
+              <Smile className="w-3.5 h-3.5" />
+            </button>
+            <button
+              type="button"
               aria-label="تنسيق الكود"
               onClick={handleFormat}
               disabled={isFormatting || !fs.activeFile}
@@ -171,6 +199,29 @@ export default function IDEWorkspace({
               }`}
             >
               <Bug className="w-3.5 h-3.5" />
+            </button>
+            <button
+              type="button"
+              aria-label="مسح الكود"
+              onClick={() => {
+                if (isConfirmingClear) {
+                  setLocalCode('');
+                  if (fs.activeFile) {
+                    fs.saveFileContent(fs.activeFile.id, '');
+                  }
+                  setIsConfirmingClear(false);
+                } else {
+                  setIsConfirmingClear(true);
+                  setTimeout(() => setIsConfirmingClear(false), 3000);
+                }
+              }}
+              disabled={!fs.activeFile}
+              className={`magnetic p-1.5 rounded transition-colors cursor-pointer disabled:opacity-40 ${
+                isConfirmingClear ? 'bg-red-500/20 text-red-400' : 'text-zinc-400 hover:text-red-400 hover:bg-red-500/10'
+              }`}
+              title={isConfirmingClear ? 'اضغط مرة أخرى للتأكيد' : 'مسح الكود'}
+            >
+              <Trash2 className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>

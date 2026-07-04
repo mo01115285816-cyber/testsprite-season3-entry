@@ -1520,6 +1520,9 @@ ${lang === 'html' ? `
                   isAgentThinking={isAgentThinking}
                   isFormatting={isFormatting}
                   formatCode={formatCode}
+                  setIsIconModalOpen={setIsIconModalOpen}
+                  isConfirmingClear={isConfirmingClear}
+                  setIsConfirmingClear={setIsConfirmingClear}
                 />
               </motion.div>
             )}
