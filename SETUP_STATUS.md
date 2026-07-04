@@ -29,6 +29,24 @@
 - Verified: public HTTP 200, workflow file reachable, LOOP.md reachable.
 - Secrets (.env.local) confirmed NOT tracked.
 
+### 0c. Vercel deployment + live URL ✅
+- Vercel account: Mohamed sayed (mohamed01140251843sayed@gmail.com)
+- Vercel CLI: v54.20.1 (installed globally)
+- Live URL: **https://my-project-one-brown-97.vercel.app** (HTTP 200, page renders)
+- Deployment: production, Next.js 16 detected automatically
+- Manual CLI deploy (git auto-deploy not wired — Vercel GitHub link not connected;
+  the agent runs `vercel --prod` as part of each loop iteration instead, which is
+  actually cleaner for the hackathon loop).
+
+### 0d. TestSprite project created + first loop iteration DONE ✅
+- TestSprite project ID: `901c0484-6b26-4058-8060-da3cfa6702e8`
+- Type: frontend, target URL: the Vercel live URL
+- `.testsprite/config.json` created (gitignored) for skill auto-discovery
+- **Smoke test ran end-to-end:** `testsprite test create --plan-from ... --run --wait`
+  → TestSprite agent visited the live page, confirmed the logo is visible,
+  assertion PASSED (stepSummary passedCount=1/1).
+- iter-01 recorded in `LOOP.md` and pushed to GitHub.
+
 ### 1. Verified the local toolchain
 | Tool      | Version   | Required?         | Status |
 |-----------|-----------|-------------------|--------|
