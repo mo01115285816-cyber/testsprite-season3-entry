@@ -1,37 +1,37 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Almarai, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const almarai = Almarai({
+  weight: ["300", "400", "700", "800"],
+  subsets: ["arabic"],
+  variable: "--font-almarai",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
-  title: "Z.ai Code Scaffold - AI-Powered Development",
-  description: "Modern Next.js scaffold optimized for AI-powered development with Z.ai. Built with TypeScript, Tailwind CSS, and shadcn/ui.",
-  keywords: ["Z.ai", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "AI development", "React"],
-  authors: [{ name: "Z.ai Team" }],
-  icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
-  },
+  title: "NEXUS — AI-Powered Arabic IDE",
+  description:
+    "NEXUS is an AI-powered Arabic-first IDE with a unique Arabic-to-code translation engine, AI security analyzer (taint flow, attack chaining, CVSS), and a 3-mode AI coding agent. Built for the TestSprite Hackathon Season 3 — Build the Loop.",
+  keywords: [
+    "NEXUS",
+    "Arabic IDE",
+    "AI code editor",
+    "security analyzer",
+    "taint analysis",
+    "TestSprite",
+    "hackathon",
+  ],
+  authors: [{ name: "MOAAMN SAYED" }],
   openGraph: {
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
-    url: "https://chat.z.ai",
-    siteName: "Z.ai",
+    title: "NEXUS — AI-Powered Arabic IDE",
+    description:
+      "Arabic-first IDE with AI security analyzer and Arabic-to-code translation engine.",
     type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
   },
 };
 
@@ -41,12 +41,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="ar"
+      dir="rtl"
+      className={`${almarai.variable} ${jetbrainsMono.variable}`}
+    >
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className="font-sans text-zinc-100 bg-[#020202]"
+        suppressHydrationWarning
       >
         {children}
-        <Toaster />
       </body>
     </html>
   );
