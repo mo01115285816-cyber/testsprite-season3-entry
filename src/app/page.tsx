@@ -16,6 +16,7 @@ import { parseInlineStyles, serializeInlineStyles } from '../lib/styles';
 import LinterPanel from '../components/LinterPanel';
 import LivePreview from '../components/LivePreview';
 import ChatAgent from '../components/ChatAgent';
+import LoopDashboard from '../components/LoopDashboard';
 import IconHelperModal from '../components/IconHelperModal';
 import InspectPanel, { SelectedElement } from '../components/InspectPanel';
 import CodeEditor from '../components/CodeEditor';
@@ -54,6 +55,7 @@ export default function HTMLPreviewApp() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isCompressModalOpen, setIsCompressModalOpen] = useState(false);
+  const [isLoopDashboardOpen, setIsLoopDashboardOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isMounted, setIsMounted] = useState(false);
@@ -1403,6 +1405,16 @@ ${lang === 'html' ? `
            >
               <FileArchive className="w-3.5 h-3.5 text-brand-accent" />
               <span className="hidden md:inline">ضغط الملفات</span>
+           </button>
+           <button
+              type="button"
+              onClick={() => setIsLoopDashboardOpen(true)}
+              aria-label="Open Loop Dashboard"
+              className="magnetic flex items-center gap-1.5 bg-gradient-to-l from-brand-accent/20 to-brand-deep/20 hover:from-brand-accent/30 hover:to-brand-deep/30 border border-brand-accent/40 hover:border-brand-accent/60 text-brand-accent transition-all px-3.5 py-1.5 rounded-full text-xs font-extrabold active:scale-95 shadow-tinted-glow cursor-pointer h-9"
+              title="لوحة الحلقة — Loop Dashboard"
+           >
+              <Activity className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">الحلقة</span>
            </button>
            <button 
               onClick={triggerFileInput}
