@@ -50,6 +50,10 @@ export default function RootLayout({
         className="font-sans text-zinc-100 bg-[#020202]"
         suppressHydrationWarning
       >
+        <a href="#main-content" className="skip-link">
+          تخطّى إلى المحتوى
+        </a>
+        <div className="grain-overlay" aria-hidden="true" />
         {children}
       </body>
     </html>

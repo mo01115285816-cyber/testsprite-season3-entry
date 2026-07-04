@@ -1317,7 +1317,7 @@ ${lang === 'html' ? `
   };
 
   return (
-    <div 
+    <div
       className="h-screen w-screen flex flex-col bg-brand-bg text-brand-text font-sans antialiased overflow-hidden relative select-none"
       onDragEnter={handleDragOverGlobal}
       onDragOver={handleDragOverGlobal}
@@ -1363,7 +1363,7 @@ ${lang === 'html' ? `
       </AnimatePresence>
 
       {/* 1. Header Area: Floating Glass Navbar Redesigned */}
-      <header className="fixed top-6 left-1/2 -translate-x-1/2 z-40 max-w-5xl w-[calc(100%-2.5rem)] bg-brand-card/90 backdrop-blur-md rounded-full border border-brand-accent/20 shadow-[0_0_35px_rgba(93,214,44,0.08)] px-4 h-[58px] flex items-center justify-between text-brand-text select-none">
+      <header className="fixed top-6 left-1/2 -translate-x-1/2 z-40 max-w-5xl w-[calc(100%-2.5rem)] bg-brand-card/90 backdrop-blur-md rounded-full border border-brand-accent/20 shadow-tinted-lg px-4 h-[58px] flex items-center justify-between text-brand-text select-none animate-fade-up">
         <div className="flex items-center gap-3">
           <div className="relative flex items-center justify-center">
             <svg className="w-6 h-6 text-brand-text drop-shadow-[0_0_8px_rgba(93,214,44,0.4)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1467,7 +1467,7 @@ ${lang === 'html' ? `
       </header>
 
       {/* 2. Main content viewport shell */}
-      <main className="flex-1 min-h-0 relative flex flex-col pt-24 pb-20">
+      <main id="main-content" className="flex-1 min-h-0 relative flex flex-col pt-24 pb-20 animate-fade-in delay-200">
         <div className="flex-1 min-h-0 flex flex-row w-full h-full position-relative overflow-hidden" ref={containerRef}>
           
           <AnimatePresence mode="wait">
@@ -1586,8 +1586,8 @@ ${lang === 'html' ? `
       </main>
 
       {/* 3. Redesigned Floating Bottom Dock */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-sm w-[calc(100%-2.5rem)] select-none">
-        <div className="bg-brand-card/95 backdrop-blur-md rounded-full shadow-[0_12px_45px_rgba(93,214,44,0.12)] border border-brand-accent/25 px-2 py-1.5 flex justify-between items-center h-14 relative w-full">
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-sm w-[calc(100%-2.5rem)] select-none animate-fade-up delay-300">
+        <div className="bg-brand-card/95 backdrop-blur-md rounded-full shadow-tinted-lg border border-brand-accent/25 px-2 py-1.5 flex justify-between items-center h-14 relative w-full">
           {[
             { id: 'editor', label: 'المحرر', icon: Code2 },
             { id: 'preview', label: 'المعاينة', icon: Play },
@@ -1596,10 +1596,10 @@ ${lang === 'html' ? `
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as 'editor' | 'preview' | 'agent')}
-              className={`relative flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full text-xs font-bold transition-all duration-300 select-none cursor-pointer ${
-                activeTab === propsActive(tab.id) 
-                  ? 'text-brand-accent font-extrabold bg-[#0f0f0f]/90 border border-brand-accent/30 shadow-[0_0_15px_rgba(93,214,44,0.15)]' 
-                  : 'text-zinc-400 hover:text-brand-accent/85'
+              className={`magnetic relative flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full text-xs font-bold transition-all duration-300 select-none cursor-pointer ${
+                activeTab === propsActive(tab.id)
+                  ? 'text-brand-accent font-extrabold bg-[#0f0f0f]/90 border border-brand-accent/30 shadow-tinted-glow'
+                  : 'text-zinc-400 hover:text-brand-accent/85 hover:bg-brand-accent/5'
               }`}
             >
               <tab.icon className="w-3.5 h-3.5" />
