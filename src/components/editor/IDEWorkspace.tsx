@@ -103,7 +103,7 @@ export default function IDEWorkspace({
 
   return (
     <div className="flex-1 min-h-0 flex flex-row overflow-hidden relative">
-      {/* Sidebar: File Explorer */}
+      {/* Sidebar: File Explorer — overlay on mobile, inline on desktop */}
       <AnimatePresence initial={false}>
         {sidebarOpen && (
           <motion.div
@@ -111,7 +111,7 @@ export default function IDEWorkspace({
             animate={{ width: 240, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
-            className="shrink-0 overflow-hidden"
+            className="shrink-0 overflow-hidden absolute md:relative right-0 top-0 bottom-0 z-30 md:z-auto"
           >
             <FileExplorer
               files={fs.files}
