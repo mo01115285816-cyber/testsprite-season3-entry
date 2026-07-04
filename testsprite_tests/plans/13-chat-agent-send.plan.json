@@ -1,0 +1,16 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "Send a chat message and receive an agent reply",
+  "description": "When the user types a message in the Agent tab input field and clicks the send button, the message appears in the chat as a user message and the agent responds (either with a reply or a rate-limit message).",
+  "priority": "p1",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "action", "description": "Click the third tab in the bottom dock to open the Agent view" },
+    { "type": "assertion", "description": "Verify the chat interface is visible with an input field at the bottom" },
+    { "type": "action", "description": "Click inside the chat input field and type a short message like 'hello'" },
+    { "type": "action", "description": "Click the send button (the button with an arrow-up icon next to the input)" },
+    { "type": "assertion", "description": "Verify the user message appears in the chat area as a sent message bubble" },
+    { "type": "assertion", "description": "Verify the agent produces some kind of response (a reply message or an error/rate-limit notice) within a reasonable time" }
+  ]
+}
