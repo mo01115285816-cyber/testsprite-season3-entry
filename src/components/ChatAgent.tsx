@@ -428,7 +428,7 @@ export default function ChatAgent({
       {/* مساحة عرض المحادثات الرئيسية المريحة للعين */}
       <div 
         ref={chatScrollRef}
-        className="flex-1 overflow-y-auto hide-scrollbar px-5 pt-[98px] pb-[220px] md:pt-[116px] md:pb-[240px] space-y-8 z-10 flex flex-col"
+        className="flex-1 overflow-y-auto hide-scrollbar px-5 pt-[98px] pb-[160px] md:pt-[116px] md:pb-[170px] space-y-8 z-10 flex flex-col"
       >
         <div className="max-w-3xl mx-auto w-full space-y-10 flex-1 flex flex-col justify-center">
           {messages.length === 0 ? (
@@ -616,8 +616,8 @@ export default function ChatAgent({
         </div>
       </div>
 
-      {/* صندوق الإدخال الثابت فوق شريط التنقل السفلي — لا يتداخل معه أبداً */}
-      <div className="absolute bottom-[96px] left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-brand-bg via-brand-bg/95 to-transparent shrink-0 z-20 pointer-events-none">
+      {/* صندوق الإدخال الثابت فوق شريط التنقل السفلي — مسافة مدروسة، بدون تداخل */}
+      <div className="absolute bottom-[76px] left-0 right-0 px-4 md:px-6 pb-1 shrink-0 z-20 pointer-events-none">
         <div className="max-w-3xl mx-auto relative pointer-events-auto">
           
           {/* كبسولة إرسال متكاملة تماماً بارتفاع 50px في وضعها الأساسي لتطابق الهيدر */}
