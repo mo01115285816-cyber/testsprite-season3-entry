@@ -1,0 +1,13 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "NEXUS IDE loads with editor and preview tabs",
+  "description": "When a visitor opens NEXUS, the page loads successfully showing the IDE shell with the code editor tab active, the NEXUS branding in the header, and the floating bottom dock with editor/preview/agent tabs.",
+  "priority": "p0",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "assertion", "description": "Verify the NEXUS logo and branding text is visible in the top header bar" },
+    { "type": "assertion", "description": "Verify a floating bottom dock is visible with three navigation tabs labeled in Arabic" },
+    { "type": "assertion", "description": "Verify the main content area shows a code editor with line numbers and the default HTML code is visible" }
+  ]
+}
