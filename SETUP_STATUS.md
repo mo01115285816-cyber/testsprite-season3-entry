@@ -19,6 +19,16 @@
   (frontend) or Python+requests (backend), `test create --run --wait`, pull
   failure bundle, fix, `test rerun`.
 
+### 0b. GitHub repo created & code pushed ✅
+- GitHub account: **mo01115285816-cyber**
+- Public repo: https://github.com/mo01115285816-cyber/testsprite-season3-entry
+- Token scopes used: `repo` + `workflow` (classic).
+- Identity set to MOHAMED SAYED <mo01115285816@gmail.com> for commit authorship.
+- Initial scaffolding pushed: LOOP.md, README.md, HACKATHON.md, SETUP_STATUS.md,
+  .env.example, .github/workflows/testsprite.yml, testsprite_tests/, .claude/skills/.
+- Verified: public HTTP 200, workflow file reachable, LOOP.md reachable.
+- Secrets (.env.local) confirmed NOT tracked.
+
 ### 1. Verified the local toolchain
 | Tool      | Version   | Required?         | Status |
 |-----------|-----------|-------------------|--------|
