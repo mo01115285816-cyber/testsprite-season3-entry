@@ -1,0 +1,17 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "Test Runner panel opens and shows test scripts list",
+  "description": "When the user clicks the Test Runner button in the header, a modal opens showing a list of available TestSprite test scripts with Run buttons and a Run-all button.",
+  "priority": "p1",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "assertion", "description": "Verify the top header bar contains a button labeled for tests (with a terminal icon)" },
+    { "type": "action", "description": "Click the tests button in the header to open the Test Runner modal" },
+    { "type": "assertion", "description": "Verify a modal dialog opens overlaying the page with a title 'Test Runner'" },
+    { "type": "assertion", "description": "Verify the modal contains a list of at least four test script entries, each with a Run button" },
+    { "type": "assertion", "description": "Verify the modal has a Run-all button at the top of the list" },
+    { "type": "action", "description": "Close the modal by clicking the X button in its header" },
+    { "type": "assertion", "description": "Verify the modal is no longer visible" }
+  ]
+}

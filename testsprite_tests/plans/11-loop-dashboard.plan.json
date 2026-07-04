@@ -1,0 +1,19 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "Loop Dashboard opens and shows iterations with stats",
+  "description": "When the user clicks the Loop Dashboard button in the header, a modal opens showing the iteration log with stats (iterations count, tests banked, bugs caught, CI/CD status) and a list of expandable iteration entries.",
+  "priority": "p1",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "assertion", "description": "Verify the top header bar contains a button labeled for the Loop (with an activity/pulse icon)" },
+    { "type": "action", "description": "Click the Loop button in the header to open the Loop Dashboard modal" },
+    { "type": "assertion", "description": "Verify a modal dialog opens overlaying the page with a title 'Loop Dashboard'" },
+    { "type": "assertion", "description": "Verify the modal shows a stats grid with at least four stat cards (Iterations, Tests Banked, Bugs Caught, CI/CD Status)" },
+    { "type": "assertion", "description": "Verify the modal shows a list of iteration entries (numbered iter-01, iter-02, etc.)" },
+    { "type": "action", "description": "Click on one of the iteration entries in the list to expand it" },
+    { "type": "assertion", "description": "Verify the expanded iteration shows three sections labeled Maker, Verify (Checker), and Fix with text content" },
+    { "type": "action", "description": "Close the modal by clicking the X button in its header" },
+    { "type": "assertion", "description": "Verify the modal is no longer visible" }
+  ]
+}

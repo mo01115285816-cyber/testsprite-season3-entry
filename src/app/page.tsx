@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useMemo, use } from 'react';
-import { 
+import {
   Sparkles, ChevronDown, Check, Copy, Bot, Code2, Play, Upload, Download,
-  FileText, FileCode, FileJson, Printer, Layers, FileCode2, FileArchive
+  FileText, FileCode, FileJson, Printer, Layers, FileCode2, FileArchive, Activity, TerminalSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Link from 'next/link';
@@ -17,6 +17,7 @@ import LinterPanel from '../components/LinterPanel';
 import LivePreview from '../components/LivePreview';
 import ChatAgent from '../components/ChatAgent';
 import LoopDashboard from '../components/LoopDashboard';
+import TestRunnerPanel from '../components/TestRunnerPanel';
 import IconHelperModal from '../components/IconHelperModal';
 import InspectPanel, { SelectedElement } from '../components/InspectPanel';
 import CodeEditor from '../components/CodeEditor';
@@ -56,6 +57,7 @@ export default function HTMLPreviewApp() {
   const [isCopied, setIsCopied] = useState(false);
   const [isCompressModalOpen, setIsCompressModalOpen] = useState(false);
   const [isLoopDashboardOpen, setIsLoopDashboardOpen] = useState(false);
+  const [isTestRunnerOpen, setIsTestRunnerOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isMounted, setIsMounted] = useState(false);
@@ -1416,6 +1418,16 @@ ${lang === 'html' ? `
               <Activity className="w-3.5 h-3.5" />
               <span className="hidden md:inline">الحلقة</span>
            </button>
+           <button
+              type="button"
+              onClick={() => setIsTestRunnerOpen(true)}
+              aria-label="Open Test Runner"
+              className="magnetic flex items-center gap-1.5 bg-[#0f0f0f] hover:bg-brand-bg/85 border border-brand-accent/30 hover:border-brand-accent/60 text-brand-accent transition-all px-3.5 py-1.5 rounded-full text-xs font-bold active:scale-95 shadow-sm shadow-brand-accent/15 cursor-pointer h-9"
+              title="مشغّل الاختبارات — Test Runner"
+           >
+              <TerminalSquare className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">الاختبارات</span>
+           </button>
            <button 
               onClick={triggerFileInput}
               className="flex items-center gap-1.5 bg-brand-bg hover:bg-brand-bg/85 hover:border-brand-accent/40 text-brand-text transition-all px-3.5 py-1.5 rounded-full text-xs font-bold active:scale-95 cursor-pointer border border-brand-accent/20 h-9"
@@ -1636,6 +1648,9 @@ ${lang === 'html' ? `
           <CompressModal onClose={() => setIsCompressModalOpen(false)} />
         )}
       </AnimatePresence>
+
+      <LoopDashboard isOpen={isLoopDashboardOpen} onClose={() => setIsLoopDashboardOpen(false)} />
+      <TestRunnerPanel isOpen={isTestRunnerOpen} onClose={() => setIsTestRunnerOpen(false)} />
 
     </div>
   );
