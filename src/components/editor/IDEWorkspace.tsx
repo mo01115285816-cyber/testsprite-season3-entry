@@ -48,13 +48,22 @@ export default function IDEWorkspace({
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [localCode, setLocalCode] = useState('');
 
-  // Sync local code with active file
+  // Sync local code with active file — read fresh from DB to avoid stale content
   React.useEffect(() => {
-    if (fs.activeFile) {
-      setLocalCode(fs.activeFile.content || '');
-    } else {
-      setLocalCode('');
-    }
+    let cancelled = false;
+    (async () => {
+      if (fs.activeFile?.id) {
+        // Read fresh content from IndexedDB (files state might be stale)
+        const { getFile } = await import('@/lib/filesystem/db');
+        const fresh = await getFile(fs.activeFile.id);
+        if (!cancelled && fresh) {
+          setLocalCode(fresh.content || '');
+        }
+      } else {
+        if (!cancelled) setLocalCode('');
+      }
+    })();
+    return () => { cancelled = true; };
   }, [fs.activeFile?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditorChange = useCallback((value: string) => {
@@ -245,12 +254,9 @@ export default function IDEWorkspace({
             />
           ) : (
             <div className="flex flex-col items-center justify-center h-full bg-[#0f0f0f] text-center">
-              <div className="w-16 h-16 rounded-2xl bg-brand-accent/5 border border-brand-accent/10 flex items-center justify-center mb-4">
-                <Sparkles className="w-7 h-7 text-brand-accent/40" />
-              </div>
-              <h3 className="text-sm font-bold text-zinc-400 mb-1">ابدأ الكتابة</h3>
+              <Sparkles className="w-6 h-6 text-brand-accent/30 mb-2" />
               <p className="text-[11px] text-zinc-600 max-w-xs">
-                افتح ملفاً من المستكشف أو أنشئ ملفاً جديداً لتبدأ
+                افتح ملفاً من المستكشف لتبدأ
               </p>
             </div>
           )}
