@@ -22,6 +22,7 @@ import IconHelperModal from '../components/IconHelperModal';
 import InspectPanel, { SelectedElement } from '../components/InspectPanel';
 import CodeEditor from '../components/CodeEditor';
 import IDEWorkspace from '../components/editor/IDEWorkspace';
+import IDEWorkspaceNew from '../components/editor/IDEWorkspaceNew';
 import { CompressModal } from '../components/CompressModal';
 
 export default function HTMLPreviewApp() {
@@ -1502,28 +1503,7 @@ ${lang === 'html' ? `
                 transition={{ duration: 0.15 }}
                 className="flex-1 min-h-0 flex flex-row overflow-hidden relative"
               >
-                <IDEWorkspace
-                  lintIssues={lintIssues}
-                  deepIssues={deepIssues}
-                  isLintPanelOpen={isLintPanelOpen}
-                  setIsLintPanelOpen={setIsLintPanelOpen}
-                  activeLintTab={activeLintTab}
-                  setActiveLintTab={setActiveLintTab}
-                  code={code}
-                  setCode={setCode}
-                  isDeepLinting={isDeepLinting}
-                  deepLintSummary={deepLintSummary}
-                  runDeepLint={runDeepLint}
-                  applyQuickFix={applyQuickFix}
-                  textareaRef={textareaRef}
-                  onTriggerAiGeneration={handleTriggerAiFromEditor}
-                  isAgentThinking={isAgentThinking}
-                  isFormatting={isFormatting}
-                  formatCode={formatCode}
-                  setIsIconModalOpen={setIsIconModalOpen}
-                  isConfirmingClear={isConfirmingClear}
-                  setIsConfirmingClear={setIsConfirmingClear}
-                />
+                <IDEWorkspaceNew />
               </motion.div>
             )}
 
