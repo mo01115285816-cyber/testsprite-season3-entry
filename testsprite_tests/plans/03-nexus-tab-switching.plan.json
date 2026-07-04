@@ -1,0 +1,17 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "NEXUS tab switching between editor, preview, and agent",
+  "description": "When a user clicks each tab in the floating bottom dock (editor, preview, agent), the main content area switches to show the corresponding view: the code editor with line numbers, the live preview with device size buttons, and the AI chat agent with a greeting message.",
+  "priority": "p1",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "assertion", "description": "Verify the floating bottom dock at the bottom of the screen shows three navigation tabs" },
+    { "type": "action", "description": "Click the second tab in the bottom dock to switch to the preview view" },
+    { "type": "assertion", "description": "Verify the main content area now shows a live preview pane with device size buttons (desktop, tablet, mobile)" },
+    { "type": "action", "description": "Click the third tab in the bottom dock to switch to the agent view" },
+    { "type": "assertion", "description": "Verify the main content area now shows an AI chat agent interface with a greeting message visible" },
+    { "type": "action", "description": "Click the first tab in the bottom dock to switch back to the editor view" },
+    { "type": "assertion", "description": "Verify the main content area shows the code editor with line numbers again" }
+  ]
+}

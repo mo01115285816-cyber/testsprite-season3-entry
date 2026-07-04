@@ -35,13 +35,15 @@ iter-02 | maker: transferred NEXUS AI IDE to the project — Arabic-first IDE wi
 
 iter-03 | maker: applied 5 taste-skills (taste-skill, redesign-skill, soft-skill, minimalist-skill, output-skill from tasteskill.dev) to elevate NEXUS design philosophy. Downloaded all 5 SKILL.md files into taste-skills/ folder (tracked in repo). Implemented targeted upgrades: grain overlay (fixed, pointer-events-none), tinted colored shadows (green hue instead of pure black), custom cubic-bezier easings, focus-visible rings, magnetic press feedback on nav tabs, staggered fade-up entrance on header/main/dock, skip-to-content link for accessibility, reduced-motion support. No functionality changed — visual refinement only. | verify: testsprite test rerun afb59edb → status=**PASSED**, verdict=passed, failedStepIndex=None. All 10 assertions still pass on the redesigned UI — redesign didn't break anything. | fix: none needed — clean redesign pass | banked: test_afb59edb (re-banked, run a8b1553c)
 
+iter-04 | maker: configured Gemini API key in Vercel environment (production + preview + development targets) so the 3 AI API routes (/api/agent, /api/lint, /api/format) can call Google Gemini from Vercel's US server region. Verified /api/format returns HTTP 200 with formatted code + Arabic summary (AI working end-to-end). Then wrote test plan 03-nexus-tab-switching covering a real user flow: switch between editor → preview → agent → editor tabs. | verify: testsprite test create (FE, 03-nexus-tab-switching.plan.json) → run --wait → status=**PASSED**, verdict=passed, failedStepIndex=None. Agent clicked each of the 3 bottom-dock tabs in sequence and confirmed the main content area switched to the matching view (code editor with line numbers, live preview with device-size buttons, AI chat agent with greeting). | fix: none needed — all 4 assertions on tab transitions passed first try | banked: test_93855752-ffbe-4510-9aa5-bb734482efd8
+
 ---
 
 ## Summary (updated by agent at end of build)
 
-- **Total iterations:** 3
-- **Tests banked in durable suite:** 2 (smoke test + NEXUS load test, re-verified post-redesign)
-- **Real bugs caught & fixed by the loop:** 0 (clean transfer + clean redesign)
+- **Total iterations:** 4
+- **Tests banked in durable suite:** 3 (smoke test + NEXUS load test + tab-switching flow)
+- **Real bugs caught & fixed by the loop:** 0 (clean transfer + clean redesign + clean AI integration)
 - **CI/CD integration:** workflow file staged, secrets pending
-- **Final loop verdict:** NEXUS IDE is live, redesigned with premium taste-skills, and verified by TestSprite — ready for feature-level loop iterations
+- **Final loop verdict:** NEXUS IDE is live, redesigned with premium taste-skills, AI routes wired to Gemini, and the first real feature-level loop iteration (tab switching) passed. Ready for deeper feature loops.
 
