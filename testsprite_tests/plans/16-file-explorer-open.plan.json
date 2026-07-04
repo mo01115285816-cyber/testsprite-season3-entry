@@ -1,0 +1,17 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "File Explorer sidebar shows files and allows opening",
+  "description": "When the user is on the editor tab, a file explorer sidebar is visible showing default files (index.html, style.css, app.js). Clicking a file opens it in a new editor tab.",
+  "priority": "p0",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "assertion", "description": "Verify a file explorer sidebar is visible on the right side of the editor" },
+    { "type": "assertion", "description": "Verify the sidebar shows at least three default files: index.html, style.css, and app.js" },
+    { "type": "action", "description": "Click on the file named style.css in the file explorer sidebar" },
+    { "type": "assertion", "description": "Verify a new editor tab appears at the top showing style.css" },
+    { "type": "assertion", "description": "Verify the editor content changes to show CSS code with syntax highlighting" },
+    { "type": "action", "description": "Click on the file named app.js in the file explorer sidebar" },
+    { "type": "assertion", "description": "Verify another editor tab appears showing app.js and the editor content changes to JavaScript code" }
+  ]
+}
