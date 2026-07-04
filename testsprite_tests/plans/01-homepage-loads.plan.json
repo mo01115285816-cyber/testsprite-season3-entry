@@ -1,5 +1,5 @@
 {
-  "projectId": "901c0484-6b26-4058-8060-da3cfa6702e8",
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
   "type": "frontend",
   "name": "Landing page loads and shows logo",
   "description": "When a visitor opens the site root, the page renders successfully and the logo is visible.",
