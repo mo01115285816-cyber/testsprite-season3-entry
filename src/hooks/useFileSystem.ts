@@ -28,10 +28,20 @@ export function useFileSystem() {
       if (mounted) {
         setFiles(allFiles);
         setIsLoading(false);
-        // Auto-open index.html if it exists
+        // Auto-open index.html if it exists — pass allFiles directly
         const indexFile = allFiles.find(f => f.name === 'index.html');
         if (indexFile) {
-          openFile(indexFile.id);
+          // Open directly without relying on stale `files` state
+          const newTab: EditorTab = {
+            id: `tab_${indexFile.id}`,
+            fileId: indexFile.id,
+            name: indexFile.name,
+            path: indexFile.path,
+            isDirty: false,
+            language: indexFile.language || getLanguageFromFilename(indexFile.name),
+          };
+          setOpenTabs([newTab]);
+          setActiveTabId(newTab.id);
         }
       }
     })();
@@ -45,7 +55,9 @@ export function useFileSystem() {
   }, []);
 
   const openFile = useCallback(async (fileId: string) => {
-    const file = files.find(f => f.id === fileId);
+    // Read fresh from DB to avoid stale state
+    const { getFile } = await import('@/lib/filesystem/db');
+    const file = await getFile(fileId);
     if (!file) return;
     const existingTab = openTabs.find(t => t.fileId === fileId);
     if (!existingTab) {
@@ -60,7 +72,7 @@ export function useFileSystem() {
       setOpenTabs(prev => [...prev, newTab]);
     }
     setActiveTabId(`tab_${fileId}`);
-  }, [files, openTabs]);
+  }, [openTabs]);
 
   const closeTab = useCallback((tabId: string) => {
     setOpenTabs(prev => {
