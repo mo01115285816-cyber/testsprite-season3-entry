@@ -1,0 +1,18 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "Preview device size switching — desktop, tablet, mobile",
+  "description": "When the user is on the Preview tab and clicks each device-size button (desktop, tablet, mobile) in the preview toolbar, the preview pane updates to show the corresponding device frame mockup.",
+  "priority": "p1",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "action", "description": "Click the second tab in the bottom dock to open the Preview view" },
+    { "type": "assertion", "description": "Verify the preview pane is visible with three device-size buttons in the toolbar (desktop, tablet, mobile)" },
+    { "type": "action", "description": "Click the tablet device-size button in the preview toolbar" },
+    { "type": "assertion", "description": "Verify the preview pane now shows a tablet-shaped device frame mockup (taller than wide, with rounded borders)" },
+    { "type": "action", "description": "Click the mobile device-size button in the preview toolbar" },
+    { "type": "assertion", "description": "Verify the preview pane now shows a mobile-phone-shaped device frame mockup (narrow, with a notch at the top)" },
+    { "type": "action", "description": "Click the desktop device-size button in the preview toolbar" },
+    { "type": "assertion", "description": "Verify the preview pane returns to the desktop browser-style frame mockup with traffic-light dots (red, yellow, green)" }
+  ]
+}

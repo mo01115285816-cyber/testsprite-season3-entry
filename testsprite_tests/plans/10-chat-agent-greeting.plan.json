@@ -1,0 +1,15 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "Chat agent accepts input and shows a greeting message",
+  "description": "When the user navigates to the Agent tab, the chat interface shows a greeting message from the AI agent, and the input field is visible and ready to accept text.",
+  "priority": "p1",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "action", "description": "Click the third tab in the bottom dock to open the Agent view" },
+    { "type": "assertion", "description": "Verify the chat agent interface is visible" },
+    { "type": "assertion", "description": "Verify a greeting message from the AI agent is visible in the chat area" },
+    { "type": "assertion", "description": "Verify a text input field is visible at the bottom of the chat for typing messages" },
+    { "type": "assertion", "description": "Verify a send button (with an arrow-up icon) is visible next to the input field" }
+  ]
+}

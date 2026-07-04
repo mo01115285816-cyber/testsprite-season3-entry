@@ -1,0 +1,17 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "Icon Helper modal opens and shows icon library",
+  "description": "When the user clicks the icon-library button in the editor toolbar, a modal opens showing a searchable grid of SVG icons with customization controls (size, stroke width, color).",
+  "priority": "p1",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "assertion", "description": "Verify the editor view is active with the code editor visible" },
+    { "type": "action", "description": "Click the icon-library button in the editor toolbar (look for a button with a smiley face icon labeled for icons)" },
+    { "type": "assertion", "description": "Verify a modal dialog opens overlaying the page" },
+    { "type": "assertion", "description": "Verify the modal contains a grid of selectable SVG icons visible to the user" },
+    { "type": "assertion", "description": "Verify the modal has customization controls for icon size, stroke width, and color" },
+    { "type": "action", "description": "Close the modal by clicking the X button in its top corner" },
+    { "type": "assertion", "description": "Verify the modal is no longer visible and the editor is interactable again" }
+  ]
+}

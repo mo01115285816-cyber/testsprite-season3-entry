@@ -1,0 +1,16 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "Code editor accepts typed input and shows line numbers",
+  "description": "When the user types into the code editor textarea, the editor content updates and the line-number gutter on the side updates to reflect the number of lines.",
+  "priority": "p1",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "assertion", "description": "Verify the code editor is visible with a line-number gutter on the side" },
+    { "type": "action", "description": "Click inside the code editor textarea to focus it" },
+    { "type": "action", "description": "Press Ctrl+A (or Cmd+A) to select all existing code, then press Delete to clear the editor" },
+    { "type": "action", "description": "Type a simple HTML snippet into the editor: a div tag containing hello world text" },
+    { "type": "assertion", "description": "Verify the editor content now shows the newly typed HTML code" },
+    { "type": "assertion", "description": "Verify the line-number gutter on the side updated to reflect the new line count of the typed code" }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "Linter panel opens and shows real-time diagnostics",
+  "description": "When the user opens the linter/diagnostics panel in the editor view, the panel slides open showing real-time diagnostic results (either issues found or a clean-code message).",
+  "priority": "p1",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "assertion", "description": "Verify the editor view is active with the code editor visible" },
+    { "type": "action", "description": "Click the linter/diagnostics toggle button in the editor toolbar (look for a button with a bug icon)" },
+    { "type": "assertion", "description": "Verify a side panel slides open on the right side of the editor" },
+    { "type": "assertion", "description": "Verify the panel has two tab options at the top (real-time check and AI analysis)" },
+    { "type": "assertion", "description": "Verify the panel shows either a list of diagnostic issues or a clean-code confirmation message" }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "Download dropdown menu opens and shows export options",
+  "description": "When the user clicks the download/export button in the header, a dropdown menu opens showing export options (auto-download and markdown export).",
+  "priority": "p2",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "action", "description": "Click the download/export button in the top header bar (look for a button with a download icon and a chevron/arrow)" },
+    { "type": "assertion", "description": "Verify a dropdown menu opens below the button" },
+    { "type": "assertion", "description": "Verify the dropdown contains at least two export options visible as clickable buttons" },
+    { "type": "action", "description": "Click outside the dropdown menu to close it" },
+    { "type": "assertion", "description": "Verify the dropdown menu is no longer visible" }
+  ]
+}

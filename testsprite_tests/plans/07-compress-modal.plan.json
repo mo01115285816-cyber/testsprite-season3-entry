@@ -1,0 +1,16 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "Compress files modal opens with drag-and-drop zone",
+  "description": "When the user clicks the compress-files button in the header, a modal opens showing a drag-and-drop zone for file compression with format options (ZIP/TAR).",
+  "priority": "p2",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "action", "description": "Click the compress-files button in the top header bar (look for a button with an archive/zip icon)" },
+    { "type": "assertion", "description": "Verify a modal dialog opens overlaying the page" },
+    { "type": "assertion", "description": "Verify the modal contains a large drag-and-drop zone area for adding files" },
+    { "type": "assertion", "description": "Verify the modal has format selection controls (at least ZIP and TAR options visible)" },
+    { "type": "action", "description": "Close the modal by clicking the X button or backdrop" },
+    { "type": "assertion", "description": "Verify the modal is no longer visible" }
+  ]
+}
