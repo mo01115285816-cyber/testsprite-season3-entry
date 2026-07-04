@@ -1366,7 +1366,8 @@ ${lang === 'html' ? `
         )}
       </AnimatePresence>
 
-      {/* 1. Header Area: Floating Glass Navbar Redesigned */}
+      {/* 1. Header Area: Floating Glass Navbar Redesigned (only on editor tab) */}
+      {activeTab === 'editor' && (
       <header className="fixed top-6 left-1/2 -translate-x-1/2 z-40 max-w-5xl w-[calc(100%-2.5rem)] bg-brand-card/90 backdrop-blur-md rounded-full border border-brand-accent/20 shadow-tinted-lg px-4 h-[58px] flex items-center justify-between text-brand-text select-none animate-fade-up">
         <div className="flex items-center gap-3">
           <div className="relative flex items-center justify-center">
@@ -1489,9 +1490,10 @@ ${lang === 'html' ? `
             </div>
          </div>
       </header>
+      )}
 
-      {/* 2. Main content viewport shell */}
-      <main id="main-content" className="flex-1 min-h-0 relative flex flex-col pt-24 pb-20 animate-fade-in delay-200">
+      {/* 2. Main content viewport shell — padding-top only on editor tab (header is hidden elsewhere) */}
+      <main id="main-content" className={`flex-1 min-h-0 relative flex flex-col pb-24 animate-fade-in delay-200 ${activeTab === 'editor' ? 'pt-24' : 'pt-6'}`}>
         <div className="flex-1 min-h-0 flex flex-row w-full h-full position-relative overflow-hidden" ref={containerRef}>
           
           <AnimatePresence mode="wait">
