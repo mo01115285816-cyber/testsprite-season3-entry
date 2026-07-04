@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -41,13 +42,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 local-*
-.claude
 .z-ai-config
 *.log
 dev.log
 dev.out.log
-test
-prompt
 
 server.log
 # Skills directory
@@ -58,3 +56,4 @@ server.log
 .testsprite-credentials.json
 testsprite_tests/local/
 .env.testsprite
+
