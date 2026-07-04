@@ -1,16 +1,30 @@
 'use client';
 
-import React, { useRef, useCallback, useEffect } from 'react';
-import Editor, { type OnMount, type BeforeMount, type OnChange } from '@monaco-editor/react';
+import dynamic from 'next/dynamic';
+import React, { useCallback } from 'react';
 import type { editor } from 'monaco-editor';
 import { nexusTheme, NEXUS_THEME_NAME } from '@/lib/monaco/theme';
+
+// CRITICAL: dynamic import with ssr:false — this is what makes Monaco work
+// reliably on mobile and avoids hydration issues.
+const MonacoEditorLoader = dynamic(() => import('@monaco-editor/react'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-full w-full items-center justify-center bg-[#0f0f0f] text-zinc-500 font-mono text-xs">
+      <div className="flex flex-col items-center gap-2">
+        <div className="w-5 h-5 border-2 border-brand-accent/30 border-t-brand-accent rounded-full animate-spin" />
+        <span>...تحميل المحرر</span>
+      </div>
+    </div>
+  ),
+});
 
 interface MonacoEditorProps {
   value: string;
   language: string;
+  path?: string;
   onChange: (value: string) => void;
   onSave: () => void;
-  onFormat?: () => void;
   fontSize?: number;
   readOnly?: boolean;
 }
@@ -18,98 +32,77 @@ interface MonacoEditorProps {
 export default function MonacoEditor({
   value,
   language,
+  path,
   onChange,
   onSave,
   fontSize = 14,
   readOnly = false,
 }: MonacoEditorProps) {
-  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
-
-  const handleBeforeMount: BeforeMount = useCallback((monaco) => {
+  const handleBeforeMount = useCallback((monaco: any) => {
     monaco.editor.defineTheme(NEXUS_THEME_NAME, nexusTheme);
   }, []);
 
-  const handleMount: OnMount = useCallback((editorInstance, monaco) => {
-    editorRef.current = editorInstance;
-
+  const handleMount = useCallback((editorInstance: editor.IStandaloneCodeEditor, monaco: any) => {
     // Ctrl+S to save
     editorInstance.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
       onSave();
     });
-
     // Focus the editor
     editorInstance.focus();
   }, [onSave]);
 
-  const handleChange: OnChange = useCallback((newValue) => {
-    onChange(newValue || '');
-  }, [onChange]);
-
   return (
-    <div className="w-full h-full overflow-hidden bg-[#0f0f0f]">
-      <Editor
-        height="100%"
-        defaultLanguage={language}
-        language={language}
-        value={value}
-        theme={NEXUS_THEME_NAME}
-        beforeMount={handleBeforeMount}
-        onMount={handleMount}
-        onChange={handleChange}
-        loading={
-          <div className="flex items-center justify-center h-full bg-[#0f0f0f]">
-            <div className="text-zinc-500 text-sm font-mono animate-pulse">
-              ...تحميل المحرر
-            </div>
-          </div>
-        }
-        options={{
-          fontSize,
-          fontFamily: 'var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-          fontLigatures: true,
-          lineHeight: 1.6,
-          letterSpacing: 0.3,
-          minimap: { enabled: false },
-          scrollBeyondLastLine: false,
-          smoothScrolling: true,
-          cursorSmoothCaretAnimation: 'on',
-          cursorBlinking: 'smooth',
-          renderWhitespace: 'selection',
-          renderLineHighlight: 'all',
-          roundedSelection: true,
-          padding: { top: 16, bottom: 16 },
-          automaticLayout: true,
-          tabSize: 2,
-          wordWrap: 'on',
-          wrappingIndent: 'indent',
-          autoIndent: 'advanced',
-          formatOnPaste: true,
-          formatOnType: false,
-          suggestOnTriggerCharacters: true,
-          acceptSuggestionOnEnter: 'on',
-          quickSuggestions: { other: true, comments: false, strings: false },
-          snippetSuggestions: 'inline',
-          codeLens: true,
-          folding: true,
-          showFoldingControls: 'always',
-          bracketPairColorization: { enabled: true },
-          guides: { bracketPairs: 'active', indentation: true },
-          readOnly,
-          scrollbar: {
-            vertical: 'auto',
-            horizontal: 'auto',
-            verticalScrollbarSize: 10,
-            horizontalScrollbarSize: 10,
-            useShadows: false,
-          },
-          overviewRulerBorder: false,
-          hideCursorInOverviewRuler: true,
-          contextmenu: true,
-          mouseWheelZoom: true,
-          multiCursorModifier: 'ctrlCmd',
-          selectionClipboard: false,
-        }}
-      />
-    </div>
+    <MonacoEditorLoader
+      height="100%"
+      theme={NEXUS_THEME_NAME}
+      path={path}
+      defaultLanguage={language}
+      language={language}
+      value={value}
+      beforeMount={handleBeforeMount}
+      onMount={handleMount}
+      onChange={(val) => onChange(val || '')}
+      options={{
+        minimap: { enabled: false },
+        fontSize,
+        fontFamily: 'var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+        fontLigatures: true,
+        tabSize: 2,
+        automaticLayout: true,
+        lineNumbers: 'on',
+        lineHeight: 22,
+        padding: { top: 12, bottom: 12 },
+        cursorBlinking: 'smooth',
+        cursorSmoothCaretAnimation: 'on',
+        roundedSelection: true,
+        scrollBeyondLastLine: false,
+        smoothScrolling: true,
+        renderWhitespace: 'selection',
+        renderLineHighlight: 'all',
+        wordWrap: 'on',
+        wrappingIndent: 'indent',
+        autoIndent: 'advanced',
+        formatOnPaste: true,
+        quickSuggestions: { other: true, comments: false, strings: false },
+        snippetSuggestions: 'inline',
+        folding: true,
+        showFoldingControls: 'always',
+        bracketPairColorization: { enabled: true },
+        guides: { bracketPairs: 'active', indentation: true },
+        readOnly,
+        scrollbar: {
+          vertical: 'auto',
+          horizontal: 'auto',
+          verticalScrollbarSize: 10,
+          horizontalScrollbarSize: 10,
+          useShadows: false,
+        },
+        overviewRulerBorder: false,
+        hideCursorInOverviewRuler: true,
+        contextmenu: true,
+        mouseWheelZoom: true,
+        multiCursorModifier: 'ctrlCmd',
+      }}
+    />
   );
 }

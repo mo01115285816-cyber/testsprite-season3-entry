@@ -243,15 +243,18 @@ export default function IDEWorkspace({
           onCloseTab={fs.closeTab}
         />
 
-        {/* Monaco Editor */}
-        <div className="flex-1 min-h-0">
+        {/* Monaco Editor — matches reference: flex-1 relative, h-full w-full inner */}
+        <div className="flex-1 relative bg-[#0f0f0f] min-h-0">
           {fs.activeFile ? (
-            <MonacoEditor
-              value={localCode}
-              language={activeLanguage}
-              onChange={handleEditorChange}
-              onSave={handleSave}
-            />
+            <div className="h-full w-full">
+              <MonacoEditor
+                value={localCode}
+                language={activeLanguage}
+                path={fs.activeFile.path}
+                onChange={handleEditorChange}
+                onSave={handleSave}
+              />
+            </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-full bg-[#0f0f0f] text-center">
               <Sparkles className="w-6 h-6 text-brand-accent/30 mb-2" />
