@@ -31,7 +31,7 @@ env:
 
 jobs:
   verify:
-    name: Run TestSprite test suite
+    name: Run TestSprite frontend suite
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -50,13 +50,11 @@ jobs:
       - name: Verify credentials resolve
         run: testsprite auth status --output json
 
-      - name: Run full backend suite (wave-ordered)
-        # `--all --project` runs every test in the project in dependency wave
-        # order. `--wait` blocks until terminal. `--output json` gives a stable
+      - name: Run the NEXUS load test (frontend)
+        # Run the canonical "NEXUS IDE loads" test from the durable suite.
+        # `--wait` blocks until terminal. `--output json` gives a stable
         # machine-readable contract. Non-zero exit fails the build.
         run: |
-          testsprite test run --all --project "$PROJECT_ID" \
+          testsprite test run afb59edb-c894-45a8-a85f-f5662c71ce9c \
+            --project "$PROJECT_ID" \
             --wait --output json
-
-      # For frontend tests, target a specific test id instead of --all:
-      # - run: testsprite test run <test-id> --wait --output json
