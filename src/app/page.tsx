@@ -1370,20 +1370,9 @@ ${lang === 'html' ? `
       {activeTab === 'editor' && (
       <header className="fixed top-6 left-1/2 -translate-x-1/2 z-40 max-w-5xl w-[calc(100%-2.5rem)] bg-brand-card/90 backdrop-blur-md rounded-full border border-brand-accent/20 shadow-tinted-lg px-4 h-[58px] flex items-center justify-between text-brand-text select-none animate-fade-up">
         <div className="flex items-center gap-3">
-          <div className="relative flex items-center justify-center">
-            <svg className="w-6 h-6 text-brand-text drop-shadow-[0_0_8px_rgba(93,214,44,0.4)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="nexusLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#f8f8f8" />
-                  <stop offset="50%" stopColor="#5dd62c" />
-                  <stop offset="100%" stopColor="#337418" />
-                </linearGradient>
-              </defs>
-              <path d="M25 25V75L45 50L25 25Z" fill="url(#nexusLogoGrad)" />
-              <path d="M75 75V25L55 50L75 75Z" fill="url(#nexusLogoGrad)" />
-              <circle cx="50" cy="50" r="10" stroke="#5dd62c" strokeWidth="4" className="animate-pulse" />
-            </svg>
-            <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-brand-accent shadow-[0_0_10px_#5dd62c]"></div>
+          {/* NEXUS logo placeholder — awaiting new logo asset */}
+          <div className="relative flex items-center justify-center w-6 h-6">
+            {/* logo will be inserted here once provided */}
           </div>
           <div className="flex flex-col text-right justify-center">
             <h1 className="text-sm md:text-base font-black text-brand-text font-mono tracking-[0.2em] uppercase">
