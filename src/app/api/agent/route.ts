@@ -213,39 +213,26 @@ export async function POST(req: NextRequest) {
                       if (chunk.text) {
                          fullResponse += chunk.text;
                          
-                         if (agentType === "FULL_STACK") {
-                           // Dynamic step transitions based on stream accumulation
-                           if (currentStep === 0 && fullResponse.includes("<FILE")) {
-                              sendStepComplete(0);
-                              sendStepActive(1);
-                              currentStep = 1;
+                         if (agentType === "FULL_STACK" || agentType === "CODE" || agentType === "UI_ARTIST") {
+                           // All agents use stream_full_text so page.tsx can parse <FILE> tags
+                           if (agentType === "FULL_STACK") {
+                             if (currentStep === 0 && fullResponse.includes("<FILE")) {
+                                sendStepComplete(0);
+                                sendStepActive(1);
+                                currentStep = 1;
+                             }
+                             if (currentStep === 1 && (fullResponse.includes("مشروع_مخطط.md") || fullResponse.includes("plan.md")) && fullResponse.indexOf("<FILE") !== fullResponse.lastIndexOf("<FILE")) {
+                                sendStepComplete(1);
+                                sendStepActive(2);
+                                currentStep = 2;
+                             }
                            }
-                           if (currentStep === 1 && (fullResponse.includes("مشروع_مخطط.md") || fullResponse.includes("plan.md")) && fullResponse.indexOf("<FILE") !== fullResponse.lastIndexOf("<FILE")) {
-                              sendStepComplete(1);
-                              sendStepActive(2);
-                              currentStep = 2;
-                           }
+                           sendStatus("الوكيل الذكي: جاري كتابة الملفات...");
                            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'stream_full_text', text: fullResponse })}\n\n`));
                          } else {
-                           const codeStart = fullResponse.indexOf("<CODE>");
-                           const codeEnd = fullResponse.indexOf("</CODE>");
-                           
-                           if (codeStart === -1) {
-                             sendStatus("الوكيل الذكي: جاري صياغة الرد والشرح التفصيلي للحل وتجهيز البنية...");
-                           } else {
-                             sendStatus("الوكيل الذكي: جاري كتابة وتوليد شيفرة المكونات التفاعلية (React/Tailwind) مباشرة...");
-                           }
-                           
-                           if (codeStart !== -1) {
-                             let rawCode = "";
-                             if (codeEnd !== -1) {
-                               rawCode = fullResponse.substring(codeStart + 6, codeEnd);
-                             } else {
-                               rawCode = fullResponse.substring(codeStart + 6);
-                             }
-                             currentCode = rawCode.replace(/^```[a-z]*\n?/i, "").replace(/```$/i, "").trimStart();
-                             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'stream_code', code: currentCode })}\n\n`));
-                           }
+                           // CHAT/ADVISOR — no code, just text
+                           sendStatus("الوكيل الذكي: جاري صياغة الرد...");
+                           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'stream_full_text', text: fullResponse })}\n\n`));
                          }
                       }
                    }
@@ -276,7 +263,7 @@ export async function POST(req: NextRequest) {
             } else if (replyStart !== -1) {
                // Tolerant: accept reply without closing tag — take until next <FILE or <CODE or end
                const afterReply = fullResponse.substring(replyStart + 7);
-               const terminator = agentType === "FULL_STACK" ? "<FILE" : "<CODE>";
+               const terminator = "<FILE";
                const termIdx = afterReply.indexOf(terminator);
                const maybeReply = (termIdx > -1 ? afterReply.substring(0, termIdx) : afterReply).trim();
                if (maybeReply) extractedReply = maybeReply;
@@ -376,12 +363,15 @@ ${code}
 ${toneInstructions}
 
 صغ ردك بهذا التنسيق:
+قاعدة إلزامية: يجب أن تكتب كل كود تنشئه بصيغة ملفات باستخدام الوسم التالي:
+<FILE path="filename.ext">content</FILE>
+
+اختر اسم الملف المناسب حسب نوع الكود (index.html, style.css, app.jsx, إلخ).
+
+بعد كتابة جميع الملفات، اكتب ملخصاً في وسم <REPLY>:
 <REPLY>
 (شرح فعلي للتغييرات التصميمية والقرارات التقنية التي اتخذتها)
-</REPLY>
-<CODE>
-(الكود المحدث والكامل)
-</CODE>`;
+</REPLY>`;
              finalResult = await runStreamingAgent(proPrompt, "المهندس المصمم (UI/UX)");
           } else { // CODE AGENT
              for(let i = 0; i < Math.max(1, steps.length - 1); i++) sendStepActive(i);
@@ -396,13 +386,21 @@ ${code}
 
 ${toneInstructions}
 
-صغ ردك بهذا التنسيق:
+قاعدة إلزامية: يجب أن تكتب كل كود تنشئه بصيغة ملفات باستخدام الوسم التالي:
+<FILE path="filename.ext">content</FILE>
+
+مثال:
+<FILE path="index.html"><!DOCTYPE html>...</FILE>
+<FILE path="style.css">body { ... }</FILE>
+<FILE path="script.js">console.log('...');</FILE>
+
+اختر اسم الملف المناسب حسب نوع الكود (index.html, style.css, script.js, app.js, إلخ).
+إذا كان طلب المستخدم يتطلب أكثر من ملف، أنشئ كل ملف في وسم <FILE> منفصل.
+
+بعد كتابة جميع الملفات، اكتب ملخصاً في وسم <REPLY>:
 <REPLY>
-(شرح تقني للتغييرات الفعلية التي قمت بها)
-</REPLY>
-<CODE>
-(الكود المحدث والكامل)
-</CODE>`;
+(شرح تقني للتغييرات الفعلية التي قمت بها والملفات التي أنشأتها)
+</REPLY>`;
              finalResult = await runStreamingAgent(engineerPrompt, "المهندس المبرمج");
           }
 
