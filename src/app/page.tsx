@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   Sparkles, ChevronDown, Check, Copy, Bot, Code2, Play, Upload, Download,
-  FileText, FileCode, FileJson, Printer, Layers, FileCode2, FileArchive, Activity, TerminalSquare
+  FileText, FileCode, FileJson, Printer, Layers, FileCode2, FileArchive, Activity, TerminalSquare, Trash2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Link from 'next/link';
@@ -86,6 +86,18 @@ class WorkspaceDB {
       const request = store.get("active_file_path");
       request.onsuccess = () => resolve(request.result || null);
       request.onerror = () => reject(request.error);
+    });
+  }
+
+  async clearFiles(): Promise<void> {
+    const db = await this.getDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(this.storeName, "readwrite");
+      const store = transaction.objectStore(this.storeName);
+      store.delete("workspace_files");
+      store.delete("active_file_path");
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error);
     });
   }
 }
@@ -338,44 +350,53 @@ export default function HTMLPreviewApp() {
           if (loadedActive && loadedFiles[loadedActive]) {
             setActiveFile(loadedActive);
           } else {
-            setActiveFile("index.html");
+            const firstFile = Object.keys(loadedFiles).find(k => !loadedFiles[k].isFolder);
+            setActiveFile(firstFile || "");
           }
         } else {
-          // Legacy migration check
-          const legacyCode = localStorage.getItem('html_preview_code');
-          let initialFiles = { ...DEFAULT_FILES };
-          
-          if (legacyCode) {
-            initialFiles["index.html"] = {
-              ...initialFiles["index.html"],
-              content: legacyCode
-            };
+          // Check if user explicitly cleared the workspace
+          const wasCleared = localStorage.getItem('nexus_workspace_cleared');
+          if (wasCleared === 'true') {
+            // User cleared — start with empty workspace
+            setFiles({});
+            setActiveFile("");
+          } else {
+            // First visit — seed default files
+            let initialFiles = { ...DEFAULT_FILES };
+            setFiles(initialFiles);
+            setActiveFile("index.html");
+            await db.saveFiles(initialFiles);
+            await db.saveActiveFile("index.html");
           }
-          
-          setFiles(initialFiles);
-          setActiveFile("index.html");
-          await db.saveFiles(initialFiles);
-          await db.saveActiveFile("index.html");
         }
       } catch (err) {
         console.error("Failed to initialize IndexedDB workspace, using localStorage fallback:", err);
         try {
           const fallbackStore = localStorage.getItem('nexus_vfs_files');
           if (fallbackStore) {
-            setFiles(JSON.parse(fallbackStore));
-          } else {
-            const legacyCode = localStorage.getItem('html_preview_code');
-            let initialFiles = { ...DEFAULT_FILES };
-            if (legacyCode) {
-              initialFiles["index.html"] = { ...initialFiles["index.html"], content: legacyCode };
+            const parsed = JSON.parse(fallbackStore);
+            if (parsed && Object.keys(parsed).length > 0) {
+              setFiles(parsed);
+              const firstFile = Object.keys(parsed).find(k => !parsed[k].isFolder);
+              setActiveFile(firstFile || "");
+            } else {
+              setFiles({});
+              setActiveFile("");
             }
-            setFiles(initialFiles);
+          } else {
+            const wasCleared = localStorage.getItem('nexus_workspace_cleared');
+            if (wasCleared === 'true') {
+              setFiles({});
+              setActiveFile("");
+            } else {
+              setFiles({ ...DEFAULT_FILES });
+              setActiveFile("index.html");
+              localStorage.setItem('nexus_vfs_files', JSON.stringify(DEFAULT_FILES));
+            }
           }
-          const activePath = localStorage.getItem('nexus_vfs_active') || "index.html";
-          setActiveFile(activePath);
         } catch (_) {
-          setFiles(DEFAULT_FILES);
-          setActiveFile("index.html");
+          setFiles({});
+          setActiveFile("");
         }
       }
     }
@@ -712,6 +733,31 @@ ${lang === 'html' ? `
     } catch (err) {
       alert('عذراً، فشلت عملية ضغط وتصدير المشروع كملف ZIP.');
     }
+    setIsMenuOpen(false);
+  };
+
+  // Clear entire workspace — deletes from IndexedDB + localStorage permanently
+  const handleClearWorkspace = async () => {
+    if (!confirm('هل أنت متأكد من حذف جميع الملفات؟ لا يمكن التراجع عن هذا الإجراء.')) return;
+    
+    try {
+      const db = new WorkspaceDB();
+      await db.clearFiles();
+    } catch (e) {
+      console.error('Failed to clear IndexedDB:', e);
+    }
+    
+    // Clear localStorage keys
+    localStorage.removeItem('nexus_vfs_files');
+    localStorage.removeItem('nexus_vfs_active');
+    localStorage.removeItem('html_preview_code');
+    // Mark as explicitly cleared so init doesn't re-seed defaults
+    localStorage.setItem('nexus_workspace_cleared', 'true');
+    
+    // Reset state
+    setFiles({});
+    setActiveFile("");
+    setCode("");
     setIsMenuOpen(false);
   };
 
@@ -1854,6 +1900,16 @@ ${lang === 'html' ? `
                       >
                         <FileArchive className="w-4 h-4 text-[#5dd62c]" />
                         تحميل المشروع بالكامل (.ZIP)
+                      </button>
+
+                      <div className="border-t border-white/5 my-1" />
+
+                      <button
+                        onClick={handleClearWorkspace}
+                        className="flex items-center gap-2.5 px-3 py-2.5 text-xs font-bold hover:bg-red-500/10 text-zinc-300 hover:text-red-400 rounded-xl transition-all w-full text-right cursor-pointer"
+                      >
+                        <Trash2 className="w-4 h-4 text-red-400" />
+                        حذف المشروع بالكامل
                       </button>
 
                       <button
