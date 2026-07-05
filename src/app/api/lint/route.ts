@@ -141,7 +141,7 @@ ${code}
 - تأكد من مطابقة الكود المقتبس "codeQuote" والتعقب الحرفي لـ "targetText" و "replacementText" لتسهيل عمليات الإصلاح التلقائي بضغطة زر.`;
 
     const response = await generateContentWithRetry(ai, {
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: prompt,
       config: {
         responseMimeType: "application/json",

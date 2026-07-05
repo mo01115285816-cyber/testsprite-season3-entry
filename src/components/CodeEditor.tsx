@@ -89,8 +89,27 @@ export default function CodeEditor({
 
   const [isArabicHelpOpen, setIsArabicHelpOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [deleteConfirmPath, setDeleteConfirmPath] = useState<string | null>(null);
+  const [isConfirmWipeOpen, setIsConfirmWipeOpen] = useState(false);
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<any>(null);
+
+  // Dynamic extraction of project name from active folders
+  const getProjectName = (files: WorkspaceFiles) => {
+    const paths = Object.keys(files);
+    if (paths.length === 0) return "مستكشف الملفات";
+    const rootFolders = new Set<string>();
+    paths.forEach(p => {
+      const parts = p.split('/');
+      if (parts.length > 1) {
+        rootFolders.add(parts[0]);
+      }
+    });
+    if (rootFolders.size > 0) {
+      return Array.from(rootFolders)[0];
+    }
+    return "مستكشف الملفات";
+  };
 
   // States for creating files/folders
   const [showCreateInput, setShowCreateInput] = useState<{ isFolder: boolean; parentDir: string } | null>(null);
@@ -386,8 +405,12 @@ export default function CodeEditor({
       alert("لا يمكن حذف ملف index.html الرئيسي الخاص بالنظام!");
       return;
     }
-    
-    if (!confirm(`هل أنت متأكد من حذف "${path}" بشكل نهائي؟`)) return;
+    setDeleteConfirmPath(path);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!deleteConfirmPath) return;
+    const path = deleteConfirmPath;
 
     const newFiles = { ...files };
     delete newFiles[path];
@@ -407,6 +430,8 @@ export default function CodeEditor({
     if (activeFile === path || activeFile.startsWith(`${path}/`)) {
       setActiveFile("index.html");
     }
+
+    setDeleteConfirmPath(null);
   };
 
   // Rename file/folder with child updates
@@ -951,8 +976,10 @@ export default function CodeEditor({
             >
               {/* Sidebar Header */}
               <div className="p-3 border-b border-brand-accent/10 flex items-center justify-between">
-                <span className="font-bold text-xs tracking-wide text-brand-text font-sans">مستكشف الملفات</span>
-                <div className="flex items-center gap-1">
+                <span className="font-bold text-xs tracking-wide text-brand-text font-sans truncate max-w-[130px]" title={getProjectName(files)}>
+                  {getProjectName(files)}
+                </span>
+                <div className="flex items-center gap-1 shrink-0">
                   <button 
                     onClick={() => setShowCreateInput({ isFolder: false, parentDir: '' })}
                     className="p-1 hover:bg-brand-accent/10 hover:text-[#5dd62c] text-zinc-400 rounded transition-all cursor-pointer"
@@ -966,6 +993,13 @@ export default function CodeEditor({
                     title="مجلد جديد"
                   >
                     <FolderPlus className="w-3.5 h-3.5" />
+                  </button>
+                  <button 
+                    onClick={() => setIsConfirmWipeOpen(true)}
+                    className="p-1 hover:bg-rose-500/10 hover:text-rose-400 text-zinc-400 rounded transition-all cursor-pointer"
+                    title="تهيئة ومسح بيئة العمل بالكامل"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
@@ -1345,6 +1379,118 @@ export default function CodeEditor({
           </div>
         </div>
       )}
+
+      {/* Custom Deletion Confirmation Modal */}
+      <AnimatePresence>
+        {deleteConfirmPath && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            {/* Backdrop with blur */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setDeleteConfirmPath(null)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            
+            {/* Modal Body */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ type: "spring", duration: 0.3 }}
+              className="relative w-full max-w-sm bg-[#121215] border border-red-500/30 rounded-2xl p-6 shadow-[0_20px_50px_rgba(239,68,68,0.15)] overflow-hidden text-right"
+              dir="rtl"
+            >
+              {/* Top Warning Icon Accent */}
+              <div className="mx-auto w-12 h-12 bg-red-500/10 border border-red-500/30 text-red-500 rounded-full flex items-center justify-center mb-4">
+                <AlertTriangle className="w-6 h-6 animate-pulse" />
+              </div>
+
+              {/* Header */}
+              <h3 className="text-sm font-black text-white mb-2 text-center">
+                تأكيد حذف الملف نهائياً ⚠️
+              </h3>
+              
+              {/* Description */}
+              <p className="text-xs text-zinc-400 leading-relaxed text-center mb-6">
+                هل أنت متأكد تماماً من رغبتك في حذف <span className="font-bold font-mono text-red-400">"{deleteConfirmPath}"</span> بشكل نهائي وكل محتوياته؟ لا يمكن التراجع عن هذا الإجراء أبداً.
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setDeleteConfirmPath(null)}
+                  className="flex-1 py-2 px-4 bg-zinc-900 border border-zinc-800 text-zinc-300 rounded-xl text-xs font-bold hover:bg-zinc-850 hover:text-white transition-all cursor-pointer"
+                >
+                  إلغاء الأمر
+                </button>
+                <button
+                  onClick={handleConfirmDelete}
+                  className="flex-1 py-2 px-4 bg-red-500/20 border border-red-500/40 text-red-400 rounded-xl text-xs font-black hover:bg-red-500/35 hover:text-red-300 transition-all cursor-pointer shadow-[0_4px_15px_rgba(239,68,68,0.2)]"
+                >
+                  نعم، احذف 🗑️
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Custom Wipe Confirmation Modal */}
+      <AnimatePresence>
+        {isConfirmWipeOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsConfirmWipeOpen(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ type: "spring", duration: 0.3 }}
+              className="relative w-full max-w-sm bg-[#121215] border border-amber-500/30 rounded-2xl p-6 shadow-[0_20px_50px_rgba(245,158,11,0.15)] overflow-hidden text-right"
+              dir="rtl"
+            >
+              <div className="mx-auto w-12 h-12 bg-amber-500/10 border border-amber-500/30 text-amber-500 rounded-full flex items-center justify-center mb-4">
+                <AlertCircle className="w-6 h-6 animate-bounce" />
+              </div>
+
+              <h3 className="text-sm font-black text-white mb-2 text-center">
+                إعادة تهيئة بيئة العمل ⚠️
+              </h3>
+              
+              <p className="text-xs text-zinc-400 leading-relaxed text-center mb-6">
+                هل أنت متأكد تماماً من رغبتك في <span className="font-bold text-amber-400">مسح وتفريغ كافة ملفات المجلد</span> والبدء من الصفر تماماً؟ لا يمكن التراجع عن هذا الإجراء أبداً.
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setIsConfirmWipeOpen(false)}
+                  className="flex-1 py-2 px-4 bg-zinc-900 border border-zinc-800 text-zinc-300 rounded-xl text-xs font-bold hover:bg-zinc-850 hover:text-white transition-all cursor-pointer"
+                >
+                  إلغاء الأمر
+                </button>
+                <button
+                  onClick={() => {
+                    setFiles({});
+                    setActiveFile("");
+                    setIsConfirmWipeOpen(false);
+                  }}
+                  className="flex-1 py-2 px-4 bg-amber-500/20 border border-amber-500/40 text-amber-400 rounded-xl text-xs font-black hover:bg-amber-500/35 hover:text-amber-300 transition-all cursor-pointer shadow-[0_4px_15px_rgba(245,158,11,0.2)]"
+                >
+                  نعم، مسح الكل 🧹
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

@@ -196,6 +196,8 @@ export interface ChatAgentProps {
   chatScrollRef: React.RefObject<HTMLDivElement | null>;
   handleClearChat?: () => void;
   agentModels?: Record<string, string>; // New prop for real model tracking
+  isFullStack?: boolean;
+  setIsFullStack?: (val: boolean) => void;
 }
 
 export default function ChatAgent({
@@ -210,13 +212,16 @@ export default function ChatAgent({
   handleSendAgentPrompt,
   chatScrollRef,
   handleClearChat,
-  agentModels = {} // Default to empty object
+  agentModels = {}, // Default to empty object
+  isFullStack = false,
+  setIsFullStack
 }: ChatAgentProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [expandedMessages, setExpandedMessages] = useState<Record<string, boolean>>({});
   const [isRecording, setIsRecording] = useState(false);
   const [isPlusMenuOpen, setIsPlusMenuOpen] = useState(false);
+  const [showModeSelection, setShowModeSelection] = useState(true);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const plusMenuRef = useRef<HTMLDivElement>(null);
@@ -387,17 +392,24 @@ export default function ChatAgent({
             
             {/* الشعار المبتكر والاحترافي لـ NEXUS */}
             <div className="flex items-center gap-3">
-              {/* NEXUS logo */}
+              {/* أيقونة الشعار الهندسية الفريدة */}
               <div className="relative flex items-center justify-center">
-                <img
-                  src="/nexus-logo.webp"
-                  alt="NEXUS logo"
-                  width={24}
-                  height={24}
-                  className="w-6 h-6 object-contain drop-shadow-[0_0_6px_rgba(93,214,44,0.5)]"
-                />
+                <svg className="w-5.5 h-5.5 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="nexusLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#ffffff" />
+                      <stop offset="50%" stopColor="#a1a1aa" />
+                      <stop offset="100%" stopColor="#3f3f46" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M25 25V75L45 50L25 25Z" fill="url(#nexusLogoGrad)" />
+                  <path d="M75 75V25L55 50L75 75Z" fill="url(#nexusLogoGrad)" />
+                  <circle cx="50" cy="50" r="10" stroke="white" strokeWidth="4" className="animate-pulse" />
+                </svg>
+                {/* نقطة مضيئة للدلالة على الذكاء التفاعلي النشط */}
+                <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#30D158] shadow-[0_0_8px_#30D158]"></div>
               </div>
-
+              
               {/* النص المكتوب للشعار الإنجليزي الفخم */}
               <h1 className="text-xs font-black tracking-[0.2em] text-white font-mono uppercase">
                 NEXUS
@@ -421,7 +433,7 @@ export default function ChatAgent({
       {/* مساحة عرض المحادثات الرئيسية المريحة للعين */}
       <div 
         ref={chatScrollRef}
-        className="flex-1 overflow-y-auto hide-scrollbar px-5 pt-[98px] pb-[160px] md:pt-[116px] md:pb-[170px] space-y-8 z-10 flex flex-col"
+        className="flex-1 overflow-y-auto hide-scrollbar px-5 pt-[98px] pb-[120px] md:pt-[116px] md:pb-[136px] space-y-8 z-10 flex flex-col"
       >
         <div className="max-w-3xl mx-auto w-full space-y-10 flex-1 flex flex-col justify-center">
           {messages.length === 0 ? (
@@ -609,10 +621,74 @@ export default function ChatAgent({
         </div>
       </div>
 
-      {/* صندوق الإدخال الثابت فوق شريط التنقل السفلي — مسافة مدروسة، بدون تداخل */}
-      <div className="absolute bottom-[76px] left-0 right-0 px-4 md:px-6 pb-1 shrink-0 z-20 pointer-events-none">
+      {/* صندوق الإدخال الثابت كلياً بالأسفل - بارتفاع مطابق تماماً للهيدر العائم */}
+      <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-brand-bg via-brand-bg/95 to-transparent shrink-0 z-20 pointer-events-none">
         <div className="max-w-3xl mx-auto relative pointer-events-auto">
           
+          {/* Active Mode Pill Indicator when floating selection is hidden */}
+          {!showModeSelection && (
+            <div className="flex justify-center mb-1.5">
+              <button
+                type="button"
+                onClick={() => setShowModeSelection(true)}
+                className={`px-2.5 py-0.5 text-[9.5px] font-bold rounded-full border transition-all flex items-center justify-center gap-1 cursor-pointer hover:scale-105 active:scale-95 ${
+                  isFullStack
+                    ? 'bg-[#22c55e]/10 border-[#22c55e]/30 text-[#22c55e] shadow-[0_0_8px_rgba(34,197,94,0.08)]'
+                    : 'bg-zinc-900/80 border-white/10 text-zinc-400 hover:text-zinc-200'
+                }`}
+                title="تغيير وضع التطوير والإنشاء"
+              >
+                {isFullStack ? (
+                  <>
+                    <Sparkles className="w-2.5 h-2.5 text-[#22c55e] shrink-0" />
+                    <span>مشروع كامل (Full-Stack) ⚡</span>
+                  </>
+                ) : (
+                  <>
+                    <Bot className="w-2.5 h-2.5 text-zinc-400 shrink-0" />
+                    <span>تعديل كود فردي 🌐</span>
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+
+          {/* محدد وضع توليد الكود: ميزة Full-Stack عسكرية واحترافية */}
+          {showModeSelection && (
+            <div className="flex items-center justify-center gap-1.5 mb-2.5 bg-brand-card/75 backdrop-blur-md border border-brand-accent/15 rounded-full p-0.5 max-w-[270px] mx-auto shadow-lg animate-fade-in">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsFullStack?.(false);
+                  setShowModeSelection(false);
+                }}
+                className={`flex-1 py-0.5 px-2.5 text-[10px] font-bold rounded-full transition-all flex items-center justify-center gap-1 cursor-pointer h-[24px] ${
+                  !isFullStack 
+                    ? 'bg-zinc-800 text-white shadow-sm border border-white/5' 
+                    : 'text-zinc-500 hover:text-zinc-400'
+                }`}
+              >
+                <Bot className="w-3 h-3" />
+                <span>كود فردي</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsFullStack?.(true);
+                  setShowModeSelection(false);
+                }}
+                className={`flex-1 py-0.5 px-2.5 text-[10px] font-bold rounded-full transition-all flex items-center justify-center gap-1 cursor-pointer h-[24px] ${
+                  isFullStack 
+                    ? 'bg-[#22c55e]/15 border border-[#22c55e]/30 text-[#22c55e] shadow-[0_0_10px_rgba(34,197,94,0.12)]' 
+                    : 'text-zinc-500 hover:text-zinc-400'
+                }`}
+              >
+                <Sparkles className="w-3 h-3 text-[#22c55e] animate-pulse" />
+                <span>Full-Stack</span>
+              </button>
+            </div>
+          )}
+
           {/* كبسولة إرسال متكاملة تماماً بارتفاع 50px في وضعها الأساسي لتطابق الهيدر */}
           <div className={`relative rounded-[26px] transition-all duration-500 bg-brand-card/90 backdrop-blur-2xl border ${
             isInputFocused 

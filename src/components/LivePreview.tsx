@@ -28,15 +28,12 @@ export default function LivePreview({
   setInspectModeActive,
 }: LivePreviewProps) {
   return (
-    <div className="flex-1 min-h-0 flex flex-col bg-brand-bg relative overflow-hidden pt-6" dir="rtl">
-      {/* Simulation Controls Toolbar — same design as editor header (floating glass pill) */}
-      <div className="shrink-0 max-w-5xl w-[calc(100%-2.5rem)] mx-auto bg-brand-card/90 backdrop-blur-md rounded-full border border-brand-accent/20 shadow-tinted-lg px-4 h-[58px] flex items-center justify-between text-brand-text select-none animate-fade-up z-20">
+    <div className="flex-1 min-h-0 flex flex-col bg-brand-bg relative overflow-hidden" dir="rtl">
+      {/* Simulation Controls Toolbar */}
+      <div className="h-12 bg-brand-card/90 backdrop-blur-md border-b border-brand-accent/15 px-4 flex items-center justify-between shrink-0 select-none">
         <div className="flex items-center gap-2.5">
           <button
-            type="button"
             onClick={() => setPreviewSize('desktop')}
-            aria-label="Desktop preview"
-            aria-pressed={previewSize === 'desktop'}
             className={`p-1.5 rounded-lg transition-all cursor-pointer ${
               previewSize === 'desktop' ? 'bg-brand-accent/10 text-brand-accent border border-brand-accent/30 shadow-[0_0_10px_rgba(93,214,44,0.15)]' : 'text-zinc-400 hover:text-brand-accent hover:bg-[#141414]'
             }`}
@@ -45,10 +42,7 @@ export default function LivePreview({
             <Monitor className="w-4 h-4" />
           </button>
           <button
-            type="button"
             onClick={() => setPreviewSize('tablet')}
-            aria-label="Tablet preview"
-            aria-pressed={previewSize === 'tablet'}
             className={`p-1.5 rounded-lg transition-all cursor-pointer ${
               previewSize === 'tablet' ? 'bg-brand-accent/10 text-brand-accent border border-brand-accent/30 shadow-[0_0_10px_rgba(93,214,44,0.15)]' : 'text-zinc-400 hover:text-brand-accent hover:bg-[#141414]'
             }`}
@@ -57,10 +51,7 @@ export default function LivePreview({
             <Tablet className="w-4 h-4" />
           </button>
           <button
-            type="button"
             onClick={() => setPreviewSize('mobile')}
-            aria-label="Mobile preview"
-            aria-pressed={previewSize === 'mobile'}
             className={`p-1.5 rounded-lg transition-all cursor-pointer ${
               previewSize === 'mobile' ? 'bg-brand-accent/10 text-brand-accent border border-brand-accent/30 shadow-[0_0_10px_rgba(93,214,44,0.15)]' : 'text-zinc-400 hover:text-brand-accent hover:bg-[#141414]'
             }`}
@@ -73,9 +64,6 @@ export default function LivePreview({
         {/* CSS Element Inspector Toggle Button (Only for HTML layout) */}
         {!isReactActive && (
           <button
-            type="button"
-            aria-label="Toggle CSS inspector"
-            aria-pressed={inspectModeActive}
             onClick={() => setInspectModeActive(!inspectModeActive)}
             className={`flex items-center gap-1.5 text-xs px-3.5 py-1.5 rounded-full border font-bold transition-all cursor-pointer select-none ${
               inspectModeActive 

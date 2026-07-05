@@ -14,7 +14,7 @@ async function generateContentWithRetry(
 ): Promise<{ response: any; modelUsed: string }> {
   const modelsToTry = [
     params.model, 
-    "gemini-3.5-flash",
+    "gemini-2.5-flash",
     "gemini-3.1-flash-lite",
     "gemini-2.5-flash",
     "gemini-2.5-pro"
@@ -67,7 +67,7 @@ async function generateContentWithRetry(
 
 export async function POST(req: NextRequest) {
   try {
-    const { code, prompt: userPrompt } = await req.json();
+    const { code, prompt: userPrompt, isFullStack } = await req.json();
     const encoder = new TextEncoder();
 
     const stream = new ReadableStream({
@@ -124,35 +124,47 @@ export async function POST(req: NextRequest) {
   "steps": ["خطوة 1", "خطوة 2", "خطوة 3"]
 }`;
 
-          let agentType = "CODE"; 
-          let steps = ["تحليل المشكلة", "تحديث الكود", "اعتماد التعديلات"];
+          let agentType = isFullStack ? "FULL_STACK" : "CODE"; 
+          let steps = isFullStack 
+            ? [
+                "تحليل المتطلبات واختيار إطار العمل وتوليد خارطة الطريق عسكرياً",
+                "إنشاء ملف المخطط العسكري الكامل (.md) وتصميم الهيكل",
+                "كتابة وتوليد ملفات المشروع المترابطة بالتفصيل والاحترافية",
+                "التدقيق الوظيفي وتأمين الكود النهائي للمشروع"
+              ]
+            : ["تحليل المشكلة", "تحديث الكود", "اعتماد التعديلات"];
           
-          try {
-            const { response: classResponse, modelUsed: classModel } = await generateContentWithRetry(ai, {
-              model: "gemini-3.5-flash",
-              contents: classAndPlanPrompt,
-              config: { responseMimeType: "application/json" }
-            });
-            const classData = JSON.parse(classResponse.text || "{}");
-            sendModelInfo("نظام التوجيه الذكي", classModel);
-            if (classData.agentType) agentType = classData.agentType;
-            if (classData.steps && Array.isArray(classData.steps) && classData.steps.length > 0) {
-                steps = classData.steps;
+          if (!isFullStack) {
+            try {
+              const { response: classResponse, modelUsed: classModel } = await generateContentWithRetry(ai, {
+                model: "gemini-2.5-flash",
+                contents: classAndPlanPrompt,
+                config: { responseMimeType: "application/json" }
+              });
+              const classData = JSON.parse(classResponse.text || "{}");
+              sendModelInfo("نظام التوجيه الذكي", classModel);
+              if (classData.agentType) agentType = classData.agentType;
+              if (classData.steps && Array.isArray(classData.steps) && classData.steps.length > 0) {
+                  steps = classData.steps;
+              }
+            } catch (err) {
+              console.error("Router error fallback to CODE", err);
             }
-          } catch (err) {
-            console.error("Router error fallback to CODE", err);
+          } else {
+            sendModelInfo("منسق المخططات العسكرية", "gemini-2.5-flash");
           }
 
           sendStepsInit(steps);
 
           const runStreamingAgent = async (prompt: string, agentTitle: string) => {
-            let modelUsedOut = "gemini-3.5-flash";
+            let modelUsedOut = "gemini-2.5-flash";
             let fullResponse = "";
             let currentCode = "";
+            let currentStep = 0;
             
             try {
               const streamModelsToTry = [
-                "gemini-3.5-flash",
+                "gemini-2.5-flash",
                 "gemini-3.1-flash-lite",
                 "gemini-2.5-flash",
                 "gemini-2.5-pro",
@@ -201,24 +213,39 @@ export async function POST(req: NextRequest) {
                       if (chunk.text) {
                          fullResponse += chunk.text;
                          
-                         const codeStart = fullResponse.indexOf("<CODE>");
-                         const codeEnd = fullResponse.indexOf("</CODE>");
-                         
-                         if (codeStart === -1) {
-                           sendStatus("الوكيل الذكي: جاري صياغة الرد والشرح التفصيلي للحل وتجهيز البنية...");
-                         } else {
-                           sendStatus("الوكيل الذكي: جاري كتابة وتوليد شيفرة المكونات التفاعلية (React/Tailwind) مباشرة...");
-                         }
-                         
-                         if (codeStart !== -1) {
-                           let rawCode = "";
-                           if (codeEnd !== -1) {
-                             rawCode = fullResponse.substring(codeStart + 6, codeEnd);
-                           } else {
-                             rawCode = fullResponse.substring(codeStart + 6);
+                         if (agentType === "FULL_STACK") {
+                           // Dynamic step transitions based on stream accumulation
+                           if (currentStep === 0 && fullResponse.includes("<FILE")) {
+                              sendStepComplete(0);
+                              sendStepActive(1);
+                              currentStep = 1;
                            }
-                           currentCode = rawCode.replace(/^```[a-z]*\n?/i, "").replace(/```$/i, "").trimStart();
-                           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'stream_code', code: currentCode })}\n\n`));
+                           if (currentStep === 1 && (fullResponse.includes("مشروع_مخطط.md") || fullResponse.includes("plan.md")) && fullResponse.indexOf("<FILE") !== fullResponse.lastIndexOf("<FILE")) {
+                              sendStepComplete(1);
+                              sendStepActive(2);
+                              currentStep = 2;
+                           }
+                           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'stream_full_text', text: fullResponse })}\n\n`));
+                         } else {
+                           const codeStart = fullResponse.indexOf("<CODE>");
+                           const codeEnd = fullResponse.indexOf("</CODE>");
+                           
+                           if (codeStart === -1) {
+                             sendStatus("الوكيل الذكي: جاري صياغة الرد والشرح التفصيلي للحل وتجهيز البنية...");
+                           } else {
+                             sendStatus("الوكيل الذكي: جاري كتابة وتوليد شيفرة المكونات التفاعلية (React/Tailwind) مباشرة...");
+                           }
+                           
+                           if (codeStart !== -1) {
+                             let rawCode = "";
+                             if (codeEnd !== -1) {
+                               rawCode = fullResponse.substring(codeStart + 6, codeEnd);
+                             } else {
+                               rawCode = fullResponse.substring(codeStart + 6);
+                             }
+                             currentCode = rawCode.replace(/^```[a-z]*\n?/i, "").replace(/```$/i, "").trimStart();
+                             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'stream_code', code: currentCode })}\n\n`));
+                           }
                          }
                       }
                    }
@@ -247,7 +274,8 @@ export async function POST(req: NextRequest) {
             if (replyStart !== -1 && replyEnd !== -1) {
                extractedReply = fullResponse.substring(replyStart + 7, replyEnd).trim();
             } else if (replyStart !== -1) {
-               const maybeReply = fullResponse.substring(replyStart + 7, fullResponse.indexOf("<CODE>") > -1 ? fullResponse.indexOf("<CODE>") : undefined).trim();
+               const terminator = agentType === "FULL_STACK" ? "<FILE" : "<CODE>";
+               const maybeReply = fullResponse.substring(replyStart + 7, fullResponse.indexOf(terminator) > -1 ? fullResponse.indexOf(terminator) : undefined).trim();
                if (maybeReply) extractedReply = maybeReply;
             }
 
@@ -256,19 +284,42 @@ export async function POST(req: NextRequest) {
 
           let finalResult = { code, reply: "" };
 
-          if (agentType === "CHAT") {
-             for(let i = 0; i < Math.max(1, steps.length - 1); i++) sendStepActive(i);
-             const advisoryPrompt = `أنت مهندس برمجيات ومستشار تقني خبير ومصمم ذو رؤية ثاقبة.
-المستخدم لديه استفسار تقني أو عام أو يحتاج شرحاً أو نصيحة، ولا يرغب في تعديل الكود مباشرة، أو أن سؤاله لا يتطلب أي تغيير في الملفات.
+          if (agentType === "FULL_STACK") {
+             const fullStackPrompt = `أنت مهندس برمجيات ومصمم معماري وخبير Full-Stack أسطوري (Elite Full-Stack Architect & Senior Engineer).
+مهمتك: بناء مشروع كامل متكامل من الصفر (From Scratch) بناءً على طلب المستخدم بدقة واحترافية فائقة لا تضاهى.
 
-طلب المستخدم: ${userPrompt}
+يجب عليك اتباع القواعد التالية بكل صرامة وجدية كأمر عسكري صارم:
+1. [تحديد إطار العمل المناسب]:
+بناءً على طلب المستخدم، حدد تلقائياً أفضل إطار عمل للتشغيل الحقيقي من بين الخيارات الأربعة التالية:
+- HTML5 / CSS3 / Vanilla JS (خيار ممتاز للصفحات الفردية البسيطة واللوحات التفاعلية الكلاسيكية)
+- React / Tailwind (للمكونات الحديثة والواجهات التفاعلية الديناميكية)
+- Next.js / React (للتطبيقات الكاملة ذات الصفحات والمسارات المتعددة)
+- Angular (للتطبيقات المنظمة والمشاريع المؤسسية)
+
+2. [إنشاء مجلد خاص للمشروع]:
+اختر اسماً إنجليزياً للمشروع يعبر عنه (مثال: TravelPlanner, CoreEcommerce, TaskBoard). جميع ملفات المشروع يجب أن تُخلق وتُحفظ داخل هذا المجلد.
+
+3. [إنشاء مخطط عسكري صارم (.md)]:
+قبل كتابة أي كود برمجي، يجب أولاً إنشاء ملف باسم "مشروع_مخطط.md" داخل مجلد المشروع (مثال: MyProject/مشروع_مخطط.md).
+هذا الملف بمثابة مخطط عسكري دقيق وخارطة طريق كاملة للمشروع بنسبة 100%. اكتب فيه بالتفصيل والجدية:
+- التقنيات وإطار العمل المختار وسبب اختياره.
+- هيكلية المجلدات والملفات التي ستقوم بإنشائها.
+- مخطط تفصيلي لخطوات العمل.`;
+             finalResult = await runStreamingAgent(fullStackPrompt, "المهندس المعماري المطور (Full-Stack)");
+          } else if (agentType === "CHAT" || agentType === "ADVISOR") {
+             const advisoryPrompt = `أنت مستشار تقني عبقري وخبير في معمارية وتطوير برمجيات الويب (Senior Technical Consultant & Architect).
+مهمتك الأساسية: تقديم استشارة برمجية وتوجيه تقني رفيع المستوى للمستخدم باللغة العربية الفصحى الفصيحة والمبهرة.
+شخصيتك: مستشار خبير، عميق التفكير، منظم جداً، مبسط للأمور المعقدة، ومحفز للمطورين.
+
+أجب بدقة متناهية وبالتفصيل على استفسارات المستخدم البرمجية والتقنية، واقترح الحلول المعمارية الأكثر كفاءة وأماناً وسرعة.
 
 الكود الحالي للسياق العام لتستشهد به إن لزم الأمر:
 ${code}
 
-صغ ردك دائماً باللغة العربية بأسلوب احترافي وودود ومشوق:
+صغ ردك دائماً باللغة العربية الفصحى الراقية، بأسلوب احترافي، بليغ، وودود، ومنظم جداً باستخدام الماركدون:
+تنبيه حازم وصارم للغاية: يجب أن يكون ردك مكتوباً بلغة عربية فصحى بليغة واحترافية فائقة الجمال والرونق (ابتعد تماماً عن العبارات الركيكة، العامية، والردود القصيرة الجافة). نسق الرد باستخدام الماركدون بطريقة مذهلة ومنظمة تشمل عناوين واضحة ونقاطاً شارحة مريحة للعين.
 <REPLY>
-(ردك الاستشاري الكامل والمفصل والمنظم هنا بالتفصيل وبدون أي وسوم كود إلا لتوضيحات صغيرة)
+(ردك الاستشاري الكامل والمفصل والمنظم هنا بالتفصيل باللغة العربية الفصحى الراقية وبدون أي وسوم كود إلا لتوضيحات صغيرة)
 </REPLY>`;
              finalResult = await runStreamingAgent(advisoryPrompt, "المستشار التقني");
           } else if (agentType === "UI_ARTIST") {
@@ -298,8 +349,9 @@ ${code}
 ${code}
 
 صغ ردك دائماً بهذا التنسيق حصراً بدون أي إضافات:
+تنبيه حازم وصارم للغاية: يجب أن تكون رسالتك التوضيحية المرافقة للكود داخل وسم <REPLY> مكتوبة بلغة عربية فصحى بليغة واحترافية فائقة الجمال والبيان تشرح فيها بوضوح ورقي فلسفتك التصميمية والميزات الحركية والتفاعلية المضافة، ومنسقة بشكل ممتاز باستخدام الماركدون.
 <REPLY>
-(رسالتك التوضيحية المشوقة القصيرة باللغة العربية كمصمم يعرض عمله على العميل)
+(رسالتك التوضيحية الراقية والمفصلة باللغة العربية الفصحى كمصمم واجهات محترف يعرض فلسفة تحفته الفنية للعميل)
 </REPLY>
 <CODE>
 (الكود المحدث والكامل هنا بدون أي اقتطاع)

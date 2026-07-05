@@ -292,6 +292,7 @@ export default function HTMLPreviewApp() {
     return [{ id: '1', role: 'agent', content: randomGreeting, isGreeting: true }];
   });
   const chatScrollRef = useRef<HTMLDivElement>(null);
+  const [isFullStack, setIsFullStack] = useState(false);
 
   // Virtual File System State
   const [files, setFiles] = useState<WorkspaceFiles>({});
@@ -772,7 +773,7 @@ ${lang === 'html' ? `
       const res = await fetch('/api/agent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, prompt })
+        body: JSON.stringify({ code, prompt, isFullStack })
       });
       
       if (!res.body) throw new Error("No response body");
@@ -804,6 +805,59 @@ ${lang === 'html' ? `
                 setCompletedStepIndices(prev => prev.includes(data.index) ? prev : [...prev, data.index]);
               } else if (data.type === 'stream_code') {
                 setCode(data.code);
+              } else if (data.type === 'stream_full_text') {
+                const fullText = data.text;
+                const filesFound: Record<string, string> = {};
+                const regex = /<FILE\s+path=["']([^"']+)["']\s*>([\s\S]*?)(?:<\/FILE>|$)/g;
+                let match;
+                let lastActiveFilePath = "";
+                while ((match = regex.exec(fullText)) !== null) {
+                  const filePath = match[1];
+                  let content = match[2];
+                  content = content.replace(/^```[a-z]*\n/i, "").replace(/```$/i, "").trimEnd();
+                  filesFound[filePath] = content;
+                  lastActiveFilePath = filePath;
+                }
+                
+                if (Object.keys(filesFound).length > 0) {
+                  setFiles(prev => {
+                    const updated = { ...prev };
+                    let hasChanged = false;
+                    
+                    Object.entries(filesFound).forEach(([path, content]) => {
+                      if (!updated[path] || updated[path].content !== content) {
+                        const parts = path.split('/');
+                        let currentPath = "";
+                        for (let i = 0; i < parts.length - 1; i++) {
+                          currentPath = currentPath ? `${currentPath}/${parts[i]}` : parts[i];
+                          if (!updated[currentPath]) {
+                            updated[currentPath] = {
+                              name: parts[i],
+                              content: "",
+                              isFolder: true,
+                              isOpen: true
+                            };
+                            hasChanged = true;
+                          }
+                        }
+                        
+                        updated[path] = {
+                          name: parts[parts.length - 1],
+                          content: content,
+                          isFolder: false
+                        };
+                        hasChanged = true;
+                      }
+                    });
+                    
+                    return hasChanged ? updated : prev;
+                  });
+                  
+                  if (lastActiveFilePath) {
+                    setActiveFile(lastActiveFilePath);
+                    setActiveTab('editor');
+                  }
+                }
               } else if (data.type === 'model_info') {
                 setAgentModels(prev => ({ ...prev, [data.agent]: data.model }));
               } else if (data.type === 'final') {
@@ -1904,6 +1958,8 @@ ${lang === 'html' ? `
                   chatScrollRef={chatScrollRef}
                   handleClearChat={() => setMessages([])}
                   agentModels={agentModels}
+                  isFullStack={isFullStack}
+                  setIsFullStack={setIsFullStack}
                 />
               </motion.div>
             )}
