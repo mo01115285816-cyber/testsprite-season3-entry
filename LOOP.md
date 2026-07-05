@@ -117,3 +117,5 @@ iter-20 | maker: wrote 3 test plans for the new IDE features: 15-monaco-editor-l
 - **Final loop verdict:** NEXUS is now a professional-grade IDE — Monaco Editor, File System, File Explorer, Editor Tabs, AI agent, security analyzer, Loop Dashboard, Test Runner, CI/CD. The write → verify → fix → verify loop is demonstrated across 20 iterations including a major IDE upgrade mid-hackathon.
 >>>>>>> 5fac5d39190c7dac2d463ccf4b821fb67fbf9108
 
+
+iter-21 | maker: استبدل المحرر بالكامل بالنسخة الجديدة من المستخدم (CodeEditor.tsx 1351 سطر + page.tsx 1961 سطر). المحرر الجديد فيه: Monaco Editor مع VFS، بحث واستبدال متقدم، IndexedDB لحفظ الملفات، تصدير ZIP، محرك تجميع فوري للمعاينة. مثبت المكتبات: @monaco-editor/react, jszip, file-saver, @types/file-saver. | verify: testsprite test create (02-nexus-loads) → run → status=PASSED, verdict=passed. الـ agent فتح الموقع وتأكد إن المحرر شغّال. | fix: none needed | banked: test_3ff03fcf-cb7f-417d-a8fd-309d7c184cf4
