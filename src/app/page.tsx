@@ -673,28 +673,72 @@ ${lang === 'html' ? `
  }
  };
 
- const handleFileDrop = (file: File) => {
- const reader = new FileReader();
- reader.onload = (event) => {
- if (event.target && typeof event.target.result === 'string') {
- const name = file.name;
- const fileContent = event.target.result;
- setFiles(prev => ({
- ...prev,
- [name]: {
- name,
- content: fileContent,
- isFolder: false
- }
- }));
- setActiveFile(name);
- setActiveTab('editor'); // Automatically focus/view the Editor so the file becomes visible instantly
- }
- };
- reader.readAsText(file);
- };
+ const handleFileDrop = async (file: File) => {
+    const buffer = new Uint8Array(await file.arrayBuffer());
 
- const handleDownloadZip = async () => {
+    // Detect ZIP by magic bytes (not extension)
+    if (isZipBytes(buffer)) {
+      try {
+        const outcome = await extractZipArchive(buffer);
+        const newFiles: WorkspaceFiles = {};
+        const folderPaths = new Set<string>();
+        let firstFile = '';
+
+        for (const stored of outcome.files) {
+          newFiles[stored.path] = {
+            name: stored.name,
+            content: stored.content,
+            isFolder: false
+          };
+          if (!firstFile) firstFile = stored.path;
+          for (const ancestor of ancestors(stored.path)) {
+            folderPaths.add(ancestor);
+          }
+        }
+
+        folderPaths.forEach(folderPath => {
+          const parts = folderPath.split('/');
+          newFiles[folderPath] = {
+            name: parts[parts.length - 1],
+            content: '',
+            isFolder: true,
+            isOpen: true
+          };
+        });
+
+        setFiles(newFiles);
+        if (firstFile) {
+          setActiveFile(firstFile);
+          setActiveTab('editor');
+        }
+
+        try {
+          const db = new WorkspaceDB();
+          await db.saveFiles(newFiles);
+          await db.saveActiveFile(firstFile);
+        } catch (e) {}
+      } catch (err: any) {
+        alert(err?.message || 'تعذّر فك ضغط الملف.');
+      }
+      return;
+    }
+
+    // Regular file
+    const name = file.name;
+    const decoded = new TextDecoder('utf-8', { fatal: false }).decode(buffer);
+    setFiles(prev => ({
+      ...prev,
+      [name]: {
+        name,
+        content: decoded,
+        isFolder: false
+      }
+    }));
+    setActiveFile(name);
+    setActiveTab('editor');
+  };
+
+  const handleDownloadZip = async () => {
  const zip = new JSZip();
  
  // Get project name from files
