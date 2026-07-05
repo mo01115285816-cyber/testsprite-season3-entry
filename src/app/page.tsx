@@ -884,10 +884,10 @@ ${lang === 'html' ? `
                 setIsAgentThinking(false);
               } else if (data.type === 'error') {
                 setChatInput(prompt);
-                setMessages(prev => [...prev, { 
-                  id: `err-${Date.now()}`, 
-                  role: 'agent', 
-                  content: `⚠️ **تنبيه رائع من المحرك الذكي للنظام:**\n\n${data.message}\n\n💡 *ملاحظة:* لقد قمنا بإعادة وضع طلبك في حقل الكتابة بالأسفل ليتسنى لك المحاولة مجدداً بعد لحظات بمجرد استقرار الاتصال بسهولة!`
+                setMessages(prev => [...prev, {
+                  id: `err-${Date.now()}`,
+                  role: 'agent',
+                  content: `حدث خطأ: ${data.message}\n\nتم إعادة طلبك إلى حقل الإدخال. حاول مرة أخرى بعد لحظات.`
                 }]);
                 setIsAgentThinking(false);
               }
@@ -897,10 +897,10 @@ ${lang === 'html' ? `
       }
     } catch (err: any) {
       setChatInput(prompt);
-      setMessages(prev => [...prev, { 
-        id: `err-${Date.now()}`, 
-        role: 'agent', 
-        content: `❌ **عذراً، واجه النظام عبئاً مؤقتاً:**\n\nيبدو أن ضغط طلبات الحصة المجانية للذكاء الاصطناعي (Rate Limit 429) يمنع معالجة الطلب حالياً. يرجى الانتظار ثوانٍ ثم المحاولة مجدداً. تم استرجاع نص طلبك بالأسفل.` 
+      setMessages(prev => [...prev, {
+        id: `err-${Date.now()}`,
+        role: 'agent',
+        content: `تعذّر الاتصال بالخادم. يرجى المحاولة مرة أخرى بعد ثوانٍ.\nتم إعادة طلبك إلى حقل الإدخال.`
       }]);
       setIsAgentThinking(false);
     }
@@ -962,10 +962,10 @@ ${lang === 'html' ? `
                 setIsAgentThinking(false);
               } else if (data.type === 'error') {
                 setChatInput(promptText);
-                setMessages(prev => [...prev, { 
-                  id: `err-${Date.now()}`, 
-                  role: 'agent', 
-                  content: `⚠️ **تنبيه رائع من محرك التصميم:**\n\n${data.message}\n\n💡 *ملاحظة:* نرجو الضغط على زر التوليد مجدداً بعد ثوانٍ قليلة لمتابعة بناء التصميم المذهل بامتياز! لقد أعدنا لصق نص طلبك في صندوق الحوار لاستثماره.`
+                setMessages(prev => [...prev, {
+                  id: `err-${Date.now()}`,
+                  role: 'agent',
+                  content: `حدث خطأ: ${data.message}\n\nتم إعادة طلبك إلى حقل الإدخال. حاول مرة أخرى بعد لحظات.`
                 }]);
                 setIsAgentThinking(false);
               }
@@ -975,10 +975,10 @@ ${lang === 'html' ? `
       }
     } catch (err: any) {
       setChatInput(promptText);
-      setMessages(prev => [...prev, { 
-        id: `err-${Date.now()}`, 
-        role: 'agent', 
-        content: `❌ **عذراً، انتهت مهلة معالجة الصفحة:**\n\nحدثت صعوبة في معالجة طلبك حالياً بسبب ضغط مؤقت في شبكة الذكاء الاصطناعي (حصة الاستخدام ممتلئة 429). نرجو إعادة المحاولة بعد ثوانٍ قليلة. تم حفظ واجهتك وطبيعة طلبك بالأسفل.` 
+      setMessages(prev => [...prev, {
+        id: `err-${Date.now()}`,
+        role: 'agent',
+        content: `تعذّر الاتصال بالخادم. يرجى المحاولة مرة أخرى بعد ثوانٍ.\nتم إعادة طلبك إلى حقل الإدخال.`
       }]);
       setIsAgentThinking(false);
     }

@@ -108,6 +108,20 @@ const AppleMarkdownRenderer = ({ content, onCopy, copiedId }: { content: string,
       return;
     }
 
+    // القوائم المرقّمة (1. 2. 3. etc.)
+    const numberedMatch = line.match(/^(\d+)\.\s+(.*)/);
+    if (numberedMatch) {
+      renderedElements.push(
+        <li key={idx} className="list-none flex items-start gap-2.5 text-zinc-300 my-2.5 text-[15.5px] leading-[1.85] pr-1">
+          <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-brand-accent/10 border border-brand-accent/30 flex items-center justify-center text-[10px] font-bold text-brand-accent font-mono">
+            {numberedMatch[1]}
+          </span>
+          <span className="flex-1">{parseInlineFormatting(numberedMatch[2])}</span>
+        </li>
+      );
+      return;
+    }
+
     // الأسطر العادية مع تباعدات هوامش ومعدل تباعد أسطر 1.85 لراحة قراءة تامة
     if (line.trim() === '') {
       renderedElements.push(<div key={idx} className="h-4" />);
