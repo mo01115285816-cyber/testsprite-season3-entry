@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useMemo, use } from 'react';
-import {
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { 
   Sparkles, ChevronDown, Check, Copy, Bot, Code2, Play, Upload, Download,
-  FileText, FileCode, FileJson, Printer, Layers, FileCode2, FileArchive, Activity, TerminalSquare
+  FileText, FileCode, FileJson, Printer, Layers, FileCode2, FileArchive
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Link from 'next/link';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 // Imported Shared Utilities
 import { isReactCode, getClientSideDiagnostics, preprocessReactCode, preprocessArabicCode, DiagnosticIssue } from '../lib/diagnostics';
@@ -16,12 +18,215 @@ import { parseInlineStyles, serializeInlineStyles } from '../lib/styles';
 import LinterPanel from '../components/LinterPanel';
 import LivePreview from '../components/LivePreview';
 import ChatAgent from '../components/ChatAgent';
-import LoopDashboard from '../components/LoopDashboard';
-import TestRunnerPanel from '../components/TestRunnerPanel';
 import IconHelperModal from '../components/IconHelperModal';
 import InspectPanel, { SelectedElement } from '../components/InspectPanel';
-import CodeEditor from '../components/CodeEditor';
+import CodeEditor, { WorkspaceFile, WorkspaceFiles } from '../components/CodeEditor';
 import { CompressModal } from '../components/CompressModal';
+
+// Workspace Database Client using HTML5 native IndexedDB with absolute safety constraints
+class WorkspaceDB {
+  private dbName = "nexus_workspace_db";
+  private storeName = "files";
+  private version = 1;
+
+  private getDB(): Promise<IDBDatabase> {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(this.dbName, this.version);
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve(request.result);
+      request.onupgradeneeded = (e: any) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(this.storeName)) {
+          db.createObjectStore(this.storeName);
+        }
+      };
+    });
+  }
+
+  async saveFiles(files: WorkspaceFiles): Promise<void> {
+    const db = await this.getDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(this.storeName, "readwrite");
+      const store = transaction.objectStore(this.storeName);
+      const request = store.put(files, "workspace_files");
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async loadFiles(): Promise<WorkspaceFiles | null> {
+    const db = await this.getDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(this.storeName, "readonly");
+      const store = transaction.objectStore(this.storeName);
+      const request = store.get("workspace_files");
+      request.onsuccess = () => resolve(request.result || null);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async saveActiveFile(path: string): Promise<void> {
+    const db = await this.getDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(this.storeName, "readwrite");
+      const store = transaction.objectStore(this.storeName);
+      const request = store.put(path, "active_file_path");
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async loadActiveFile(): Promise<string | null> {
+    const db = await this.getDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(this.storeName, "readonly");
+      const store = transaction.objectStore(this.storeName);
+      const request = store.get("active_file_path");
+      request.onsuccess = () => resolve(request.result || null);
+      request.onerror = () => reject(request.error);
+    });
+  }
+}
+
+// Beautiful standard seedling files mapping matching professional dark-cyber aesthetics
+const DEFAULT_FILES: WorkspaceFiles = {
+  "index.html": {
+    name: "index.html",
+    content: `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مشروع NEXUS الجديد</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container animate__animated animate__fadeIn">
+        <div class="card">
+            <h1>مرحباً بك في بيئة NEXUS IDE الاحترافية! 🚀</h1>
+            <p>هذا نظام ملفات افتراضي متكامل ومحرر Monaco متطور يدعم معاينتك البرمجية فوراً.</p>
+            <button onclick="showAlert()">اضغط للتجربة</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>`,
+    isFolder: false
+  },
+  "style.css": {
+    name: "style.css",
+    content: `body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: radial-gradient(circle, #0e1712 0%, #030705 100%);
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+.container {
+    max-width: 500px;
+    width: 90%;
+}
+.card {
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(93, 214, 44, 0.2);
+    border-radius: 24px;
+    padding: 3rem 2rem;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(93, 214, 44, 0.1);
+}
+h1 {
+    font-size: 1.8rem;
+    color: #5dd62c;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px rgba(93, 214, 44, 0.3);
+}
+p {
+    color: #94a3b8;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+}
+button {
+    background: #5dd62c;
+    color: #030705;
+    border: none;
+    padding: 0.85rem 2.5rem;
+    border-radius: 9999px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(93, 214, 44, 0.4);
+    transition: all 0.3s ease;
+}
+button:hover {
+    background: #76e048;
+    box-shadow: 0 0 25px rgba(93, 214, 44, 0.6);
+    transform: translateY(-2px);
+}`,
+    isFolder: false
+  },
+  "script.js": {
+    name: "script.js",
+    content: `function showAlert() {
+    alert("مرحباً بك! الكود يعمل ويتم استيراد الملفات الخارجية بنجاح باهر!");
+}`,
+    isFolder: false
+  },
+  "README.md": {
+    name: "README.md",
+    content: `# NEXUS IDE 💻
+
+مرحباً بك في بيئة التطوير المتكاملة الذكية! 
+
+## المميزات الجديدة:
+1. **محرر Monaco المتكامل**: نفس المحرك المستخدم في VS Code لدعم التلوين الذكي وتصحيح الأخطاء.
+2. **نظام الملفات الافتراضي (VFS)**: يدعم إنشاء ملفات ومجلدات متعددة وحذفها وإعادة تسميتها وحفظها تلقائياً.
+3. **مترجم وباني المواقع المدمج**: يربط تلقائياً بين ملفات HTML و CSS و JavaScript ويترجم الأكواد العربية.
+4. **الوضع التفاعلي**: معاينة فورية وعالية السرعة.
+`,
+    isFolder: false
+  },
+  "src": {
+    name: "src",
+    content: "",
+    isFolder: true,
+    isOpen: true
+  },
+  "src/App.tsx": {
+    name: "App.tsx",
+    content: `// كود متفاعل بلغة React بالكامل!
+ثابت مكون تطبيق_معاينة () {
+  ثابت [العد, تعيين_العد] = استخدم_حالة(0);
+  
+  إرجاع (
+    <حاوية فئة="flex flex-col items-center justify-center p-8 bg-[#0c0a09]/80 text-white rounded-3xl border border-[#44403c] shadow-2xl">
+      <عنوان2 فئة="text-2xl font-black text-[#10b981] mb-4 font-sans">مرحباً من React بالعربية! ⚛️</عنوان2>
+      <فقرة فئة="text-zinc-400 mb-6 font-medium text-center">
+        تحديث فوري للحالة باستخدام الأكواد العربية والـ Hooks!
+      </فقرة>
+      <حاوية فئة="text-6xl font-black text-white mb-6">
+        {العد}
+      </حاوية>
+      <حاوية فئة="flex gap-4">
+        <زر الحدث={() => تعيين_العد(العد + 1)} فئة="px-6 py-2.5 bg-[#10b981] text-black font-extrabold rounded-full hover:scale-105 duration-150 transition-all cursor-pointer">
+          زيادة العداد ➕
+        </زر>
+        <زر الحدث={() => تعيين_العد(0)} فئة="px-6 py-2.5 bg-[#292524] text-[#fafaf9] font-extrabold rounded-full hover:scale-105 duration-150 transition-all cursor-pointer">
+          تصفير 🔄
+        </زر>
+      </حاوية>
+    </حاوية>
+  );
+}
+
+تصدير افتراضي مكون تطبيق_معاينة;`,
+    isFolder: false
+  }
+};
 
 export default function HTMLPreviewApp() {
   const [activeTab, setActiveTab] = useState<'editor' | 'preview' | 'agent'>('editor');
@@ -56,8 +261,6 @@ export default function HTMLPreviewApp() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isCompressModalOpen, setIsCompressModalOpen] = useState(false);
-  const [isLoopDashboardOpen, setIsLoopDashboardOpen] = useState(false);
-  const [isTestRunnerOpen, setIsTestRunnerOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isMounted, setIsMounted] = useState(false);
@@ -83,78 +286,118 @@ export default function HTMLPreviewApp() {
       "أهلاً بك! أنا مستعد لتحويل أفكارك إلى أكواد برمجية احترافية خالية من الأخطاء. ماذا سنبني الآن؟ 🚀",
       "مرحباً! أنا هنا لدعمك كمطور ومستشار تقني. أخبرني بما تريد تعديله أو إضافته للصفحة. ✨",
       "تحياتي لك! جاهز للعمل على تطوير كودك، كتابة ميزات جديدة، وإصلاح أي مشاكل برمجية. تفضل بكتابة طلبك. 🛠️",
-      "السلام عليكم ورحمة الله. دكاء اصطناعي في خدمتك! هل لديك تصميم تريد تحويله، أو خطأ تريد حله؟ 🤖"
+      "السلام عليكم ورحمة الله. ذكاء اصطناعي في خدمتك! هل لديك تصميم تريد تحويله، أو خطأ تريد حله؟ 🤖"
     ];
     const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
     return [{ id: '1', role: 'agent', content: randomGreeting, isGreeting: true }];
   });
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
-  const [code, setCode] = useState<string>(`<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تجربة الكود</title>
-    <style>
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background-color: #f0fdf4;
-            color: #14532d;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: white;
-            padding: 2.5rem;
-            border-radius: 1.5rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
-            text-align: center;
-            max-width: 450px;
-            width: 90%;
-            border: 1px solid rgba(34, 197, 94, 0.1);
-        }
-        h1 { margin-top: 0; color: #166534; font-size: 1.75rem; font-weight: 800; tracking: -0.025em; }
-        p { color: #166534/80; line-height: 1.6; font-size: 0.95rem; margin-bottom: 2rem; }
-        button {
-            background-color: #22c55e;
-            color: white;
-            border: none;
-            padding: 0.85rem 2rem;
-            border-radius: 0.75rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
-        }
-        button:hover { background-color: #16a34a; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(34, 197, 94, 0.3); }
-        button:active { transform: translateY(0); }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>مرحباً بك في شاشة المعاينة!</h1>
-        <p>قم بتعديل كود الـ HTML في محرر الأكواد واستعرض النتيجة الفورية هنا.</p>
-        <button onclick="alert('الكود يعمل بنجاح وبسرعة خارقة!')">اضغط للتجربة المباشرة</button>
-    </div>
-</body>
-</html>`);
+  // Virtual File System State
+  const [files, setFiles] = useState<WorkspaceFiles>({});
+  const [activeFile, setActiveFile] = useState<string>("index.html");
 
+  // Dynamic code getter & setter linked directly with VFS active file
+  const code = useMemo(() => {
+    return files[activeFile]?.content || "";
+  }, [files, activeFile]);
+
+  const setCode = (newCode: string) => {
+    setFiles(prev => {
+      const activeItem = prev[activeFile];
+      if (!activeItem || activeItem.isFolder) return prev;
+      return {
+        ...prev,
+        [activeFile]: {
+          ...activeItem,
+          content: newCode
+        }
+      };
+    });
+  };
+
+  // Load files from IndexedDB or migrate from LocalStorage legacy content
   useEffect(() => {
     setIsMounted(true);
-    const savedCode = localStorage.getItem('html_preview_code');
-    // Check for null specifically to handle empty string as a valid state
-    if (savedCode !== null) setCode(savedCode);
+    
+    async function initWorkspace() {
+      if (typeof window === 'undefined') return;
+      
+      try {
+        const db = new WorkspaceDB();
+        const loadedFiles = await db.loadFiles();
+        const loadedActive = await db.loadActiveFile();
+        
+        if (loadedFiles && Object.keys(loadedFiles).length > 0) {
+          setFiles(loadedFiles);
+          if (loadedActive && loadedFiles[loadedActive]) {
+            setActiveFile(loadedActive);
+          } else {
+            setActiveFile("index.html");
+          }
+        } else {
+          // Legacy migration check
+          const legacyCode = localStorage.getItem('html_preview_code');
+          let initialFiles = { ...DEFAULT_FILES };
+          
+          if (legacyCode) {
+            initialFiles["index.html"] = {
+              ...initialFiles["index.html"],
+              content: legacyCode
+            };
+          }
+          
+          setFiles(initialFiles);
+          setActiveFile("index.html");
+          await db.saveFiles(initialFiles);
+          await db.saveActiveFile("index.html");
+        }
+      } catch (err) {
+        console.error("Failed to initialize IndexedDB workspace, using localStorage fallback:", err);
+        try {
+          const fallbackStore = localStorage.getItem('nexus_vfs_files');
+          if (fallbackStore) {
+            setFiles(JSON.parse(fallbackStore));
+          } else {
+            const legacyCode = localStorage.getItem('html_preview_code');
+            let initialFiles = { ...DEFAULT_FILES };
+            if (legacyCode) {
+              initialFiles["index.html"] = { ...initialFiles["index.html"], content: legacyCode };
+            }
+            setFiles(initialFiles);
+          }
+          const activePath = localStorage.getItem('nexus_vfs_active') || "index.html";
+          setActiveFile(activePath);
+        } catch (_) {
+          setFiles(DEFAULT_FILES);
+          setActiveFile("index.html");
+        }
+      }
+    }
+    
+    initWorkspace();
   }, []);
 
+  // Sync VFS changes back to database asynchronously with debounced layout flow
   useEffect(() => {
-    if (isMounted) localStorage.setItem('html_preview_code', code);
-  }, [code, isMounted]);
+    if (!isMounted || Object.keys(files).length === 0) return;
+    
+    const saveTimeout = setTimeout(async () => {
+      try {
+        const db = new WorkspaceDB();
+        await db.saveFiles(files);
+        await db.saveActiveFile(activeFile);
+      } catch (err) {
+        console.error("Failed to save files, using localStorage fallback:", err);
+        try {
+          localStorage.setItem('nexus_vfs_files', JSON.stringify(files));
+          localStorage.setItem('nexus_vfs_active', activeFile);
+        } catch (_) {}
+      }
+    }, 400);
+
+    return () => clearTimeout(saveTimeout);
+  }, [files, activeFile, isMounted]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -417,11 +660,40 @@ ${lang === 'html' ? `
     const reader = new FileReader();
     reader.onload = (event) => {
       if (event.target && typeof event.target.result === 'string') {
-        setCode(event.target.result);
+        const name = file.name;
+        const fileContent = event.target.result;
+        setFiles(prev => ({
+          ...prev,
+          [name]: {
+            name,
+            content: fileContent,
+            isFolder: false
+          }
+        }));
+        setActiveFile(name);
         setActiveTab('editor'); // Automatically focus/view the Editor so the file becomes visible instantly
       }
     };
     reader.readAsText(file);
+  };
+
+  const handleDownloadZip = async () => {
+    const zip = new JSZip();
+    
+    // Package all files inside our VFS into a single structured ZIP archive
+    Object.entries(files).forEach(([path, file]) => {
+      if (!file.isFolder) {
+        zip.file(path, file.content);
+      }
+    });
+    
+    try {
+      const content = await zip.generateAsync({ type: 'blob' });
+      saveAs(content, 'nexus-project.zip');
+    } catch (err) {
+      alert('عذراً، فشلت عملية ضغط وتصدير المشروع كملف ZIP.');
+    }
+    setIsMenuOpen(false);
   };
 
   const formatCode = async () => {
@@ -434,8 +706,8 @@ ${lang === 'html' ? `
         body: JSON.stringify({ code })
       });
       const data = await response.json();
-      if (data.code) {
-        setCode(data.code);
+      if (data.formatted) {
+        setCode(data.formatted);
       } else {
         alert(data.error || 'فشلت عملية تنسيق الكود.');
       }
@@ -481,7 +753,7 @@ ${lang === 'html' ? `
       alert("عذراً، لم يتم العثور على الجزء المراد إصلاحه في طيات الكود الحالي (قد يكون قد تم تعديله بالفعل).");
       return;
     }
-    setCode(prev => prev.replace(targetText, replacementText));
+    setCode(code.replace(targetText, replacementText));
   };
 
   const handleSendAgentPrompt = async () => {
@@ -1126,11 +1398,50 @@ ${lang === 'html' ? `
 
     try {
       let htmlToParse = arabicPreprocessed;
-      const t = arabicPreprocessed.trim().toLowerCase();
+      
+      // If we are editing "index.html" (or any standard html file), let's resolve relative CSS and JS imports from the VFS:
+      if (activeFile.endsWith('.html') || activeFile.endsWith('.htm')) {
+        try {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(arabicPreprocessed, 'text/html');
+          
+          // 1. Resolve relative CSS links (<link rel="stylesheet" href="style.css">)
+          const links = doc.querySelectorAll('link[rel="stylesheet"]');
+          links.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && files[href] && !files[href].isFolder) {
+              const styleEl = doc.createElement('style');
+              styleEl.textContent = files[href].content;
+              link.parentNode?.replaceChild(styleEl, link);
+            }
+          });
+
+          // 2. Resolve relative JS scripts (<script src="script.js"></script>)
+          const scripts = doc.querySelectorAll('script[src]');
+          scripts.forEach(script => {
+            const src = script.getAttribute('src');
+            if (src && files[src] && !files[src].isFolder) {
+              const scriptEl = doc.createElement('script');
+              scriptEl.textContent = files[src].content;
+              script.parentNode?.replaceChild(scriptEl, script);
+            }
+          });
+
+          htmlToParse = doc.documentElement.outerHTML;
+          if (arabicPreprocessed.trim().toLowerCase().startsWith('<!doctype html>')) {
+            htmlToParse = '<!DOCTYPE html>\n' + htmlToParse;
+          }
+        } catch (err) {
+          console.error("VFS relative resolution error:", err);
+        }
+      }
+
+      let parsedHtmlResult = htmlToParse;
+      const t = parsedHtmlResult.trim().toLowerCase();
       // Only SVG Wrapper for centering and rendering
       // Also inject a tech background to see transparency perfectly 
       if (t.startsWith('<svg') || (t.includes('<svg') && !t.includes('<html') && !t.includes('<body'))) {
-        htmlToParse = `<!DOCTYPE html>
+        parsedHtmlResult = `<!DOCTYPE html>
 <html>
 <head>
   <style>
@@ -1154,14 +1465,14 @@ ${lang === 'html' ? `
 </head>
 <body>
   <div class="svg-w">
-    \${arabicPreprocessed}
+    ${htmlToParse}
   </div>
 </body>
 </html>`;
       }
 
       const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlToParse, 'text/html');
+      const doc = parser.parseFromString(parsedHtmlResult, 'text/html');
 
       if (inspectModeActive) {
         const style = doc.createElement('style');
@@ -1234,17 +1545,17 @@ ${lang === 'html' ? `
       }
 
       let res = doc.documentElement.outerHTML;
-      if (arabicPreprocessed.trim().toLowerCase().startsWith('<!doctype html>')) {
+      if (parsedHtmlResult.trim().toLowerCase().startsWith('<!doctype html>')) {
         res = '<!DOCTYPE html>\n' + res;
-      } else if (arabicPreprocessed.trim().toLowerCase().startsWith('<!doctype')) {
-        const matches = arabicPreprocessed.match(/^<!doctype[^>]*>/i);
+      } else if (parsedHtmlResult.trim().toLowerCase().startsWith('<!doctype')) {
+        const matches = parsedHtmlResult.match(/^<!doctype[^>]*>/i);
         if (matches) res = matches[0] + '\n' + res;
       }
       return res;
     } catch (err) {
       return arabicPreprocessed;
     }
-  }, [code, inspectModeActive, isReactActive]);
+  }, [code, inspectModeActive, isReactActive, files, activeFile]);
 
   const charsCount = code.length;
 
@@ -1316,12 +1627,12 @@ ${lang === 'html' ? `
         textarea.setSelectionRange(start + insertedValue.length, start + insertedValue.length);
       }, 50);
     } else {
-      setCode(prev => prev + '\n' + insertedValue);
+      setCode(code + '\n' + insertedValue);
     }
   };
 
   return (
-    <div
+    <div 
       className="h-screen w-screen flex flex-col bg-brand-bg text-brand-text font-sans antialiased overflow-hidden relative select-none"
       onDragEnter={handleDragOverGlobal}
       onDragOver={handleDragOverGlobal}
@@ -1366,19 +1677,23 @@ ${lang === 'html' ? `
         )}
       </AnimatePresence>
 
-      {/* 1. Header Area: Floating Glass Navbar Redesigned (only on editor tab) */}
-      {activeTab === 'editor' && (
-      <header className="fixed top-6 left-1/2 -translate-x-1/2 z-40 max-w-5xl w-[calc(100%-2.5rem)] bg-brand-card/90 backdrop-blur-md rounded-full border border-brand-accent/20 shadow-tinted-lg px-4 h-[58px] flex items-center justify-between text-brand-text select-none animate-fade-up">
+      {/* 1. Header Area: Floating Glass Navbar Redesigned */}
+      <header className="fixed top-6 left-1/2 -translate-x-1/2 z-40 max-w-5xl w-[calc(100%-2.5rem)] bg-brand-card/90 backdrop-blur-md rounded-full border border-brand-accent/20 shadow-[0_0_35px_rgba(93,214,44,0.08)] px-4 h-[58px] flex items-center justify-between text-brand-text select-none">
         <div className="flex items-center gap-3">
-          {/* NEXUS logo */}
           <div className="relative flex items-center justify-center">
-            <img
-              src="/nexus-logo.webp"
-              alt="NEXUS logo"
-              width={28}
-              height={28}
-              className="w-7 h-7 object-contain drop-shadow-[0_0_8px_rgba(93,214,44,0.4)]"
-            />
+            <svg className="w-6 h-6 text-brand-text drop-shadow-[0_0_8px_rgba(93,214,44,0.4)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="nexusLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#f8f8f8" />
+                  <stop offset="50%" stopColor="#5dd62c" />
+                  <stop offset="100%" stopColor="#337418" />
+                </linearGradient>
+              </defs>
+              <path d="M25 25V75L45 50L25 25Z" fill="url(#nexusLogoGrad)" />
+              <path d="M75 75V25L55 50L75 75Z" fill="url(#nexusLogoGrad)" />
+              <circle cx="50" cy="50" r="10" stroke="#5dd62c" strokeWidth="4" className="animate-pulse" />
+            </svg>
+            <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-brand-accent shadow-[0_0_10px_#5dd62c]"></div>
           </div>
           <div className="flex flex-col text-right justify-center">
             <h1 className="text-sm md:text-base font-black text-brand-text font-mono tracking-[0.2em] uppercase">
@@ -1403,26 +1718,6 @@ ${lang === 'html' ? `
            >
               <FileArchive className="w-3.5 h-3.5 text-brand-accent" />
               <span className="hidden md:inline">ضغط الملفات</span>
-           </button>
-           <button
-              type="button"
-              onClick={() => setIsLoopDashboardOpen(true)}
-              aria-label="Open Loop Dashboard"
-              className="magnetic flex items-center gap-1.5 bg-gradient-to-l from-brand-accent/20 to-brand-deep/20 hover:from-brand-accent/30 hover:to-brand-deep/30 border border-brand-accent/40 hover:border-brand-accent/60 text-brand-accent transition-all px-3.5 py-1.5 rounded-full text-xs font-extrabold active:scale-95 shadow-tinted-glow cursor-pointer h-9"
-              title="لوحة الحلقة — Loop Dashboard"
-           >
-              <Activity className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">الحلقة</span>
-           </button>
-           <button
-              type="button"
-              onClick={() => setIsTestRunnerOpen(true)}
-              aria-label="Open Test Runner"
-              className="magnetic flex items-center gap-1.5 bg-[#0f0f0f] hover:bg-brand-bg/85 border border-brand-accent/30 hover:border-brand-accent/60 text-brand-accent transition-all px-3.5 py-1.5 rounded-full text-xs font-bold active:scale-95 shadow-sm shadow-brand-accent/15 cursor-pointer h-9"
-              title="مشغّل الاختبارات — Test Runner"
-           >
-              <TerminalSquare className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">الاختبارات</span>
            </button>
            <button 
               onClick={triggerFileInput}
@@ -1458,7 +1753,15 @@ ${lang === 'html' ? `
                         className="flex items-center gap-2.5 px-3 py-2.5 text-xs font-bold hover:bg-[#5dd62c]/10 text-zinc-200 hover:text-[#5dd62c] rounded-xl transition-all w-full text-right cursor-pointer"
                       >
                         <Download className="w-4 h-4 text-[#5dd62c]" />
-                        تنزيل الملف (تلقائي)
+                        تنزيل الملف المفتوح
+                      </button>
+
+                      <button
+                        onClick={handleDownloadZip}
+                        className="flex items-center gap-2.5 px-3 py-2.5 text-xs font-bold hover:bg-[#5dd62c]/10 text-zinc-200 hover:text-[#5dd62c] rounded-xl transition-all w-full text-right cursor-pointer"
+                      >
+                        <FileArchive className="w-4 h-4 text-[#5dd62c]" />
+                        تحميل المشروع بالكامل (.ZIP)
                       </button>
 
                       <button
@@ -1485,12 +1788,11 @@ ${lang === 'html' ? `
             </div>
          </div>
       </header>
-      )}
 
-      {/* 2. Main content viewport shell — padding-top only on editor tab (header is hidden elsewhere) */}
-      <main id="main-content" className={`flex-1 min-h-0 relative flex flex-col animate-fade-in delay-200 ${activeTab === 'editor' ? 'pt-20 pb-20 md:pt-24 md:pb-24' : 'pt-6 pb-20'}`}>
-        <div className="flex-1 min-h-0 flex flex-row w-full h-full overflow-hidden" ref={containerRef}>
-
+      {/* 2. Main content viewport shell */}
+      <main className="flex-1 min-h-0 relative flex flex-col pt-24 pb-20">
+        <div className="flex-1 min-h-0 flex flex-row w-full h-full position-relative overflow-hidden" ref={containerRef}>
+          
           <AnimatePresence mode="wait">
             {activeTab === 'editor' && (
               <motion.div
@@ -1526,6 +1828,10 @@ ${lang === 'html' ? `
                   setEditorHeight={setEditorHeight}
                   onTriggerAiGeneration={handleTriggerAiFromEditor}
                   isAgentThinking={isAgentThinking}
+                  files={files}
+                  setFiles={setFiles}
+                  activeFile={activeFile}
+                  setActiveFile={setActiveFile}
                 />
 
                 {/* Sliding Diagnostics sidebar */}
@@ -1607,8 +1913,8 @@ ${lang === 'html' ? `
       </main>
 
       {/* 3. Redesigned Floating Bottom Dock */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-sm w-[calc(100%-2.5rem)] select-none animate-fade-up delay-300">
-        <div className="bg-brand-card/95 backdrop-blur-md rounded-full shadow-tinted-lg border border-brand-accent/25 px-2 py-1.5 flex justify-between items-center h-14 relative w-full">
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-sm w-[calc(100%-2.5rem)] select-none">
+        <div className="bg-brand-card/95 backdrop-blur-md rounded-full shadow-[0_12px_45px_rgba(93,214,44,0.12)] border border-brand-accent/25 px-2 py-1.5 flex justify-between items-center h-14 relative w-full">
           {[
             { id: 'editor', label: 'المحرر', icon: Code2 },
             { id: 'preview', label: 'المعاينة', icon: Play },
@@ -1617,10 +1923,10 @@ ${lang === 'html' ? `
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as 'editor' | 'preview' | 'agent')}
-              className={`magnetic relative flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full text-xs font-bold transition-all duration-300 select-none cursor-pointer ${
-                activeTab === propsActive(tab.id)
-                  ? 'text-brand-accent font-extrabold bg-[#0f0f0f]/90 border border-brand-accent/30 shadow-tinted-glow'
-                  : 'text-zinc-400 hover:text-brand-accent/85 hover:bg-brand-accent/5'
+              className={`relative flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full text-xs font-bold transition-all duration-300 select-none cursor-pointer ${
+                activeTab === propsActive(tab.id) 
+                  ? 'text-brand-accent font-extrabold bg-[#0f0f0f]/90 border border-brand-accent/30 shadow-[0_0_15px_rgba(93,214,44,0.15)]' 
+                  : 'text-zinc-400 hover:text-brand-accent/85'
               }`}
             >
               <tab.icon className="w-3.5 h-3.5" />
@@ -1645,9 +1951,6 @@ ${lang === 'html' ? `
           <CompressModal onClose={() => setIsCompressModalOpen(false)} />
         )}
       </AnimatePresence>
-
-      <LoopDashboard isOpen={isLoopDashboardOpen} onClose={() => setIsLoopDashboardOpen(false)} />
-      <TestRunnerPanel isOpen={isTestRunnerOpen} onClose={() => setIsTestRunnerOpen(false)} />
 
     </div>
   );
