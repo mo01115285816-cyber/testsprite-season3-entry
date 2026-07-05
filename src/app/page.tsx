@@ -296,17 +296,7 @@ export default function HTMLPreviewApp() {
   const [activeStepIndex, setActiveStepIndex] = useState<number | null>(null);
   const [completedStepIndices, setCompletedStepIndices] = useState<number[]>([]);
   const [agentModels, setAgentModels] = useState<Record<string, string>>({});
-  const [messages, setMessages] = useState<{id: string, role: 'user' | 'agent', content: string, isGreeting?: boolean}[]>(() => {
-    const greetings = [
-      "السلام عليكم! أنا المساعد الذكي الخاص بك. كيف يمكنني مساعدتك في تطوير كودك اليوم؟ 👨‍💻",
-      "أهلاً بك! أنا مستعد لتحويل أفكارك إلى أكواد برمجية احترافية خالية من الأخطاء. ماذا سنبني الآن؟ 🚀",
-      "مرحباً! أنا هنا لدعمك كمطور ومستشار تقني. أخبرني بما تريد تعديله أو إضافته للصفحة. ✨",
-      "تحياتي لك! جاهز للعمل على تطوير كودك، كتابة ميزات جديدة، وإصلاح أي مشاكل برمجية. تفضل بكتابة طلبك. 🛠️",
-      "السلام عليكم ورحمة الله. ذكاء اصطناعي في خدمتك! هل لديك تصميم تريد تحويله، أو خطأ تريد حله؟ 🤖"
-    ];
-    const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
-    return [{ id: '1', role: 'agent', content: randomGreeting, isGreeting: true }];
-  });
+  const [messages, setMessages] = useState<{id: string, role: 'user' | 'agent', content: string, isGreeting?: boolean}[]>([]);
   const chatScrollRef = useRef<HTMLDivElement>(null);
   const [isFullStack, setIsFullStack] = useState(false);
 

@@ -423,8 +423,8 @@ export default function ChatAgent({
               </h1>
             </div>
 
-            {/* زر سلة المحذوفات المصمم على مقاس صندوق الإدخال تماماً لتماثل بصري مذهل */}
-            {handleClearChat && (
+            {/* زر الحذف — يظهر بس لما فيه رسائل فعلية */}
+            {handleClearChat && messages.length > 0 && (
               <button 
                 onClick={handleClearChat}
                 className="h-[36px] w-[36px] rounded-full bg-zinc-900/40 hover:bg-rose-950/30 text-zinc-400 hover:text-rose-400 hover:border-rose-900/30 transition-all duration-300 border border-white/5 active:scale-90 flex items-center justify-center cursor-pointer"
@@ -444,15 +444,11 @@ export default function ChatAgent({
       >
         <div className="max-w-3xl mx-auto w-full space-y-10 flex-1 flex flex-col justify-center">
           {messages.length === 0 ? (
-            /* واجهة ترحيبية ناعمة جداً في حال عدم وجود أي رسائل */
-            <div className="text-center py-12 px-4 animate-fade-in flex flex-col items-center justify-center">
-              <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-white/5 flex items-center justify-center mb-4 text-zinc-400 apple-glow">
-                <Sparkles className="w-5 h-5 text-white/80" />
+            /* شات فاضي — مفيش رسائل */
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center px-4">
+                <p className="text-sm text-zinc-600">ابدأ بكتابة طلبك في الأسفل</p>
               </div>
-              <h2 className="text-lg font-bold text-white mb-2">مرحباً بك في NEXUS</h2>
-              <p className="text-sm text-zinc-500 max-w-sm leading-relaxed">
-                اكتب أي استفسار أو ابدأ محادثة جديدة الآن لتجربة واجهة المستخدم السلسة والمتقنة.
-              </p>
             </div>
           ) : (
             <div className="space-y-10 flex flex-col">
