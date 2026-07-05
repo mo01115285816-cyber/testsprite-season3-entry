@@ -228,7 +228,18 @@ export default function IDEWorkspaceNew() {
 
       const savedActiveFile = localStorage.getItem("nexus_active_file");
       if (savedActiveFile) {
-        setActiveFilePath(savedActiveFile);
+        // Verify the saved active file exists in the loaded files
+        const savedFilesData = JSON.parse(savedFiles);
+        const fileExists = savedFilesData.some((f: VirtualFile) => f.path === savedActiveFile);
+        if (fileExists) {
+          setActiveFilePath(savedActiveFile);
+        } else {
+          // Active file doesn't exist in loaded files — fall back to first file
+          const firstFile = savedFilesData.find((f: VirtualFile) => !f.isFolder);
+          if (firstFile) {
+            setActiveFilePath(firstFile.path);
+          }
+        }
       }
     }
   }, []);
@@ -294,6 +305,19 @@ export default function IDEWorkspaceNew() {
 
   // Active File Helper
   const activeFile = files.find((f) => f.path === activeFilePath);
+
+  // Fix: if activeFilePath doesn't exist in loaded files, fall back to first file
+  useEffect(() => {
+    if (files.length > 0 && !activeFile) {
+      const firstFile = files.find((f) => !f.isFolder);
+      if (firstFile) {
+        setActiveFilePath(firstFile.path);
+        if (!openTabs.includes(firstFile.path)) {
+          setOpenTabs([firstFile.path]);
+        }
+      }
+    }
+  }, [files, activeFile]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ----------------- Virtual File System Operations -----------------
 
