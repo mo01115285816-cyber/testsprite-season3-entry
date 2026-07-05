@@ -1490,9 +1490,9 @@ ${lang === 'html' ? `
       )}
 
       {/* 2. Main content viewport shell — padding-top only on editor tab (header is hidden elsewhere) */}
-      <main id="main-content" className={`flex-1 min-h-0 relative flex flex-col pb-24 animate-fade-in delay-200 ${activeTab === 'editor' ? 'pt-24' : 'pt-6'}`}>
-        <div className="flex-1 min-h-0 flex flex-row w-full h-full position-relative overflow-hidden" ref={containerRef}>
-          
+      <main id="main-content" className={`flex-1 min-h-0 relative flex flex-col animate-fade-in delay-200 ${activeTab === 'editor' ? 'pt-20 pb-20 md:pt-24 md:pb-24' : 'pt-6 pb-20'}`}>
+        <div className="flex-1 min-h-0 flex flex-row w-full h-full overflow-hidden" ref={containerRef}>
+
           <AnimatePresence mode="wait">
             {activeTab === 'editor' && (
               <motion.div
@@ -1501,7 +1501,7 @@ ${lang === 'html' ? `
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.99 }}
                 transition={{ duration: 0.15 }}
-                className="flex-1 min-h-0 flex flex-row overflow-hidden relative"
+                className="flex-1 min-h-0 h-full flex flex-row overflow-hidden relative"
               >
                 <IDEWorkspaceNew />
               </motion.div>

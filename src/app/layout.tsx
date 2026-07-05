@@ -53,7 +53,6 @@ export default function RootLayout({
         <a href="#main-content" className="skip-link">
           تخطّى إلى المحتوى
         </a>
-        <div className="grain-overlay" aria-hidden="true" />
         {children}
       </body>
     </html>
