@@ -1807,7 +1807,7 @@ ${lang === 'html' ? `
  سيتم قراءة محتوى الملف وتحديث المحرر فوراً بكل سهولة وأمان بلمح البصر.
  </p>
  <span className="text-[10px] bg-brand-bg border border-brand-accent/25 text-brand-accent px-3 py-1 rounded-full font-mono font-bold mt-1 inline-block">
- دعم كامل لـ .html, .css, .js, .tsx, .txt, .json
+ دعم كامل لـ .html, .css, .js, .tsx, .txt, .json, .zip
  </span>
  </motion.div>
  </motion.div>
@@ -1838,7 +1838,7 @@ ${lang === 'html' ? `
  <div className="flex items-center gap-2">
  <input 
  type="file" 
- accept=".html,.htm,.txt,.md,.svg,.css,.js,.jsx,.ts,.tsx,.json" 
+ accept=".html,.htm,.txt,.md,.svg,.css,.js,.jsx,.ts,.tsx,.json,.zip" 
  ref={fileInputRef} 
  className="hidden" 
  onChange={handleFileUpload} 
@@ -1874,7 +1874,7 @@ ${lang === 'html' ? `
  <button 
  onClick={triggerFileInput}
  className="flex items-center gap-1.5 bg-brand-bg hover:bg-brand-bg/85 hover:border-brand-accent/40 text-brand-text transition-all px-3.5 py-1.5 rounded-full text-xs font-bold active:scale-95 cursor-pointer border border-brand-accent/20 h-9"
- title="رفع ملف (HTML, SVG, Text...)"
+ title="رفع ملف أو مشروع ZIP"
  >
  <Upload className="w-3.5 h-3.5 text-brand-accent" />
  <span className="hidden md:inline">رفع ملف</span>
