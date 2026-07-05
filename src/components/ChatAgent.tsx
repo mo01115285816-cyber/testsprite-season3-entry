@@ -221,7 +221,7 @@ export default function ChatAgent({
   const [expandedMessages, setExpandedMessages] = useState<Record<string, boolean>>({});
   const [isRecording, setIsRecording] = useState(false);
   const [isPlusMenuOpen, setIsPlusMenuOpen] = useState(false);
-  const [showModeSelection, setShowModeSelection] = useState(true);
+  const [showModeSelection, setShowModeSelection] = useState(false);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const plusMenuRef = useRef<HTMLDivElement>(null);

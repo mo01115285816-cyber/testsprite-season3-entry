@@ -268,7 +268,7 @@ export async function POST(req: NextRequest) {
                 throw streamErr; 
             }
 
-            let extractedReply = "تم إنجاز المطلوب بنجاح.";
+            let extractedReply = "تم بناء المشروع بنجاح. يمكنك الآن تصفح الملفات في المستكشف وتجربتها في المعاينة الحية.";
             const replyStart = fullResponse.indexOf("<REPLY>");
             const replyEnd = fullResponse.indexOf("</REPLY>");
             if (replyStart !== -1 && replyEnd !== -1) {

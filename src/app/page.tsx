@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { 
+import {
   Sparkles, ChevronDown, Check, Copy, Bot, Code2, Play, Upload, Download,
-  FileText, FileCode, FileJson, Printer, Layers, FileCode2, FileArchive
+  FileText, FileCode, FileJson, Printer, Layers, FileCode2, FileArchive, Activity, TerminalSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Link from 'next/link';
@@ -22,6 +22,8 @@ import IconHelperModal from '../components/IconHelperModal';
 import InspectPanel, { SelectedElement } from '../components/InspectPanel';
 import CodeEditor, { WorkspaceFile, WorkspaceFiles } from '../components/CodeEditor';
 import { CompressModal } from '../components/CompressModal';
+import LoopDashboard from '../components/LoopDashboard';
+import TestRunnerPanel from '../components/TestRunnerPanel';
 
 // Workspace Database Client using HTML5 native IndexedDB with absolute safety constraints
 class WorkspaceDB {
@@ -261,6 +263,8 @@ export default function HTMLPreviewApp() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isCompressModalOpen, setIsCompressModalOpen] = useState(false);
+  const [isLoopDashboardOpen, setIsLoopDashboardOpen] = useState(false);
+  const [isTestRunnerOpen, setIsTestRunnerOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isMounted, setIsMounted] = useState(false);
@@ -681,6 +685,20 @@ ${lang === 'html' ? `
   const handleDownloadZip = async () => {
     const zip = new JSZip();
     
+    // Get project name from files
+    const paths = Object.keys(files);
+    let projectName = 'nexus-project';
+    const rootFolders = new Set<string>();
+    paths.forEach(p => {
+      const parts = p.split('/');
+      if (parts.length > 1) {
+        rootFolders.add(parts[0]);
+      }
+    });
+    if (rootFolders.size > 0) {
+      projectName = Array.from(rootFolders)[0];
+    }
+    
     // Package all files inside our VFS into a single structured ZIP archive
     Object.entries(files).forEach(([path, file]) => {
       if (!file.isFolder) {
@@ -690,7 +708,7 @@ ${lang === 'html' ? `
     
     try {
       const content = await zip.generateAsync({ type: 'blob' });
-      saveAs(content, 'nexus-project.zip');
+      saveAs(content, `${projectName}.zip`);
     } catch (err) {
       alert('عذراً، فشلت عملية ضغط وتصدير المشروع كملف ZIP.');
     }
@@ -1773,6 +1791,26 @@ ${lang === 'html' ? `
               <FileArchive className="w-3.5 h-3.5 text-brand-accent" />
               <span className="hidden md:inline">ضغط الملفات</span>
            </button>
+           <button
+              type="button"
+              onClick={() => setIsLoopDashboardOpen(true)}
+              aria-label="Open Loop Dashboard"
+              className="magnetic flex items-center gap-1.5 bg-gradient-to-l from-brand-accent/20 to-brand-deep/20 hover:from-brand-accent/30 hover:to-brand-deep/30 border border-brand-accent/40 hover:border-brand-accent/60 text-brand-accent transition-all px-3.5 py-1.5 rounded-full text-xs font-extrabold active:scale-95 shadow-tinted-glow cursor-pointer h-9"
+              title="لوحة الحلقة"
+           >
+              <Activity className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">الحلقة</span>
+           </button>
+           <button
+              type="button"
+              onClick={() => setIsTestRunnerOpen(true)}
+              aria-label="Open Test Runner"
+              className="magnetic flex items-center gap-1.5 bg-[#0f0f0f] hover:bg-brand-bg/85 border border-brand-accent/30 hover:border-brand-accent/60 text-brand-accent transition-all px-3.5 py-1.5 rounded-full text-xs font-bold active:scale-95 shadow-sm shadow-brand-accent/15 cursor-pointer h-9"
+              title="مشغّل الاختبارات"
+           >
+              <TerminalSquare className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">الاختبارات</span>
+           </button>
            <button 
               onClick={triggerFileInput}
               className="flex items-center gap-1.5 bg-brand-bg hover:bg-brand-bg/85 hover:border-brand-accent/40 text-brand-text transition-all px-3.5 py-1.5 rounded-full text-xs font-bold active:scale-95 cursor-pointer border border-brand-accent/20 h-9"
@@ -2007,6 +2045,9 @@ ${lang === 'html' ? `
           <CompressModal onClose={() => setIsCompressModalOpen(false)} />
         )}
       </AnimatePresence>
+
+      <LoopDashboard isOpen={isLoopDashboardOpen} onClose={() => setIsLoopDashboardOpen(false)} />
+      <TestRunnerPanel isOpen={isTestRunnerOpen} onClose={() => setIsTestRunnerOpen(false)} />
 
     </div>
   );

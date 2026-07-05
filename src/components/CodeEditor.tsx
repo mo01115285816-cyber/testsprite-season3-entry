@@ -97,7 +97,7 @@ export default function CodeEditor({
   // Dynamic extraction of project name from active folders
   const getProjectName = (files: WorkspaceFiles) => {
     const paths = Object.keys(files);
-    if (paths.length === 0) return "مستكشف الملفات";
+    if (paths.length === 0) return "مشروع جديد";
     const rootFolders = new Set<string>();
     paths.forEach(p => {
       const parts = p.split('/');
@@ -108,7 +108,7 @@ export default function CodeEditor({
     if (rootFolders.size > 0) {
       return Array.from(rootFolders)[0];
     }
-    return "مستكشف الملفات";
+    return "مشروعي";
   };
 
   // States for creating files/folders
