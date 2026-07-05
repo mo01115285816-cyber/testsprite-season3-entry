@@ -1,0 +1,18 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "Split View toggle shows desktop and mobile side by side",
+  "description": "When the user is on the Preview tab and clicks the Columns (Split View) toggle button in the preview toolbar, two preview frames (Desktop and Mobile) appear side by side. Clicking again returns to single view.",
+  "priority": "p2",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "action", "description": "Click the second tab in the bottom dock to open the Preview view" },
+    { "type": "assertion", "description": "Verify the preview pane is visible with a toolbar containing device-size buttons (desktop, tablet, mobile)" },
+    { "type": "action", "description": "Find the Split View toggle button in the preview toolbar — it has a Columns icon and a title attribute 'عرض منقسم (مقارنة)'" },
+    { "type": "action", "description": "Click the Split View toggle button to activate split view mode" },
+    { "type": "assertion", "description": "Verify that two preview frames are now visible side by side — one labeled 'Desktop' and one labeled 'Mobile'" },
+    { "type": "assertion", "description": "Verify the Split View toggle button now appears in an active/pressed state (green accent background)" },
+    { "type": "action", "description": "Click the Split View toggle button again to deactivate split view" },
+    { "type": "assertion", "description": "Verify the preview returns to a single frame view" }
+  ]
+}

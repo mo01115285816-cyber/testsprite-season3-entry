@@ -5,7 +5,7 @@ import {
  Code2, Sparkles, Smile, Trash2, Bug, AlertCircle, AlertTriangle, X, Play, Copy, HelpCircle,
  Search, ChevronLeft, ChevronRight, Folder, FolderOpen, FileCode, Hash, FileText, FileJson,
  Plus, Edit2, ChevronDown, Check, FolderPlus, FilePlus, ChevronRight as ChevronRightIcon,
- BookOpen
+ BookOpen, History, RotateCcw, Save, Clock
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Editor, { Monaco } from '@monaco-editor/react';
@@ -93,6 +93,11 @@ export default function CodeEditor({
  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
  const [deleteConfirmPath, setDeleteConfirmPath] = useState<string | null>(null);
  const [isConfirmWipeOpen, setIsConfirmWipeOpen] = useState(false);
+  const [versionHistory, setVersionHistory] = useState<Array<{id: string, timestamp: number, label: string, content: string, size: number}>>([]);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [restoreNotice, setRestoreNotice] = useState(false);
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastSavedContent = useRef<string>('');
  const editorRef = useRef<any>(null);
  const monacoRef = useRef<any>(null);
 
@@ -585,6 +590,47 @@ export default function CodeEditor({
  const errorsCount = lintIssues.filter(i => i.type === 'error').length + deepIssues.filter(i => i.type === 'error').length;
  const warningsCount = lintIssues.filter(i => i.type === 'warning').length + deepIssues.filter(i => i.type === 'warning').length;
 
+ // Version History System
+ const loadVersionHistory = () => {
+   try {
+     const stored = localStorage.getItem('nexus_version_history');
+     if (stored) setVersionHistory(JSON.parse(stored));
+   } catch (e) {}
+ };
+
+ useEffect(() => { loadVersionHistory(); }, []);
+
+ const saveVersionHistory = (versions: any[]) => {
+   try { localStorage.setItem('nexus_version_history', JSON.stringify(versions)); } catch (e) {}
+ };
+
+ const createVersion = (label: string, content: string) => {
+   const version = { id: `v_${Date.now()}`, timestamp: Date.now(), label, content, size: new Blob([content]).size };
+   const updated = [version, ...versionHistory].slice(0, 5);
+   setVersionHistory(updated);
+   saveVersionHistory(updated);
+ };
+
+ useEffect(() => {
+   if (!code || code === lastSavedContent.current) return;
+   if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+   autoSaveTimer.current = setTimeout(() => {
+     if (code !== lastSavedContent.current) { createVersion('تلقائي', code); lastSavedContent.current = code; }
+   }, 4000);
+   return () => { if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current); };
+ }, [code]); // eslint-disable-line react-hooks/exhaustive-deps
+
+ const handleManualSave = () => { createVersion('يدوي', code); lastSavedContent.current = code; };
+
+ const restoreVersion = (version: any) => {
+   setCode(version.content); lastSavedContent.current = version.content;
+   setShowVersionHistory(false); setRestoreNotice(true);
+   setTimeout(() => setRestoreNotice(false), 2000);
+ };
+
+ const formatTime = (ts: number) => new Date(ts).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+ const formatSize = (bytes: number) => bytes < 1024 ? bytes + ' B' : (bytes / 1024).toFixed(1) + ' KB';
+
  return (
  <div className="flex-1 min-h-0 flex flex-col bg-brand-bg border-r border-brand-accent/15 relative overflow-hidden" id="nexus-core-ide">
  
@@ -692,6 +738,33 @@ export default function CodeEditor({
  title="مكتبة أيقونات (Lucide)"
  >
  <Smile className="w-3.5 h-3.5 text-brand-accent/90" />
+ </button>
+
+ {/* Version History Save Button */}
+ <button
+ onClick={handleManualSave}
+ className="flex items-center justify-center w-7 h-7 bg-brand-bg border border-brand-accent/20 rounded-md text-zinc-400 hover:text-brand-accent hover:bg-white/5 hover:border-brand-accent/40 select-none cursor-pointer duration-150 transition-all shadow-sm"
+ title="حفظ نسخة يدوية"
+ >
+ <Save className="w-3.5 h-3.5" />
+ </button>
+
+ {/* Version History Toggle Button */}
+ <button
+ onClick={() => setShowVersionHistory(!showVersionHistory)}
+ className={`relative flex items-center justify-center w-7 h-7 rounded-md select-none cursor-pointer duration-150 transition-all shadow-sm border ${
+   showVersionHistory
+     ? 'bg-brand-accent/20 border-brand-accent/50 text-brand-text'
+     : 'bg-brand-bg border-brand-accent/20 text-zinc-400 hover:text-white hover:bg-white/5 hover:border-brand-accent/40'
+ }`}
+ title="سجل التغييرات"
+ >
+ <History className="w-3.5 h-3.5" />
+ {versionHistory.length > 0 && (
+   <span className="absolute -top-1 -right-1 bg-brand-accent text-brand-bg font-black text-[7px] w-3 h-3 rounded-full flex items-center justify-center">
+     {versionHistory.length}
+   </span>
+ )}
  </button>
  
  <span className="w-px h-3.5 bg-zinc-800 mx-0.5" />
@@ -1497,6 +1570,70 @@ export default function CodeEditor({
  </div>
  )}
  </AnimatePresence>
+
+
+    {/* Version History Panel */}
+    <AnimatePresence>
+      {showVersionHistory && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          className="absolute top-12 left-4 right-4 z-50 bg-brand-card/95 backdrop-blur-md border border-brand-accent/20 rounded-2xl overflow-hidden shadow-lg"
+          dir="rtl"
+        >
+          <div className="flex items-center justify-between px-4 py-2.5 border-b border-brand-accent/10">
+            <div className="flex items-center gap-2">
+              <History className="w-3.5 h-3.5 text-brand-accent" />
+              <span className="text-xs font-bold text-brand-text">سجل التغييرات</span>
+            </div>
+            <button onClick={() => setShowVersionHistory(false)} className="text-zinc-500 hover:text-white cursor-pointer">
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          <div className="max-h-64 overflow-y-auto custom-scrollbar p-2">
+            {versionHistory.length === 0 ? (
+              <div className="text-center py-8 text-xs text-zinc-500">لا توجد نسخ محفوظة بعد</div>
+            ) : (
+              <div className="space-y-1.5">
+                {versionHistory.map((v, idx) => (
+                  <div key={v.id} className="flex items-center justify-between p-2.5 rounded-lg bg-brand-bg/60 border border-brand-accent/10 hover:border-brand-accent/30 transition-all group">
+                    <div className="flex items-center gap-2.5">
+                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-black ${v.label === 'يدوي' ? 'bg-brand-accent/15 text-brand-accent' : 'bg-zinc-800 text-zinc-400'}`}>
+                        {idx + 1}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[11px] font-bold text-zinc-200">{v.label}</span>
+                          <span className="text-[9px] text-zinc-500 font-mono">{formatSize(v.size)}</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-[9px] text-zinc-500 mt-0.5">
+                          <Clock className="w-2.5 h-2.5" />
+                          {formatTime(v.timestamp)}
+                        </div>
+                      </div>
+                    </div>
+                    <button onClick={() => restoreVersion(v)} className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-accent/10 border border-brand-accent/20 text-brand-accent text-[10px] font-bold hover:bg-brand-accent/20 hover:border-brand-accent/40 transition-all cursor-pointer opacity-0 group-hover:opacity-100">
+                      <RotateCcw className="w-3 h-3" />
+                      <span>استعادة</span>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    {/* Restore Notice */}
+    <AnimatePresence>
+      {restoreNotice && (
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute top-14 left-1/2 -translate-x-1/2 z-50 bg-brand-accent/20 border border-brand-accent/40 text-brand-accent px-4 py-2 rounded-full text-xs font-bold backdrop-blur-md">
+          ✓ تم استعادة النسخة بنجاح
+        </motion.div>
+      )}
+    </AnimatePresence>
 
  </div>
  );

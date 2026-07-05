@@ -1,0 +1,21 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "Version History panel opens and allows restoring a saved version",
+  "description": "When the user is on the Editor tab and clicks the History button, the Version History panel opens showing saved code versions with timestamps, labels, and sizes. Each version has a restore button. Clicking restore applies the version and shows a confirmation notice.",
+  "priority": "p2",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "assertion", "description": "Verify the editor view is visible by default (first tab) with a code editor area and a file explorer sidebar" },
+    { "type": "action", "description": "Find the History button in the editor toolbar — it has a History (clock) icon and may show a count badge" },
+    { "type": "action", "description": "Click the History button to open the Version History panel" },
+    { "type": "assertion", "description": "Verify a Version History panel appears with the title 'سجل التغييرات' (Change History)" },
+    { "type": "assertion", "description": "Verify the panel either shows a list of saved versions (each with a number, label, size, and timestamp) or shows an empty-state message 'لا توجد نسخ محفوظة بعد' if no versions exist yet" },
+    { "type": "action", "description": "If saved versions exist, hover over one of the version entries to reveal the restore button labeled 'استعادة'" },
+    { "type": "action", "description": "Click the restore button ('استعادة') on one of the saved versions" },
+    { "type": "assertion", "description": "Verify a confirmation notice appears with the text '✓ تم استعادة النسخة بنجاح' (Version restored successfully)" },
+    { "type": "assertion", "description": "Verify the Version History panel closes after restoring" },
+    { "type": "action", "description": "If no versions exist, click the close (X) button on the Version History panel header" },
+    { "type": "assertion", "description": "Verify the Version History panel closes" }
+  ]
+}
