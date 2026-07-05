@@ -1886,7 +1886,7 @@ ${lang === 'html' ? `
                 className="flex items-center gap-1.5 bg-[#0f0f0f] border border-brand-accent/30 hover:border-brand-accent/60 text-brand-text transition-all px-3.5 py-1.5 rounded-full text-xs font-extrabold active:scale-95 shadow-sm shadow-brand-accent/15 cursor-pointer h-9"
              >
                 <Download className="w-3.5 h-3.5 text-brand-accent" />
-                <span>تحميل وتصدير</span>
+                <span>تنزيل</span>
                 <ChevronDown className="w-3.5 h-3.5 text-brand-accent" />
              </button>
 
@@ -1914,16 +1914,6 @@ ${lang === 'html' ? `
                       >
                         <FileArchive className="w-4 h-4 text-[#5dd62c]" />
                         تحميل المشروع بالكامل (.ZIP)
-                      </button>
-
-                      <div className="border-t border-white/5 my-1" />
-
-                      <button
-                        onClick={handleClearWorkspace}
-                        className="flex items-center gap-2.5 px-3 py-2.5 text-xs font-bold hover:bg-red-500/10 text-zinc-300 hover:text-red-400 rounded-xl transition-all w-full text-right cursor-pointer"
-                      >
-                        <Trash2 className="w-4 h-4 text-red-400" />
-                        حذف المشروع بالكامل
                       </button>
 
                       <button
@@ -1995,6 +1985,7 @@ ${lang === 'html' ? `
                   setFiles={setFiles}
                   activeFile={activeFile}
                   setActiveFile={setActiveFile}
+                  onClearWorkspace={handleClearWorkspace}
                 />
 
                 {/* Sliding Diagnostics sidebar */}

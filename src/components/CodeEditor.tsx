@@ -52,6 +52,7 @@ interface CodeEditorProps {
   setFiles: React.Dispatch<React.SetStateAction<WorkspaceFiles>>;
   activeFile: string;
   setActiveFile: (path: string) => void;
+  onClearWorkspace?: () => void;
 }
 
 export default function CodeEditor({
@@ -85,6 +86,7 @@ export default function CodeEditor({
   setFiles,
   activeFile,
   setActiveFile,
+  onClearWorkspace,
 }: CodeEditorProps) {
 
   const [isArabicHelpOpen, setIsArabicHelpOpen] = useState(false);
@@ -975,29 +977,29 @@ export default function CodeEditor({
               dir="rtl"
             >
               {/* Sidebar Header */}
-              <div className="p-3 border-b border-brand-accent/10 flex items-center justify-between">
+              <div className="p-3 border-b border-brand-accent/10 flex items-center justify-between rounded-t-xl">
                 <span className="font-bold text-xs tracking-wide text-brand-text font-sans truncate max-w-[130px]" title={getProjectName(files)}>
                   {getProjectName(files)}
                 </span>
-                <div className="flex items-center gap-1 shrink-0">
+                <div className="flex items-center gap-1.5 shrink-0">
                   <button 
                     onClick={() => setShowCreateInput({ isFolder: false, parentDir: '' })}
-                    className="p-1 hover:bg-brand-accent/10 hover:text-[#5dd62c] text-zinc-400 rounded transition-all cursor-pointer"
+                    className="p-1.5 hover:bg-brand-accent/15 hover:text-brand-accent text-zinc-400 rounded-lg transition-all cursor-pointer"
                     title="ملف جديد"
                   >
                     <FilePlus className="w-3.5 h-3.5" />
                   </button>
                   <button 
                     onClick={() => setShowCreateInput({ isFolder: true, parentDir: '' })}
-                    className="p-1 hover:bg-brand-accent/10 hover:text-[#5dd62c] text-zinc-400 rounded transition-all cursor-pointer"
+                    className="p-1.5 hover:bg-brand-accent/15 hover:text-brand-accent text-zinc-400 rounded-lg transition-all cursor-pointer"
                     title="مجلد جديد"
                   >
                     <FolderPlus className="w-3.5 h-3.5" />
                   </button>
                   <button 
                     onClick={() => setIsConfirmWipeOpen(true)}
-                    className="p-1 hover:bg-rose-500/10 hover:text-rose-400 text-zinc-400 rounded transition-all cursor-pointer"
-                    title="تهيئة ومسح بيئة العمل بالكامل"
+                    className="p-1.5 hover:bg-red-500/15 hover:text-red-400 text-zinc-400 rounded-lg transition-all cursor-pointer"
+                    title="حذف المشروع بالكامل"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -1478,8 +1480,12 @@ export default function CodeEditor({
                 </button>
                 <button
                   onClick={() => {
-                    setFiles({});
-                    setActiveFile("");
+                    if (onClearWorkspace) {
+                      onClearWorkspace();
+                    } else {
+                      setFiles({});
+                      setActiveFile("");
+                    }
                     setIsConfirmWipeOpen(false);
                   }}
                   className="flex-1 py-2 px-4 bg-amber-500/20 border border-amber-500/40 text-amber-400 rounded-xl text-xs font-black hover:bg-amber-500/35 hover:text-amber-300 transition-all cursor-pointer shadow-[0_4px_15px_rgba(245,158,11,0.2)]"
