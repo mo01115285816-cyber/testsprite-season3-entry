@@ -868,7 +868,21 @@ ${lang === 'html' ? `
               } else if (data.type === 'step_complete') {
                 setCompletedStepIndices(prev => prev.includes(data.index) ? prev : [...prev, data.index]);
               } else if (data.type === 'stream_code') {
-                setCode(data.code);
+                // لو مفيش ملف نشط، أنشئ ملف تلقائياً وحط الكود فيه
+                if (!activeFile || !files[activeFile] || files[activeFile].isFolder) {
+                  const newFileName = `code_${Date.now()}.html`;
+                  setFiles(prev => ({
+                    ...prev,
+                    [newFileName]: {
+                      name: newFileName,
+                      content: data.code,
+                      isFolder: false
+                    }
+                  }));
+                  setActiveFile(newFileName);
+                } else {
+                  setCode(data.code);
+                }
               } else if (data.type === 'stream_full_text') {
                 const fullText = data.text;
                 const filesFound: Record<string, string> = {};
@@ -925,7 +939,22 @@ ${lang === 'html' ? `
               } else if (data.type === 'model_info') {
                 setAgentModels(prev => ({ ...prev, [data.agent]: data.model }));
               } else if (data.type === 'final') {
-                if (data.code) setCode(data.code);
+                if (data.code) {
+                  if (!activeFile || !files[activeFile] || files[activeFile].isFolder) {
+                    const newFileName = `result_${Date.now()}.html`;
+                    setFiles(prev => ({
+                      ...prev,
+                      [newFileName]: {
+                        name: newFileName,
+                        content: data.code,
+                        isFolder: false
+                      }
+                    }));
+                    setActiveFile(newFileName);
+                  } else {
+                    setCode(data.code);
+                  }
+                }
                 setMessages(prev => [...prev, { id: Date.now().toString(), role: 'agent', content: data.message }]);
                 setIsAgentThinking(false);
               } else if (data.type === 'error') {
