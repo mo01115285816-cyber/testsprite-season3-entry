@@ -21,8 +21,6 @@ import TestRunnerPanel from '../components/TestRunnerPanel';
 import IconHelperModal from '../components/IconHelperModal';
 import InspectPanel, { SelectedElement } from '../components/InspectPanel';
 import CodeEditor from '../components/CodeEditor';
-import IDEWorkspace from '../components/editor/IDEWorkspace';
-import IDEWorkspaceNew from '../components/editor/IDEWorkspaceNew';
 import { CompressModal } from '../components/CompressModal';
 
 export default function HTMLPreviewApp() {
@@ -1501,9 +1499,50 @@ ${lang === 'html' ? `
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.99 }}
                 transition={{ duration: 0.15 }}
-                className="flex-1 min-h-0 h-full flex flex-row overflow-hidden relative"
+                className="flex-1 min-h-0 flex flex-row overflow-hidden relative"
               >
-                <IDEWorkspaceNew />
+                <CodeEditor
+                  code={code}
+                  setCode={setCode}
+                  formatCode={formatCode}
+                  isFormatting={isFormatting}
+                  setIsIconModalOpen={setIsIconModalOpen}
+                  isConfirmingClear={isConfirmingClear}
+                  setIsConfirmingClear={setIsConfirmingClear}
+                  isReactActive={isReactActive}
+                  lintIssues={lintIssues}
+                  deepIssues={deepIssues}
+                  textareaRef={textareaRef}
+                  sidebarRef={sidebarRef}
+                  isLintPanelOpen={isLintPanelOpen}
+                  setIsLintPanelOpen={setIsLintPanelOpen}
+                  currentLine={currentLine}
+                  setCurrentLine={setCurrentLine}
+                  currentCol={currentCol}
+                  setCurrentCol={setCurrentCol}
+                  editorScrollTop={editorScrollTop}
+                  setEditorScrollTop={setEditorScrollTop}
+                  editorHeight={editorHeight}
+                  setEditorHeight={setEditorHeight}
+                  onTriggerAiGeneration={handleTriggerAiFromEditor}
+                  isAgentThinking={isAgentThinking}
+                />
+
+                {/* Sliding Diagnostics sidebar */}
+                <LinterPanel
+                  isLintPanelOpen={isLintPanelOpen}
+                  setIsLintPanelOpen={setIsLintPanelOpen}
+                  activeLintTab={activeLintTab}
+                  setActiveLintTab={setActiveLintTab}
+                  lintIssues={lintIssues}
+                  deepIssues={deepIssues}
+                  code={code}
+                  isDeepLinting={isDeepLinting}
+                  deepLintSummary={deepLintSummary}
+                  runDeepLint={runDeepLint}
+                  applyQuickFix={applyQuickFix}
+                  textareaRef={textareaRef}
+                />
               </motion.div>
             )}
 
