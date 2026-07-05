@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Link from 'next/link';
+import { isZipBytes, extractZipArchive, ancestors, type StoredFile } from '../lib/zip';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
