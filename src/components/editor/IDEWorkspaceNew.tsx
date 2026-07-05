@@ -37,6 +37,10 @@ import {
   PanelRightClose
 } from "lucide-react";
 
+// Configure Monaco loader to use unpkg CDN (more reliable than jsdelivr in some regions)
+import { loader } from "@monaco-editor/react";
+loader.config({ paths: { vs: "https://unpkg.com/monaco-editor@0.52.2/min/vs" } });
+
 // Dynamically import Monaco Editor to avoid SSR issues
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false,
@@ -1074,6 +1078,17 @@ export default function IDEWorkspaceNew() {
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
     setEditorInstance(editor);
+
+    // Force layout after mount to fix rendering on mobile
+    setTimeout(() => {
+      editor.layout();
+    }, 100);
+    setTimeout(() => {
+      editor.layout();
+    }, 500);
+    setTimeout(() => {
+      editor.layout();
+    }, 1000);
 
     // Track text selection to empower localized AI operations
     editor.onDidChangeCursorSelection((e: any) => {
