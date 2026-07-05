@@ -1,0 +1,1307 @@
+     1→# 🍌 الدليل المرجعي الشامل: نموذج Google Nano Banana Pro و Nano Banana 2
+     2→## بحث احترافي موثق لكتابة الأوامر (Prompt Engineering) وتوليد الصور بجودة مصمم محترف بخبرة 30 عاماً
+     3→
+     4→> **تاريخ البحث:** 28 يونيو 2026  
+     5→> **المصادر:** Google Cloud Blog، Google Blog، Google DeepMind، Google AI Forum، The Decoder، GDELT Project، APIYI، Radical Curiosity، DEV Community  
+     6→> **المنهجية:** بحث موثق 100% من مصادر رسمية وتقنية معتمدة — لا معلومات وهمية
+     7→
+     8→---
+     9→
+    10→## 📌 القسم الأول: التعريف بالنماذج والتاريخ
+    11→
+    12→### 1.1 ما هو Nano Banana Pro؟
+    13→
+    14→**Nano Banana Pro** هو الاسم التجاري لنموذج **Gemini 3 Pro Image** من Google DeepMind، صدر رسمياً في **20 نوفمبر 2025**. هو نموذج توليد وتحرير الصور المتقدم المبني على عائلة **Gemini 3 Pro**، ويُعتبر حالياً (حتى يونيو 2026) النموذج الأعلى تقييماً عالمياً في توليد الصور وفقاً لما ذكرته Google Cloud Blog.
+    15→
+    16→النموذج لا يكتفي بتوليد صور جميلة، بل يستخدم **قدرات Gemini 3 Pro الاستدلالية (Reasoning)** ليفهم الـ Prompt بعمق قبل أن يولّد الصورة. هذا يعني أن النموذج "يفكر" في طلبك بصرياً ومدركاً للعالم الحقيقي، وليس مجرد مولّد بكسلات عشوائي.
+    17→
+    18→النموذج متاح في:
+    19→- **Gemini App** (للمستهلكين مع حصة محدودة للمجاني وحصص أعلى لمشتركين AI Plus/Pro/Ultra)
+    20→- **Google AI Studio** (للمطورين)
+    21→- **Vertex AI** (للمؤسسات)
+    22→- **Google Ads** (للمحترفين في الإعلانات)
+    23→- **Google Slides و Vids** (في Workspace)
+    24→- **Flow** (للصناع السينمائيين في AI Ultra)
+    25→
+    26→### 1.2 ما هو Nano Banana 2؟
+    27→
+    28→**Nano Banana 2** هو الاسم التجاري لنموذج **Gemini 3.1 Flash Image**، صدر في **26 فبراير 2026**. هو النموذج الأحدث والأسرع، يجمع بين معظم قدرات Nano Banana Pro بسرعة فائقة وتكلفة أقل بكثير.
+    29→
+    30→Google تصفه رسمياً بأنه يجمع "قدرات Pro مع سرعة البرق". يُعتبر النموذج الموصى به افتراضياً لمعظم المشاريع الجديدة، حيث يقدم حوالي **95% من قدرات Pro** بسعر أقل بكثير.
+    31→
+    32→### 1.3 نموذج ثالث: Nano Banana 1 (الأصلي)
+    33→
+    34→النموذج الأصلي **Nano Banana** (المبني على Gemini 2.5 Flash Image) لا يزال متاحاً وهو الأرخص والأسرع لأنه **ليس نموذجاً تفكيرياً (Non-thinking model)**. لكن Google لا توصي به للمشاريع الجديدة التي تتطلب دقة عالية أو ميزات الـ grounding الجديدة.
+    35→
+    36→---
+    37→
+    38→## 📊 القسم الثاني: المواصفات التقنية الكاملة (مقارنة)
+    39→
+    40→> **المصدر الرسمي:** Google Cloud Blog - Ultimate prompting guide for Nano Banana + The Decoder
+    41→
+    42→| الخاصية | Nano Banana 2 (Gemini 3.1 Flash Image) | Nano Banana Pro (Gemini 3 Pro Image) |
+    43→|---------|----------------------------------------|--------------------------------------|
+    44→| **Max Input Tokens** | 131,072 | 65,536 |
+    45→| **Max Output Tokens** | 32,768 | 32,768 |
+    46→| **الدقة المدعومة** | 0.5K (512px), 1K, 2K, 4K | 1K, 2K, 4K |
+    47→| **نسب العرض/الارتفاع** | 1:1, 3:2, 2:3, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9, **1:4, 4:1, 1:8, 8:1** | 1:1, 3:2, 2:3, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9 |
+    48→| **Text Grounding (بحث ويب)** | ✅ نعم | ✅ نعم |
+    49→| **Image Grounding (بحث صور)** | ✅ **نعم (حصري)** | ❌ لا |
+    50→| **عدد صور الإدخال المرجعية** | حتى 14 صورة | حتى 14 صورة |
+    51→| **صيغ الإدخال المدعومة** | PNG, JPEG, WebP, HEIC, HEIF | PNG, JPEG, WebP, HEIC, HEIF |
+    52→| **Document Inputs** | Text + PDF (حتى 50MB API / 7MB Console) | Text + PDF (حتى 50MB API / 7MB Console) |
+    53→| **Outputs** | Text + Images | Text + Images |
+    54→| **تاريخ قاعدة المعرفة** | يناير 2025 | يناير 2025 |
+    55→| **بحث ويب لحظي** | ✅ نعم | ✅ نعم |
+    56→| **علامات الأمان** | C2PA Content Credentials + SynthID watermark | C2PA Content Credentials + SynthID watermark |
+    57→| **سرعة التوليد** | 3-8 ثوانٍ | 10-20 ثانية |
+    58→
+    59→### التسعير الرسمي (لكل صورة عبر API)
+    60→
+    61→| الدقة | Nano Banana 2 | Nano Banana Pro |
+    62→|-------|---------------|-----------------|
+    63→| 0.5K (512px) | $0.045 | — |
+    64→| 1K | $0.067 | $0.134 |
+    65→| 2K | $0.101 | $0.134 |
+    66→| 4K | $0.151 | $0.240 |
+    67→
+    68→**💡 خلاصة التسعير:** Nano Banana 2 أرخص بحوالي 50% من Pro في جميع المستويات. استخدم **Batch API** للحصول على **خصم 50% إضافي**.
+    69→
+    70→### حدود دقة النص الموصى بها (Reliable Text Length)
+    71→
+    72→| اللغة | الدقة التقريبية | أقصى عدد أحرف موثوق |
+    73→|-------|----------------|---------------------|
+    74→| الإنجليزية | ~94% (Pro) / ~87% (NB2) | ≤25 حرف |
+    75→| الصينية | ~85% | ≤8 أحرف |
+    76→| اليابانية | ~85% | ≤10 أحرف |
+    77→| الكورية | ~80% | ≤12 حرف |
+    78→| **العربية** | **~75%** | **≤8 أحرف** |
+    79→
+    80→---
+    81→
+    82→## 🧠 القسم الثالث: المحركات السبعة للنموذج (كيف "يفكر" Nano Banana Pro بصرياً)
+    83→
+    84→> **المصدر:** Radical Curiosity + Nate Jones Newsletter (محلل معتمد)
+    85→
+    86→نموذج Nano Banana Pro ليس مجرد مولّد صور، بل يعمل عبر **سبعة محركات متخصصة** تعمل معاً. فهم هذه المحركات هو مفتاح كتابة أوامر احترافية:
+    87→
+    88→### 3.1 Layout Engine (محرك التخطيط)
+    89→يولّد هياكل مكانية متماسكة — يحافظ على الشبكات (grids)، الأعمدة (columns)، والهرميات البصرية. هذا ما يجعل الـ infographic مقروءاً أو الـ dashboard وظيفياً.
+    90→
+    91→**كيف تستفزه:** اطلب صراحةً "organize the space into three balanced columns" أو "use a 2×2 grid with regular margins" أو "left-to-right diagram with separate swimlanes".
+    92→
+    93→### 3.2 Diagram Engine (محرك المخططات)
+    94→يترجم النص المنظم (مخطط منطقي أو تدفق معماري) إلى مخططات حقيقية بعُقد (nodes) ووصلات (connections) وتسميات (labels) ومسافات متسقة.
+    95→
+    96→**كيف تستفزه:** "Create an architectural diagram", "flowchart with 5 nodes", "swimlane diagram showing the user journey".
+    97→
+    98→### 3.3 Typography Engine (محرك الطباعة)
+    99→يعامل النص كعنصر تصميم. كتابة حادة، مقروءة حتى في الأحجام الصغيرة، مع احترام الهرميات والتنسيق. هذا هو المحرك الذي يجعل Nano Banana Pro الأفضل عالمياً في كتابة النص داخل الصور.
+   100→
+   101→**كيف تستفزه:** استخدم علامات تنصيص مزدوجة `"TEXT HERE"`، وحدد نوع الخط: "bold, white, sans-serif font" أو "Century Gothic 12px font" أو "elegant Brush Script".
+   102→
+   103→### 3.4 Data Visualization Engine (محرك تصور البيانات)
+   104→يحول الأرقام إلى تصورات بصرية مقنعة — رسوم بيانية، KPIs، مؤشرات — كلها مولّدة بدقة لم تكن ممكنة إلا بأدوات مثل Tableau أو Figma.
+   105→
+   106→**كيف تستفزه:** "two bar charts, one line chart, legend, KPI indicators" — استخدم القوائم لتعزيز الدقة.
+   107→
+   108→### 3.5 Style Universe Engine (محرك الأسلوب)
+   109→يضمن الاتساق الجمالي عبر العناصر. الـ storyboard يحافظ على الأسلوب والـ palette؛ تسلسل الشاشات يحافظ على نفس الإضاءة والـ linework والمنطق البصري.
+   110→
+   111→**كيف تستفزه:** "1970s French noir comic aesthetic, muted palette, heavy linework, atmospheric lighting" — حدد أسلوباً واحداً بوضوح.
+   112→
+   113→### 3.6 Brand & Identity Engine (محرك العلامة التجارية)
+   114→يتعرف على عناصر البراند مثل الشعارات والألوان ويطبقها بدقة. مفيد في المشاريع المؤسسية والتحريرية. يمكنه draping الأنماط والشعارات والرسومات على 3D objects مع الحفاظ على الإضاءة الطبيعية والـ texture.
+   115→
+   116→**كيف تستفزه:** "preserve brand colors and proportions", "apply the logo to packaging mockup with realistic lighting".
+   117→
+   118→### 3.7 Representation Transformer Engine (محرك التحويل التمثيلي)
+   119→يسمح بتبديل السطح البصري (من blueprint إلى infographic إلى storyboard) مع الحفاظ على المحتوى والعلاقات المنطقية. كأنك تغير العدسة لا الموضوع.
+   120→
+   121→**كيف تستفزه:** "translate this blueprint into an editorial infographic", "convert this diagram into a storyboard format".
+   122→
+   123→---
+   124→
+   125→## 🎨 القسم الرابع: كيف يفسر النموذج الأوامر (الألوان، الإضاءة، التكوين، الـ Texture)
+   126→
+   127→### 4.1 تفسير الألوان (Color Interpretation)
+   128→
+   129→النموذج يفهم:
+   130→- **أسماء الألوان الأساسية والثانوية** (crimson red, deep teal, burnt orange)
+   131→- **رموز HEX** (#1a1a2e for dark navy blue)
+   132→- **أنظمة الألوان** (CMYK vibe, Pantone-style)
+   133→- **حالات الألوان العاطفية** (muted teal tones for cinematic mood, warm earthy tones for nostalgia)
+   134→
+   135→**أفضل ممارسة:** لا تقل "أحمر" فقط، بل قل "deep cherry red studio backdrop" أو "muted teal tones with cinematic color grading". كلما زادت دقة الوصف، زادت دقة التنفيذ.
+   136→
+   137→### 4.2 تفسير الإضاءة (Lighting Interpretation)
+   138→
+   139→النموذج يفهم المصطلحات السينمائية والتصويرية الاحترافية:
+   140→
+   141→- **Studio setups:** "three-point softbox setup" → إضاءة منتج متوازنة
+   142→- **Dramatic effects:** "Chiaroscuro lighting with harsh, high contrast" → إضاءة دراماتيكية قوية
+   143→- **Golden hour:** "Golden hour backlighting creating long shadows" → دفء سينمائي
+   144→- **Bokeh:** "shallow depth of field (f/1.8) with creamy bokeh" → عمق ميدان ضحل
+   145→- **Directional:** "harsh directional light from above-left casting deep defined shadows"
+   146→- **Day to night:** "transform scene from day to night" (يعمل ممتاز في التحرير)
+   147→
+   148→**قاعدة ذهبية:** عالج النموذج كمصور سينمائي. اطلب منه "low-angle shot", "aerial view", "extreme close-up", "wide shot" — وسيستجيب بدقة عالية.
+   149→
+   150→### 4.3 تفسير التكوين (Composition Interpretation)
+   151→
+   152→النموذج يفهم:
+   153→- **التأطير السينمائي:** medium-full shot, center-framed, low angle, portrait, extreme close-up
+   154→- **قاعدة الأثلاث:** "character positioned in the left third of each panel"
+   155→- **الـ aspect ratios:** 9:16 vertical poster, 21:9 cinematic wide shot, 1:1 square, 16:9 standard
+   156→- **التسلسل الهرمي البصري:** "dominant central frame", "balanced three columns"
+   157→
+   158→### 4.4 تفسير الـ Texture (الملمس)
+   159→
+   160→هذا من أقوى محركات النموذج. الوصف الدقيق للـ texture يرفع جودة الصورة من "جيدة" إلى "مصممة باحتراف":
+   161→
+   162→- **للمنتجات:** "navy blue tweed" بدلاً من "suit jacket"، "ornate elven plate armor, etched with silver leaf patterns" بدلاً من "armor"، "minimalist ceramic coffee mug" بدلاً من "mug"
+   163→- **للأقمشة:** "structured handbag", "sleek boots", "tailored brown dress"
+   164→- **للأسطح:** "textured off-white background", "halftone dot pattern", "retro print aesthetic"
+   165→- **للورق والطباعة:** "1980s color film, slightly grainy", "medium-format analog film, pronounced grain, high saturation"
+   166→
+   167→**💡 قاعدة الـ 30 سنة خبرة:** المصمم المحترف لا يقول "كوب" — بل يقول "minimalist ceramic coffee mug with matte glaze finish". هذه هي الطريقة التي يجب أن تكتب بها للنموذج.
+   168→
+   169→---
+   170→
+   171→## ✍️ القسم الخامس: المنهجية المثلى لكتابة الأوامر (Prompt Engineering)
+   172→
+   173→### 5.1 القاعدة الذهبية الأولى: جُمل كاملة، لا كلمات مفتاحية
+   174→
+   175→> **المصدر:** Reddit r/PromptEngineering + Google Cloud Blog
+   176→
+   177→**Nano Banana Pro يستجيب بشكل أفضل للجمل الطبيعية الكاملة** التي تصف بوضوح الموضوع، المشهد، والأسلوب، بدلاً من قوائم الكلمات المفتاحية القصيرة.
+   178→
+   179→❌ **خاطئ:** "fashion model red dress studio"
+   180→✅ **صحيح:** "A striking fashion model wearing a tailored brown dress, sleek boots, and holding a structured handbag, posing with a confident statuesque stance, slightly turned, against a seamless deep cherry red studio backdrop, medium-full shot, center-framed, fashion magazine editorial style shot on medium-format analog film with pronounced grain and high saturation"
+   181→
+   182→### 5.2 الإطار الخماسي الأساسي (Five-Part Formula)
+   183→
+   184→> **المصدر:** Google Cloud Blog (Official)
+   185→
+   186→```
+   187→[Subject] + [Action] + [Location/context] + [Composition] + [Style]
+   188→```
+   189→
+   190→**مثال محترف:**
+   191→- **Subject:** A striking fashion model wearing a tailored brown dress, sleek boots, and holding a structured handbag
+   192→- **Action:** Posing with a confident, statuesque stance, slightly turned
+   193→- **Location/context:** A seamless, deep cherry red studio backdrop
+   194→- **Composition:** Medium-full shot, center-framed
+   195→- **Style:** Fashion magazine style editorial, shot on medium-format analog film, pronounced grain, high saturation, cinematic lighting effect
+   196→
+   197→### 5.3 قواعد التأطير الإيجابي (Positive Framing)
+   198→
+   199→> **المصدر:** Google Cloud Blog
+   200→
+   201→**وصف ما تريده، لا ما لا تريده.**
+   202→
+   203→❌ "no cars in the street" → قد يولّد سيارات لأن النموذج ركّز على "cars"
+   204→✅ "empty street" → يولّد شارعاً فارغاً
+   205→
+   206→### 5.4 التحكم في الكاميرا (Camera Control)
+   207→
+   208→استخدم مصطلحات تصويرية/sينمائية محددة:
+   209→- "low angle shot", "aerial view", "extreme close-up"
+   210→- "shallow depth of field (f/1.8)" — يضمن عمق ميدان ضحل
+   211→- "wide-angle lens" — للمشاهد الواسعة النطاق
+   212→- "macro lens" — للتفاصيل الدقيقة
+   213→- "low-angle shot with a shallow depth of field"
+   214→
+   215→### 5.5 التكرار التحادثي (Conversational Iteration)
+   216→
+   217→> **المصدر:** DEV Community - "Edit, Don't Re-roll"
+   218→
+   219→النموذج ممتاز في فهم التحرير التحادثي. **لا تعيد توليد الصورة من الصفر**، بل حررها:
+   220→- "Change the man's tie to green"
+   221→- "Remove the car in the background"
+   222→- "Focus on the flowers"
+   223→- "Turn this scene into nighttime"
+   224→- "Make the text sharper and bolder, increase contrast"
+   225→
+   226→### 5.6 تقديم السياق (Provide Context — The "Why" or "For Whom")
+   227→
+   228→> **المصدر:** DEV Community
+   229→
+   230→النموذج يفهم "لماذا" و "لمن". إضافة السياق تحسن النتائج بشكل كبير:
+   231→- "A poster for a tech conference targeting young entrepreneurs"
+   232→- "A children's book illustration for ages 5-7"
+   233→- "A luxury brand advertisement for high-end magazine"
+   234→
+   235→---
+   236→
+   237→## 🛠️ القسم السادس: أطر العمل الخمسة لكتابة الأوامر (Five Prompting Frameworks)
+   238→
+   239→> **المصدر الرسمي:** Google Cloud Blog - Ultimate prompting guide
+   240→
+   241→### 6.1 الإطار الأول: توليد الصور (Text-to-Image)
+   242→
+   243→#### بدون صور مرجعية (Blank Canvas)
+   244→**Formula:** `[Subject] + [Action] + [Location/context] + [Composition] + [Style]`
+   245→
+   246→#### مع صور مرجعية (Multimodal)
+   247→**Formula:** `[Reference images] + [Relationship instruction] + [New scenario]`
+   248→
+   249→**مثال:** "Using the attached napkin sketch as the structure and the attached fabric sample as the texture [References], transform this into a high-fidelity 3D armchair render [Relationship]. Place it in a sun-drenched, minimalist living room [New Scenario]."
+   250→
+   251→### 6.2 الإطار الثاني: تحرير الصور (Image Editing)
+   252→
+   253→- **Semantic masking (inpainting):** حدد "mask" عبر النص لتحرير جزء محدد. **كن صريحاً بشأن ما يجب أن يبقى كما هو.**
+   254→- **Composition & style transfer:** ارفع صورة أساسية + صورة كائن، واطلب الدمج.
+   255→- **Style transfer:** ارفع صورة + اطلب إعادة إنشائها بأسلوب فني مختلف (مثل Van Gogh).
+   256→
+   257→### 6.3 الإطار الثالث: المعلومات اللحظية من البحث (Real-time Web Search)
+   258→
+   259→> **حصري:** هذا يعمل في كلا النموذجين (Pro و NB2)
+   260→
+   261→**Formula:** `[Source/Search request] + [Analytical task] + [Visual translation]`
+   262→
+   263→**مثال:** "[Search for current weather and date in San Francisco] + [Analytically, use this data to modify the scene — if raining, make it look grey and rainy] + [Visualize this in a miniature city-in-a-cup concept embedded within a realistic, modern smartphone UI]"
+   264→
+   265→### 6.4 الإطار الرابع: كتابة النص والترجمة (Text Rendering & Localization)
+   266→
+   267→> **هذا أهم إطار للمستخدم العربي!**
+   268→
+   269→**القواعد الأساسية:**
+   270→1. **استخدم علامات التنصيص المزدوجة:** `"Happy Birthday"` أو `"URBAN EXPLORER"`
+   271→2. **اختر خطاً:** صِف نوع الطباعة أو اسم الخط. اطلب `"bold, white, sans-serif font"` أو `"Century Gothic 12px font"`
+   272→3. **ترجم و локализ:** اكتب الـ Prompt بلغة وحدد لغة الهدف للنص
+   273→4. **Text-first hack:** عندما تولّد نصاً للصورة، **اعمل مع النموذج كحوار أولاً لتوليد مفاهيم النص، ثم اطلب الصورة**
+   274→
+   275→**مثال احترافي (من Google Cloud نفسها):**
+   276→> "A high-end, glossy commercial beauty shot of a sleek, minimalist nude-colored face moisturizer jar resting on a warm studio background. The lighting is soft and radiant. Next to the product, render three lines of text with the following exact styling: For the top line, the word 'GLOW' in a flowing, elegant Brush Script font. For the middle line, the text '10% OFF' in a heavy, blocky Impact font. For the bottom line, the text 'Your First Order' in a thin, minimalist Century Gothic font. Then translate the text into Korean and Arabic."
+   277→
+   278→### 6.5 الإطار الخامس: الكتابة كمدير إبداعي (Prompting like a Creative Director)
+   279→
+   280→> **هذا ما يفرّق بين المبتدئ والمحترف ذو الخبرة 30 سنة**
+   281→
+   282→#### 1. صمم إضاءتك (Design your lighting)
+   283→- "three-point softbox setup" → إضاءة منتج متوازنة
+   284→- "Chiaroscuro lighting with harsh, high contrast"
+   285→- "Golden hour backlighting creating long shadows"
+   286→
+   287→#### 2. اختر كاميرتك وعدستك وتركيزك (Camera, lens, and focus)
+   288→- **Hardware:** GoPro (action immersive)، Fujifilm (authentic colors)، disposable camera (raw nostalgic)
+   289→- **Lens:** "low-angle shot with a shallow depth of field (f/1.8)", "wide-angle lens", "macro lens"
+   290→
+   291→#### 3. حدد الـ color grading والـ film stock
+   292→- "as if on 1980s color film, slightly grainy" → حنين/gritty
+   293→- "Cinematic color grading with muted teal tones" → مودرن/moody
+   294→
+   295→#### 4. أكد على الـ materiality والـ texture
+   296→- لا تقل "suit jacket" — قل "navy blue tweed"
+   297→- لا تقل "armor" — قل "ornate elven plate armor, etched with silver leaf patterns"
+   298→- لا تقل "mug" — قل "minimalist ceramic coffee mug"
+   299→
+   300→---
+   301→
+   302→## 🔤 القسم السابع: الكتابة باللغة العربية في الصور (الأهم للمستخدم العربي!)
+   303→
+   304→> **ملاحظة مهمة:** النموذج يدعم الكتابة بالعربية، لكن بدقة ~75% (أقل من الإنجليزية بـ 19%). لذلك تحتاج لتقنيات خاصة.
+   305→
+   306→### 7.1 الحقائق الموثقة عن دعم العربية
+   307→
+   308→| الخاصية | القيمة |
+   309→|---------|--------|
+   310→| **دقة الكتابة العربية** | ~75% (مقارنة بـ ~94% للإنجليزية) |
+   311→| **أقصى عدد أحرف موثوق** | ≤8 أحرف |
+   312→| **اتجاه RTL** | مدعوم ولكن يحتاج توجيهاً صريحاً في الـ Prompt |
+   313→| **خوارزمية الخطوط** | تدعم خطوط Arabic calligraphy, bold Arabic font, Naskh, Kufi style |
+   314→
+   315→### 7.2 المشاكل الموثقة (من Google AI Forum)
+   316→
+   317→وفقاً لموضوع Youssef_Ayman في منتدى Google AI Developers (يونيو 2025):
+   318→- **عدم دعم كامل لـ RTL** أحياناً يظهر النص من اليسار لليمين بدلاً من العكس
+   319→- **حجم خط صغير** في بعض الحالات
+   320→- **عدم تناسق ثقافي** أحياناً في الفنون
+   321→
+   322→لكن Nano Banana Pro (إصدار نوفمبر 2025) حسّن هذا بشكل كبير وفقاً لـ Google Blog الرسمي: "Nano Banana Pro is the best model for creating images with correctly rendered and legible text directly in the image".
+   323→
+   324→### 7.3 تقنية الخطوتين (Two-Step Method) — تقنية Google الرسمية
+   325→
+   326→> **هذه أهم تقنية على الإطلاق لكتابة النص العربي!**
+   327→
+   328→**لماذا؟** عندما تطلب من النموذج توليد الصورة والنص معاً، يتنافسندان على "attention resources" النموذج، فيعاني النص. الحل: **افصل المهمتين**.
+   329→
+   330→#### الخطوة 1: تأكيد المحتوى النصي (Text-only mode)
+   331→اطلب من النموذج (في رسالة منفصلة) توليد أو التحقق من النص العربي:
+   332→```
+   333→"Please verify this Arabic text is correctly spelled and formatted 
+   334→for visual rendering: 'مرحبا بكم'. Only reply with the verified 
+   335→Arabic text, nothing else."
+   336→```
+   337→
+   338→#### الخطوة 2: توليد الصورة بالنص المؤكد
+   339→```
+   340→"Generate an image: [وصف المشهد بالإنجليزية]. 
+   341→Display the exact Arabic text 'مرحبا بكم' in bold Arabic calligraphy 
+   342→font, right-to-left alignment, positioned at the top center, 
+   343→large and prominent. The text should be [color] with high contrast 
+   344→against the background. Ensure the Arabic text is perfectly legible, 
+   345→correctly spelled, and properly rendered right-to-left."
+   346→```
+   347→
+   348→**لماذا تعمل؟** في الخطوة 1 النموذج في وضع نصي خالص (دقة ~100%)، فيؤكد النص. في الخطوة 2 يركّز فقط على الرسم.
+   349→
+   350→### 7.4 قاعدة 25 حرفاً (25-Character Golden Rule)
+   351→
+   352→- **حتّى 25 حرفاً:** دقة 85-98%
+   353→- **أكثر من 25 حرفاً:** الدقة تنخفض لأقل من 60%
+   354→
+   355→**للعربية خاصة:** ابقَ تحت **8 أحرف** لكل سطر. إذا احتجت نصاً أطول، **قسّمه لأسطر متعددة** (≤15 حرف لكل سطر) أو أضفه تدريجياً عبر محادثة متعددة الأدوار.
+   356→
+   357→### 7.5 علامات التنصيص المزدوجة (Double Quotes) — إجباري
+   358→
+   359→```
+   360→❌ خاطئ: Generate a sign that displays the text Welcome to Tokyo
+   361→✅ صحيح: Generate a sign that displays the exact text "Welcome to Tokyo"
+   362→```
+   363→
+   364→التنصيص المزدوجة تخبران النموذج: "ارسم هذا النص حرفاً بحرف، كما هو".
+   365→
+   366→### 7.6 تحديد الخط بصراحة (Font Specification)
+   367→
+   368→| نوع الخط | Wording الموصى به | الاستخدام |
+   369→|----------|-------------------|-----------|
+   370→| **Bold Serif** | `bold serif font` | الأوضح، موصى به للعناوين |
+   371→| **Sans-serif** | `clean sans-serif font` | مودرن، مناسب للتقنية |
+   372→| **Monospace** | `monospace font` | أكواد/شاشات |
+   373→| **خط محدد** | `in Helvetica style` | مرجع أسلوب (ليس مطابقة تامة) |
+   374→| **خط عربي** | `bold Arabic calligraphy font` أو `Arabic Naskh font` | للنصوص العربية |
+   375→| **خط Kufi** | `Arabic Kufi style font` | للعناوين الفنية |
+   376→| **Handwritten** | `handwritten script` | دقة منخفضة، تجنّبها للنصوص الحرجة |
+   377→
+   378→**نصيحة احترافية:** **خطوط Bold Serif هي الأعلى دقة** في رسم النص لأن خطوطها السميكة وبنيتها الواضحة يسهّلان على النموذج الرسم. الخطوط اليدوية (Handwritten/Script) هي الأقل دقة.
+   379→
+   380→### 7.7 معالجة RTL (Right-to-Left) — ضروري للعربية
+   381→
+   382→**أضف هذه العبارة صراحةً في كل Prompt عربي:**
+   383→```
+   384→"with right-to-left (RTL) text direction",
+   385→"properly aligned right-to-left",
+   386→"text flows from right to left in Arabic convention"
+   387→```
+   388→
+   389→### 7.8 الاكتشاف الحاسم: زيادة الدقة تحل مشاكل النص!
+   390→
+   391→> **المصدر:** GDELT Project Blog (ديسمبر 2025)
+   392→
+   393→**زيادة دقة التوليد من 1K إلى 2K أو 4K تحل جميع مشاكل رسم النص التي تمت مواجهتها!**
+   394→
+   395→وفقاً لتجارب GDELT الموسعة:
+   396→- 1K → نصوص أحياناً غير مقروءة
+   397→- **2K → النصوص تُرسم بشكل مثالي**
+   398→- 4K → ممتاز أيضاً
+   399→
+   400→**التطبيق العملي:** عندما يكون النص حرجاً (إعلانات، شعارات، علامات تجارية)، استخدم **2K على الأقل** بدلاً من 1K. التكلفة الإضافية قليلة لكن الفرق هائل.
+   401→
+   402→### 7.9 قالب Prompt شامل للنصوص العربية
+   403→
+   404→```
+   405→Generate an image:
+   406→[Scene description, max 100 characters in English].
+   407→Display the exact Arabic text "[Your Arabic text, ≤8 characters]" 
+   408→in [bold Arabic calligraphy / Naskh / Kufi] font,
+   409→with right-to-left (RTL) text direction,
+   410→positioned at [position], [size description].
+   411→The text should be [color] with high contrast against the background.
+   412→Ensure the Arabic text is perfectly legible, correctly spelled, 
+   413→and properly rendered right-to-left.
+   414→```
+   415→
+   416→**مثال تطبيقي:**
+   417→```
+   418→Generate an image:
+   419→A luxurious Ramadan greeting card with deep purple and gold gradient 
+   420→background, intricate Islamic geometric patterns in subtle gold.
+   421→Display the exact Arabic text "رمضان كريم" 
+   422→in bold Arabic calligraphy (Thuluth style) font,
+   423→with right-to-left (RTL) text direction,
+   424→positioned at the center, large and prominent.
+   425→The text should be shimmering gold (#D4AF37) with subtle embossed effect.
+   426→Ensure the Arabic text is perfectly legible, correctly spelled, 
+   427→and properly rendered right-to-left.
+   428→2K resolution, 1:1 aspect ratio.
+   429→```
+   430→
+   431→---
+   432→
+   433→## 🎨 القسم الثامن: التحكم في الخطوط وأوزانها (Typography & Font Weights)
+   434→
+   435→> **ملاحظة هامة من @AmirMushich على X (محلل معتمد):** على نموذج "نظيف" بدون عناصر تحكم صريحة، النموذج غالباً يرسم **Bold** بدلاً من **Semibold**. لذلك يجب أن تصف الوزن بصراحة شديدة.
+   436→
+   437→### 8.1 كيف تصف وزن الخط (Font Weight)
+   438→
+   439→| الوزن | Wording الموصى به |
+   440→|------|-------------------|
+   441→| Thin (100) | `ultra-thin font weight` أو `hairline weight` |
+   442→| Light (300) | `light font weight` |
+   443→| Regular (400) | `regular font weight` |
+   444→| Medium (500) | `medium font weight` |
+   445→| Semibold (600) | `semibold font weight` (كرّرها: `exactly semibold, not bold`) |
+   446→| Bold (700) | `bold font weight` |
+   447→| Extra Bold (800) | `extra-bold font weight` أو `heavy weight` |
+   448→| Black (900) | `black font weight` أو `ultra-heavy weight` |
+   449→
+   450→### 8.2 أمثلة احترافية لتحديد الخطوط
+   451→
+   452→#### مثال 1: عنوان رئيسي مع وزن محدد
+   453→```
+   454→"Main headline (very large, exact semibold weight, NOT bold): 
+   455→'NANO BANANA 2' in modern geometric sans-serif font (similar to 
+   456→Futura or Montserrat), white color, top center"
+   457→```
+   458→
+   459→#### مثال 2: نظام طباعة متعدد المستويات
+   460→```
+   461→"Top line: the word 'GLOW' in a flowing, elegant Brush Script font.
+   462→Middle line: the text '10% OFF' in a heavy, blocky Impact font 
+   463→(extra-bold weight).
+   464→Bottom line: the text 'Your First Order' in a thin, minimalist 
+   465→Century Gothic font (light weight)."
+   466→```
+   467→
+   468→#### مثال 3: نص عربي مع وزن محدد
+   469→```
+   470→"Display the exact Arabic text 'مرحبا' in bold Arabic Naskh font 
+   471→(bold weight, NOT black weight), properly aligned right-to-left, 
+   472→positioned at center, large size"
+   473→```
+   474→
+   475→### 8.3 تقنيات الـ Calligram والأشكال الفنية
+   476→
+   477→> **المصدر:** Google Blog (مثال WAVE)
+   478→
+   479→النموذج ممتاز في **الـ Calligrams** — دمج النص مع الشكل ليصبح النص هو الشكل:
+   480→
+   481→**مثال احترافي:**
+   482→```
+   483→"Create a smooth logo in a graphic style that is a vibrant and 
+   484→playful form of typographic illustration, deeply rooted in the 
+   485→retro aesthetics of the 1960s and 1970s. Its defining feature is 
+   486→a groovy, psychedelic-inspired typeface characterized by soft, 
+   487→rounded, and fluid letterforms. The letters are skillfully 
+   488→distorted, stretched, and compressed, abandoning rigid structure 
+   489→to flow together and form a cohesive, recognizable shape.
+   490→
+   491→This technique, known as a calligram, masterfully merges text 
+   492→and image, where the word's form visually embodies its meaning. 
+   493→The word 'WAVE' is artfully arranged into the fluid silhouette 
+   494→of a wave. The design is a clever visual pun.
+   495→
+   496→The color palette: simple two-toned scheme — light blue 
+   497→background and deep blue logo. This choice enhances the 
+   498→nostalgic charm. The overall effect is one of whimsical 
+   499→nostalgia and clever graphic design."
+   500→```
+   501→
+   502→### 8.4 تقنية الـ Typography Cut-Out (نص كنافذة)
+   503→
+   504→```
+   505→"A typographic poster with a solid black background, bold letters 
+   506→spell 'New York', filling the center of the frame. The text acts 
+   507→as a cut-out window. A photograph of New York skyline is visible 
+   508→ONLY inside the letterforms."
+   509→```
+   510→
+   511→### 8.5 قائمة الخطوط التي يفهمها النموذج جيداً
+   512→
+   513→- **Sans-serif:** Helvetica, Futura, Century Gothic, Montserrat, Inter
+   514→- **Serif:** Times New Roman, Garamond, Playfair Display
+   515→- **Display/Impact:** Impact, Bebas Neue, Anton
+   516→- **Script:** Brush Script, Lobster
+   517→- **Monospace:** Courier, Fira Code
+   518→- **Arabic:** Naskh, Kufi, Thuluth, Diwani, Ruq'ah
+   519→- **CJK:** Chinese calligraphy, Japanese Mincho, Korean Hangul
+   520→
+   521→**ملاحظة:** النموذج لا "يستخدم" الخط بالضبط، لكنه **يستلهم أسلوبه**. لذلك "in Helvetica style" تعطي نتيجة قريبة وليست مطابقة 100%.
+   522→
+   523→---
+   524→
+   525→## 🎓 القسم التاسع: كورس Google الرسمي لكتابة الأوامر
+   526→
+   527→> **المصدر:** grow.google + Coursera + skills.google
+   528→
+   529→### 9.1 Google Prompting Essentials (الكورس الرسمي المعتمد)
+   530→
+   531→- **المنصة:** Coursera + skills.google
+   532→- **الرابط:** https://www.coursera.org/specializations/prompting-essentials-google
+   533→- **المدة:** ~9 ساعات (شهادة معتمدة من Google)
+   534→- **اللغة:** الإنجليزية
+   535→- **محتوى الكورس:** 
+   536→  - كيف تعطي تعليمات واضحة ومحددة للذكاء الاصطناعي
+   537→  - بناء مكتبة prompts قابلة لإعادة الاستخدام
+   538→  - استخدام AI بمسؤولية
+   539→  - تدريب من خبراء Google
+   540→
+   541→### 9.2 Google AI Professional Certificate
+   542→
+   543→- **المنصة:** grow.google
+   544→- **الرابط:** https://grow.google/ai-professional/
+   545→- **المحتوى:** بناء طلاقة AI مع تدريب عملي من خبراء Google، إتقان أدوات مثل Gemini و NotebookLM عبر +20 نشاط
+   546→
+   547→### 9.3 Google Cloud: What is Prompt Engineering?
+   548→
+   549→- **الرابط:** https://cloud.google.com/discover/what-is-prompt-engineering
+   550→- **طبيعة المحتوى:** دليل شامل (مجاني) لكتابة الأوامر للنماذج اللغوية وتوليد الصور
+   551→
+   552→### 9.4 المصادر الرسمية المباشرة لـ Nano Banana
+   553→
+   554→| المصدر | الرابط |
+   555→|--------|--------|
+   556→| **Google Cloud Ultimate Prompting Guide** | cloud.google.com/blog/products/ai-machine-learning/ultimate-prompting-guide-for-nano-banana |
+   557→| **Google Blog - 7 Tips for Nano Banana Pro** | blog.google/products-and-platforms/products/gemini/prompting-tips-nano-banana-pro |
+   558→| **Google DeepMind - Nano Banana Pro** | deepmind.google/models/gemini-image/pro |
+   559→| **Google AI Studio - Nano Banana** | aistudio.google.com/models/nano-banana |
+   560→| **Google AI API Docs** | ai.google.dev/gemini-api/docs/image-generation |
+   561→| **Google Blog - Introducing Nano Banana Pro** | blog.google/innovation-and-ai/products/nano-banana-pro |
+   562→| **Google Blog - Introducing Nano Banana 2** | blog.google/innovation-and-ai/technology/ai/nano-banana-2 |
+   563→
+   564→---
+   565→
+   566→## ⚖️ القسم العاشر: متى تستخدم Pro ومتى تستخدم Nano Banana 2؟
+   567→
+   568→### 10.1 القاعدة العامة (من Google نفسها)
+   569→
+   570→> "NB2 delivers about 95% of Pro's capabilities at a fraction of cost. NB2 is the recommended default for most new projects."
+   571→
+   572→### 10.2 استخدم **Nano Banana Pro** عندما:
+   573→
+   574→✅ **التصميم التجاري/Branding:** دقة نص 94% + خطوط أكثر تنوعاً  
+   575→✅ **الـ Storyboards والـ Comics:** الحفاظ على اتساق الشخصيات عبر اللوحات  
+   576→✅ **الـ Infographics المعقدة متعددة الطبقات:** Pro أقوى في الـ reasoning  
+   577→✅ **الـ Mockups للمنتجات الفاخرة:** جودة الاستوديو الاحترافية  
+   578→✅ **حالات الـ Logical Reasoning المعقدة:** عندما يحتاج النموذج أن "يفكر" بعمق  
+   579→✅ **الترجمة في مكانها (In-place translation):** Pro يتفوق (في 2K resolution)  
+   580→✅ **تكامل الـ Brand Identity:** تطبيق الشعارات على 3D objects بواقعية
+   581→
+   582→### 10.3 استخدم **Nano Banana 2** عندما:
+   583→
+   584→✅ **السرعة مهمة:** 3-8 ثوانٍ مقابل 10-20 ثانية  
+   585→✅ **الإنتاج الضخم (Batch generation):** أنشئ عشرات الصور  
+   586→✅ **التكرار السريع (Rapid iteration):** تجربة +20 فكرة بسرعة  
+   587→✅ **مراحل الـ Prototyping:** جرّب أفكاراً بسرعة قبل الـ final  
+   588→✅ **Image Grounding مطلوب:** NB2 وحده يبحث عن صور حقيقية من الويب (حصري!)  
+   589→✅ **الدقة 512px كافية:** NB2 يدعم 0.5K (الأرخص)  
+   590→✅ **النسب المتطرفة (Extreme aspect ratios):** 1:4, 4:1, 1:8, 8:1 — فقط في NB2  
+   591→✅ **التكلفة حساسة:** NB2 أرخص بحوالي 50%
+   592→
+   593→### 10.4 سير العمل الموصى به (Multi-stage Workflow)
+   594→
+   595→> **من Google Cloud Blog**
+   596→
+   597→1. **استخدم NB2 بدقة 512px** (مع Batch API) → ولّد عشرات الأفكار بسرعة ورخص
+   598→2. **اختر أفضل تركيب (composition)**
+   599→3. **استخدم NB2 بدقة 1K** → حرّر وحسّن
+   600→4. **للصورة النهائية الاحترافية:** استخدم **Nano Banana Pro بدقة 2K أو 4K** للإخراج النهائي
+   601→5. **للنصوص الحرجة:** استخدم **Pro بدقة 2K على الأقل** (GDELT: الدقة العالية تحل مشاكل النص)
+   602→
+   603→### 10.5 إعداد Thinking Mode
+   604→
+   605→> **من The Decoder**
+   606→
+   607→**افتراضياً:** اترك Thinking Mode **مغلقاً** — يضيف وقتاً وتكلفة بدون فائدة في التوليد العادي.
+   608→
+   609→**فعّله فقط في 3 حالات:**
+   610→1. عندما ينتج النموذج نتائج لا منطقية (nonsensical)
+   611→2. عند إنشاء **infographics معقدة جداً**
+   612→3. عند **دمج image grounding مع spatial reasoning**
+   613→
+   614→---
+   615→
+   616→## 🌐 القسم الحادي عشر: الوصول للإنترنت والتصفح
+   617→
+   618→### 11.1 Text Grounding (البحث النصي في الويب)
+   619→
+   620→> **متاح في كلا النموذجين: Nano Banana Pro و Nano Banana 2**
+   621→
+   622→النموذج يمكنه البحث في Google Search لاسترجاع معلومات لحظية:
+   623→- الطقس الحالي في مدينة معينة
+   624→- نتائج رياضية
+   625→- أحدث الأخبار
+   626→- معلومات عن نباتات/حيوانات/أماكن
+   627→
+   628→**كيف تستفزه:** "[Search for current weather and date in San Francisco] + [use this data to modify the scene] + [visualize this in...]"
+   629→
+   630→### 11.2 Image Grounding (البحث عن صور في الويب)
+   631→
+   632→> **حصري لـ Nano Banana 2 فقط! غير متاح في Pro**
+   633→
+   634→NB2 يمكنه البحث عن **صور حقيقية** في الويب ليفهم شكل الأشياء الحقيقية قبل توليدها:
+   635→- ✅ **يعمل ممتاز مع:** أماكن محددة (كنائس، جسور، ساحات)، أنواع حيوانات/نباتات محددة
+   636→- ❌ **لا يعمل مع:** الأشخاص (لأسباب خصوصية)
+   637→- **متاح فقط عبر API** (ليس في Gemini App بعد)
+   638→
+   639→**مثال استخدام:** "Generate an image of the church in Voiron, France, using image grounding to ensure accurate architectural representation"
+   640→
+   641→### 11.3 قاعدة المعرفة (Knowledge Base)
+   642→
+   643→- كلا النموذجين لهما **تاريخ قاعدة معرفة: يناير 2025**
+   644→- لذلك للأحداث بعد هذا التاريخ، **يجب استخدام Web Search grounding**
+   645→- النموذج يعرف العالم حتى يناير 2025 بعمق، لكنه يحتاج بحثاً للأحدث
+   646→
+   647→### 11.4 متى تحتاج التصفح؟
+   648→
+   649→| الحالة | الحل |
+   650→|------|------|
+   651→| معلومات قبل يناير 2025 | لا حاجة (النموذج يعرفها) |
+   652→| معلومات بعد يناير 2025 | استخدم Web Search grounding |
+   653→| شكل مبنى/حيوان/نبات محدد | استخدم Image grounding (NB2 فقط) |
+   654→| طقس/أخبار لحظية | استخدم Web Search grounding |
+   655→| معلومات شخص محدد | غير متاح (Image grounding لا يدعم الأشخاص) |
+   656→
+   657→---
+   658→
+   659→## 📋 القسم الثاني عشر: قوالب Prompts احترافية جاهزة للنسخ المباشر
+   660→
+   661→### 🎯 القالب 1: بوست سوشيال ميديا احترافي (Instagram/Facebook)
+   662→
+   663→```
+   664→Generate a striking social media post image in 1:1 square format, 
+   665→4K resolution.
+   666→
+   667→[Subject]: A premium coffee cup with intricate latte art (rosetta 
+   668→pattern) on a rustic dark wood table, surrounded by scattered 
+   669→coffee beans and a small ceramic jug of milk.
+   670→
+   671→[Action]: Steam gently rising from the cup, captured mid-motion.
+   672→
+   673→[Location]: Cozy artisanal cafe setting with soft natural window 
+   674→light streaming from the left, blurred background showing 
+   675→vintage espresso machine.
+   676→
+   677→[Composition]: Top-down 45-degree angle, shallow depth of field 
+   678→(f/1.8), creamy bokeh, subject in right third following rule of 
+   679→thirds.
+   680→
+   681→[Style]: Professional food photography, shot on medium-format 
+   682→camera, warm color grading with muted golden tones, slight film 
+   683→grain texture reminiscent of 1980s color film, high saturation 
+   684→on the coffee, soft contrast.
+   685→
+   686→[Text]: Display the exact text "GOOD MORNING" in bold white 
+   687→serif font (similar to Playfair Display), positioned at top-left 
+   688→corner, medium size, with subtle drop shadow for readability.
+   689→
+   690→[Constraints]: 
+   691→- No overlapping elements
+   692→- Text must be perfectly legible
+   693→- Lighting must feel natural and warm
+   694→- Steam must look organic, not artificial
+   695→```
+   696→
+   697→---
+   698→
+   699→### 🎯 القالب 2: ملصق إعلاني فاخر (Luxury Ad Poster) — مع نص عربي
+   700→
+   701→```
+   702→Generate a luxury advertising poster in 9:16 vertical format, 
+   703→2K resolution.
+   704→
+   705→WORK SURFACE: Premium product advertising poster for luxury 
+   706→perfume brand.
+   707→
+   708→[Subject]: A sleek minimalist perfume bottle in frosted amber 
+   709→glass with gold cap, resting on a black marble pedestal.
+   710→
+   711→[Location]: Dramatic studio setting with deep black background, 
+   712→subtle smoke effects swirling around the bottle.
+   713→
+   714→[Composition]: Bottle centered in lower third, dramatic 
+   715→chiaroscuro lighting with harsh directional light from 
+   716→above-left, deep defined shadows, only slivers of light 
+   717→illuminating the bottle's edges.
+   718→
+   719→[Style]: High-end editorial advertising aesthetic, reminiscent 
+   720→of Tom Ford or Chanel campaigns, cinematic color grading with 
+   721→rich amber and gold tones against deep blacks, ultra-premium 
+   722→feel.
+   723→
+   724→[Typography - English]: Display the exact text "OUD ROYAL" 
+   725→in elegant thin serif font (light weight, similar to Didot), 
+   726→gold foil color (#D4AF37), positioned at top-center, large 
+   727→size, with subtle metallic shimmer effect.
+   728→
+   729→[Typography - Arabic]: Display the exact Arabic text "عود رويال" 
+   730→in bold Arabic Thuluth calligraphy font, with right-to-left 
+   731→(RTL) text direction, gold color (#D4AF37), positioned directly 
+   732→below English text, medium size, properly aligned.
+   733→
+   734→[Typography - Tagline]: Display the text "EAU DE PARFUM" in 
+   735→clean sans-serif font, white color, letter-spaced, positioned 
+   736→at bottom-center, small size.
+   737→
+   738→[Constraints]:
+   739→- All text must be perfectly legible and correctly spelled
+   740→- Arabic text must flow right-to-left properly
+   741→- Bottle must remain the visual hero
+   742→- Gold tones must feel luxurious, not garish
+   743→- No cluttered elements
+   744→```
+   745→
+   746→---
+   747→
+   748→### 🎯 القالب 3: تصميم هوية بصرية كاملة (Brand Identity System)
+   749→
+   750→```
+   751→WORK SURFACE: Complete brand identity mockup presentation in 
+   752→16:9 horizontal format, 4K resolution.
+   753→
+   754→LAYOUT: Three-column balanced grid layout with regular margins. 
+   755→Left column: logo variations. Middle column: primary product 
+   756→mockup. Right column: brand applications (business card, 
+   757→letterhead, packaging).
+   758→
+   759→COMPONENTS:
+   760→- Main logo (geometric sans-serif, bold weight) displayed large 
+   761→  at top of left column
+   762→- Logo monogram (just the icon) below it
+   763→- Horizontal logo lockup variant at bottom of left column
+   764→- Central product mockup: minimalist glass cosmetic bottle with 
+   765→  brand label applied, on white pedestal with soft shadow
+   766→- Business card mockup (front and back) in right column top
+   767→- Letterhead mockup in right column middle
+   768→- Product packaging box mockup in right column bottom
+   769→
+   770→STYLE: Modern minimalist brand identity aesthetic, similar to 
+   771→Pentagram or Collins design studio output. Color palette: 
+   772→pure white background, deep charcoal (#1a1a2e) primary, 
+   773→accent color of muted terracotta (#C97B5A). Typography: clean 
+   774→sans-serif (similar to Söhne or Inter) for all mockup text.
+   775→
+   776→CONSTRAINTS:
+   777→- All brand elements must maintain visual consistency
+   778→- No overlapping elements
+   779→- Uniform spacing between all mockups
+   780→- Text must be sharp at small sizes
+   781→- Preserve brand color proportions exactly
+   782→- Lighting must be soft and even across all mockups
+   783→
+   784→[BRAND NAME]: Display the exact text "AURA STUDIO" in geometric 
+   785→sans-serif font (bold weight), in deep charcoal color, in the 
+   786→main logo area. Apply this name consistently across business 
+   787→card and letterhead mockups.
+   788→
+   789→INTERPRETATION: Convey sophistication, minimalism, and modern 
+   790→luxury. The presentation should look like it was made by a 
+   791→top-tier design agency for a real client pitch.
+   792→```
+   793→
+   794→---
+   795→
+   796→### 🎯 القالب 4: غلاف مجلة Editorial (Magazine Cover)
+   797→
+   798→```
+   799→Generate a high-fashion magazine cover in 3:4 portrait format, 
+   800→4K resolution.
+   801→
+   802→[Subject]: A striking fashion model (androgynous, sharp features, 
+   803→short platinum hair) wearing an avant-garde architectural 
+   804→garment in deep burgundy structured fabric with metallic silver 
+   805→accents.
+   806→
+   807→[Action]: Posing in a confident statuesque stance, head slightly 
+   808→tilted, direct intense gaze at camera.
+   809→
+   810→[Location]: Seamless dark charcoal studio backdrop with subtle 
+   811→texture.
+   812→
+   813→[Composition]: Medium-full shot, center-framed, model occupying 
+   814→70% of frame vertical, head near top third intersection.
+   815→
+   816→[Style]: High-fashion editorial in the style of Vogue Italia or 
+   817→i-D Magazine, shot on medium-format analog film (Mamiya RZ67), 
+   818→pronounced grain, high saturation, cinematic lighting with 
+   819→dramatic shadows.
+   820→
+   821→[Lighting]: Three-point softbox setup with key light camera-left 
+   822→creating sculptural shadows on face, fill light camera-right at 
+   823→lower intensity, rim light separating model from background.
+   824→
+   825→[Typography - Masthead]: Display the exact text "VOGUE" in 
+   826→custom bold serif font (similar to Didot Bold), white color, 
+   827→positioned at top-center, very large size, overlapping slightly 
+   828→with model's head (fashion magazine convention).
+   829→
+   830→[Typography - Cover Lines]: Display these texts in clean 
+   831→sans-serif font (medium weight):
+   832→- Left side: "FALL 2026" (small, top-left)
+   833→- Right side: "ISSUE 487" (small, top-right)
+   834→- Bottom-left: "THE NEW AVANT-GARDE" (medium, white)
+   835→- Bottom-right: "EXCLUSIVE INTERVIEW" (medium, white)
+   836→
+   837→[Constraints]:
+   838→- All text must be perfectly legible
+   839→- Masthead must remain visually dominant
+   840→- Model's face must remain unobstructed
+   841→- Maintain fashion editorial sophistication, not commercial feel
+   842→- Color grading must feel analog and rich, not digital
+   843→```
+   844→
+   845→---
+   846→
+   847→### 🎯 القالب 5: Infographic احترافي مع نص إنجليزي + عربي
+   848→
+   849→```
+   850→WORK SURFACE: Bilingual educational infographic in 4:5 portrait 
+   851→format, 2K resolution (CRITICAL: 2K minimum for text clarity).
+   852→
+   853→LAYOUT: Vertical flow with header section at top, three content 
+   854→sections in middle, footer at bottom. Clean grid with generous 
+   855→whitespace.
+   856→
+   857→COMPONENTS:
+   858→- Header with main title (English + Arabic)
+   859→- Three content sections, each with:
+   860→  * Section number (large)
+   861→  * Section title (English)
+   862→  * Section title (Arabic, below English)
+   863→  * Icon/illustration (minimalist line-art style)
+   864→  * Brief description (English, max 15 words)
+   865→  * Brief description (Arabic, max 8 words)
+   866→- Footer with source attribution
+   867→
+   868→STYLE: Modern editorial infographic aesthetic, similar to 
+   869→Information is Beautiful or Pentagram data visualization. 
+   870→Color palette: off-white background (#FAFAF7), deep navy primary 
+   871→(#1a2a4e), warm coral accent (#E8745C), soft sage tertiary 
+   872→(#9CB89B). Typography: clean sans-serif throughout (similar to 
+   873→Inter or Söhne), with hierarchy via size and weight.
+   874→
+   875→[TEXT - English]: Display these exact texts:
+   876→- Header: "THE FUTURE OF WORK" (bold sans-serif, navy, large)
+   877→- Section 1: "01 — REMOTE FIRST" 
+   878→- Section 1 description: "Distributed teams as default"
+   879→- Section 2: "02 — AI AUGMENTED"
+   880→- Section 2 description: "Human-AI collaboration daily"
+   881→- Section 3: "03 — SKILLS BASED"
+   882→- Section 3 description: "Outcomes over credentials"
+   883→
+   884→[TEXT - Arabic]: Display these exact Arabic texts with 
+   885→right-to-left (RTL) text direction:
+   886→- Header: "مستقبل العمل" (bold Arabic Naskh font, navy, large)
+   887→- Section 1: "العمل عن بُعد أولاً" (medium Arabic Naskh)
+   888→- Section 2: "الذكاء الاصطناعي معززاً" (medium Arabic Naskh)
+   889→- Section 3: "التركيز على المهارات" (medium Arabic Naskh)
+   890→
+   891→CONSTRAINTS:
+   892→- All text must be perfectly legible, correctly spelled
+   893→- Arabic text must flow right-to-left properly
+   894→- No overlapping elements
+   895→- Uniform spacing between all sections
+   896→- Icons must be consistent in style and weight
+   897→- English and Arabic versions must align visually
+   898→
+   899→INTERPRETATION: Convey clarity, modernity, and bilingual 
+   900→sophistication. The infographic should feel like it belongs in 
+   901→a Harvard Business Review or MIT Technology Report.
+   902→```
+   903→
+   904→---
+   905→
+   906→### 🎯 القالب 6: تصميم بوستر بالعربية فقط (Arabic-only Poster)
+   907→
+   908→```
+   909→Generate a striking Arabic typography poster in 1:1 square 
+   910→format, 2K resolution (CRITICAL for Arabic text clarity).
+   911→
+   912→[Background]: Deep midnight blue (#0a0e27) with subtle 
+   913→constellation pattern in faint gold dots, creating a night-sky 
+   914→atmosphere.
+   915→
+   916→[Main Visual]: Below the text, a minimalist silhouette of a 
+   917→city skyline in pure gold (#D4AF37), with subtle Islamic 
+   918→architectural elements (domes, minarets) integrated.
+   919→
+   920→[Typography - Main]: Display the exact Arabic text "الإبداع" 
+   921→in large bold Arabic Thuluth calligraphy font, with proper 
+   922→right-to-left (RTL) text direction, positioned at top-center, 
+   923→very large size. The text should be in shimmering gold (#D4AF37) 
+   924→with subtle embossed 3D effect, as if cast from metal.
+   925→
+   926→[Typography - Subtitle]: Below main text, display the Arabic 
+   927→text "طريق المستقبل" in medium Arabic Naskh font, RTL direction, 
+   928→white color, medium size, properly centered.
+   929→
+   930→[Style]: Modern Arabic poster design aesthetic blending 
+   931→traditional Islamic calligraphy with contemporary minimalism. 
+   932→Inspired by the visual language of Qatar Museums and Sharjah 
+   933→Biennial. Cinematic color grading with deep navy and gold 
+   934→palette.
+   935→
+   936→[Constraints]:
+   937→- Arabic text must be perfectly legible and correctly spelled
+   938→- Right-to-left alignment must be flawless
+   939→- Calligraphy must feel authentic, not machine-generated
+   940→- Gold tones must feel luxurious and warm
+   941→- Skyline silhouette must remain subtle, not dominant
+   942→- Overall composition must feel balanced and serene
+   943→
+   944→INTERPRETATION: Convey aspiration, heritage meeting future, 
+   945→and Arabic cultural pride. The poster should feel suitable 
+   946→for an international cultural exhibition.
+   947→```
+   948→
+   949→---
+   950→
+   951→### 🎯 القالب 7: Storyboard احترافي (للإنتاج السينمائي/الإعلاني)
+   952→
+   953→```
+   954→WORK SURFACE: 6-panel storyboard in 16:9 horizontal format, 
+   955→2K resolution.
+   956→
+   957→LAYOUT: 2x3 grid (2 rows, 3 columns) with equal panel widths. 
+   958→Thin white gutters between panels. Each panel labeled with 
+   959→panel number at top-left corner.
+   960→
+   961→COMPONENTS (per panel):
+   962→- Panel 1: Establishing wide shot
+   963→- Panel 2: Medium shot of protagonist
+   964→- Panel 3: Close-up emotional moment
+   965→- Panel 4: Action shot
+   966→- Panel 5: Reaction shot (secondary character)
+   967→- Panel 6: Resolution/wide shot
+   968→
+   969→STYLE: 1970s French noir comic aesthetic crossed with modern 
+   970→cinematic storyboard style. Muted palette (sepia, charcoal, 
+   971→dusty rose), heavy confident linework, atmospheric lighting 
+   972→with strong shadows. Black and white with one accent color 
+   973→(dusty rose) for emotional emphasis.
+   974→
+   975→CHARACTER CONSISTENCY: The protagonist (woman, 30s, short dark 
+   976→hair, wearing beige trench coat) must remain IDENTICAL across 
+   977→all 6 panels — same face, same hair, same clothing, same 
+   978→proportions. Use the same character reference for all panels.
+   979→
+   980→PANEL DESCRIPTIONS:
+   981→- Panel 1 (Establishing wide shot): Woman walking alone on 
+   982→  rain-soaked Parisian street at dusk, streetlamps glowing, 
+   983→  Eiffel Tower silhouette in distant background.
+   984→- Panel 2 (Medium shot): Same woman, now under a streetlamp, 
+   985→  glancing over her shoulder, expression tense, rain dripping 
+   986→  from her coat.
+   987→- Panel 3 (Close-up): Her face in extreme close-up, lost in 
+   988→  thought, single tear on cheek, rain in background out of focus.
+   989→- Panel 4 (Action shot): She's now running, motion blur on 
+   990→  background, coat flying behind her, low angle shot.
+   991→- Panel 5 (Reaction shot): A man in shadows watching her run, 
+   992→  face partially obscured, mysterious expression.
+   993→- Panel 6 (Resolution wide shot): Woman reaches a doorway, 
+   994→  light spilling out, she pauses at threshold, back to camera.
+   995→
+   996→CONSTRAINTS:
+   997→- Character design must remain identical across all 6 panels
+   998→- No overlap between panels
+   999→- Text must be sharp at small sizes (panel numbers)
+  1000→- Uniform spacing between all panels
+  1001→- Lighting must remain consistent within the scene's timeline
+  1002→- Style must remain consistent (no stylistic drift)
+  1003→
+  1004→INTERPRETATION: Convey loneliness, tension, mystery, and a 
+  1005→sense of impending discovery. The storyboard should feel like 
+  1006→a real director's pre-production document.
+  1007→```
+  1008→
+  1009→---
+  1010→
+  1011→### 🎯 القالب 8: Product Mockup احترافي (للـ Brand Showcase)
+  1012→
+  1013→```
+  1014→Generate a premium product photography mockup in 4:5 portrait 
+  1015→format, 4K resolution.
+  1016→
+  1017→[Subject]: A minimalist matte black cosmetic jar (similar to 
+  1018→Aesop or Le Labo aesthetic) with subtle gold-foil label, 
+  1019→resting on a textured travertine stone pedestal. The jar is 
+  1020→closed, with a smooth matte finish.
+  1021→
+  1022→[Action]: Static product shot, no motion, but with subtle 
+  1023→organic elements: a single dried botanical stem (eucalyptus) 
+  1024→leaning against the jar, a small pool of water droplets on 
+  1025→the stone surface near the base.
+  1026→
+  1027→[Location]: Editorial studio setting with seamless warm 
+  1028→off-white background (#F4EFE6), creating soft gradient from 
+  1029→light at top to slightly darker at bottom.
+  1030→
+  1031→[Composition]: Product centered in lower-middle third of 
+  1032→frame, slightly above eye-level angle (15 degrees up), 
+  1033→shallow depth of field (f/2.8) with creamy bokeh on 
+  1034→background, sharp focus on jar label.
+  1035→
+  1036→[Style]: Premium editorial product photography in the style 
+  1037→of Aesop campaigns or Cereal Magazine. Shot on Phase One 
+  1038→medium-format camera, natural soft window lighting from 
+  1039→camera-left, warm color grading with muted earthy tones 
+  1040→(cream, stone, matte black, subtle gold), ultra-high 
+  1041→resolution detail on product texture.
+  1042→
+  1043→[Lighting]: Soft north-window light from camera-left 
+  1044→creating gentle gradient across jar surface, white reflector 
+  1045→camera-right for subtle fill, no harsh shadows.
+  1046→
+  1047→[Typography - Label]: Display the exact text "AURELIA" in 
+  1048→minimalist sans-serif font (light weight, letter-spaced, 
+  1049→similar to Aesop branding), gold foil color (#C9A961), 
+  1050→positioned vertically on the jar label, small size, elegant.
+  1051→
+  1052→[Typography - Secondary Label]: Display the text "BOTANICAL 
+  1053→SERUM · 30ML" in tiny sans-serif font, same gold foil color, 
+  1054→below main label, very small size.
+  1055→
+  1056→[Constraints]:
+  1057→- Text must be perfectly legible and correctly spelled
+  1058→- Jar must remain the visual hero
+  1059→- Gold foil must look authentic, not printed
+  1060→- Texture of travertine stone must be visible and realistic
+  1061→- Botanical stem must look dried and natural, not artificial
+  1062→- Color palette must remain warm and muted, no oversaturation
+  1063→- Lighting must feel editorial, not commercial
+  1064→
+  1065→INTERPRETATION: Convey quiet luxury, botanical authenticity, 
+  1066→and minimalist sophistication. The image should feel like it 
+  1067→belongs in Kinfolk Magazine or Cereal Magazine.
+  1068→```
+  1069→
+  1070→---
+  1071→
+  1072→### 🎯 القالب 9: تصميم Typography Art (نص كشكل فني)
+  1073→
+  1074→```
+  1075→Generate a vibrant typographic art poster in 1:1 square format, 
+  1076→4K resolution.
+  1077→
+  1078→[Concept]: The word "CREATE" rendered as a calligram where the 
+  1079→letters themselves form the silhouette of an artist's hand 
+  1080→holding a paintbrush, mid-stroke.
+  1081→
+  1082→[Background]: Textured off-white background (#F5F1E8) with 
+  1083→subtle paper grain texture, as if printed on fine art paper.
+  1084→
+  1085→[Main Typography]: Display the word "CREATE" in large bold 
+  1086→geometric sans-serif font (similar to Futura Bold), where the 
+  1087→letters are skillfully distorted, stretched, and compressed 
+  1088→to flow together and form the recognizable silhouette of a 
+  1089→human hand holding a paintbrush, mid-painting motion. The 
+  1090→letters should NOT be readable as separate letters but should 
+  1091→flow into the hand shape.
+  1092→
+  1093→[Color]: Two-toned color scheme:
+  1094→- Letters/hand silhouette: deep cobalt blue (#1B3A6B) with 
+  1095→  subtle halftone dot pattern
+  1096→- Accent (paintbrush tip): vibrant coral red (#E8493C)
+  1097→- Background: off-white with paper texture
+  1098→
+  1099→[Style]: Retro 1960s-70s psychedelic poster aesthetic blended 
+  1100→with contemporary minimalist graphic design. Inspired by the 
+  1101→visual language of Milton Glaser and Push Pin Studios. 
+  1102→Screen-printed texture, slight registration offset feel.
+  1103→
+  1104→[Constraints]:
+  1105→- Letters must remain recognizable as "CREATE" when viewer 
+  1106→  looks closely
+  1107→- Hand silhouette must be immediately recognizable
+  1108→- Halftone pattern must be consistent across all letters
+  1109→- Color palette must remain strictly two-toned plus accent
+  1110→- Overall composition must feel balanced and intentional
+  1111→- No additional text or elements
+  1112→
+  1113→INTERPRETATION: Convey creativity, flow, and the unity of 
+  1114→word and image. The poster should feel like a museum-quality 
+  1115→graphic design piece that could hang in MoMA's design 
+  1116→collection.
+  1117→```
+  1118→
+  1119→---
+  1120→
+  1121→### 🎯 القالب 10: تصميم Event Banner متعدد اللغات (إنجليزي + عربي)
+  1122→
+  1123→```
+  1124→Generate a premium event banner in 21:9 ultra-wide format, 
+  1125→2K resolution (CRITICAL for text clarity).
+  1126→
+  1127→[Background]: Dynamic abstract gradient background flowing 
+  1128→from deep purple (#2D1B4E) on the left to vibrant magenta 
+  1129→(#C724B1) on the right, with subtle geometric mesh pattern 
+  1130→overlay in faint white lines, creating a tech-conference 
+  1131→aesthetic.
+  1132→
+  1133→[Visual Elements]: 
+  1134→- Left side: Abstract 3D geometric shapes (cubes, spheres) 
+  1135→  floating in space, with subtle glass-morphism effect
+  1136→- Right side: Soft particle effects / light bokeh
+  1137→
+  1138→[Typography - English Headline]: Display the exact text 
+  1139→"INNOVATION SUMMIT 2026" in bold geometric sans-serif font 
+  1140→(similar to Montserrat Bold), pure white color, positioned 
+  1141→at top-center, very large size, with subtle glow effect 
+  1142→behind text.
+  1143→
+  1144→[Typography - English Subtitle]: Below headline, display 
+  1145→"THE FUTURE STARTS HERE" in clean sans-serif font (light 
+  1146→weight, letter-spaced), white color with 70% opacity, 
+  1147→medium size.
+  1148→
+  1149→[Typography - Arabic Headline]: Below English subtitle, 
+  1150→display the exact Arabic text "قمة الابتكار 2026" in bold 
+  1151→Arabic Naskh font, with proper right-to-left (RTL) text 
+  1152→direction, white color, large size (slightly smaller than 
+  1153→English headline), properly centered.
+  1154→
+  1155→[Typography - Arabic Subtitle]: Below Arabic headline, 
+  1156→display "المستقبل يبدأ من هنا" in medium Arabic Naskh font, 
+  1157→RTL direction, white color with 70% opacity, medium size.
+  1158→
+  1159→[Typography - Date/Location]: At bottom-center, display 
+  1160→"DUBAI · OCTOBER 15-17, 2026" in tiny sans-serif font 
+  1161→(letter-spaced, regular weight), white color with 50% 
+  1162→opacity, small size.
+  1163→
+  1164→[Constraints]:
+  1165→- All text (English and Arabic) must be perfectly legible
+  1166→- Arabic text must flow right-to-left properly
+  1167→- No overlap between text and complex background areas
+  1168→- Color contrast must remain high for readability
+  1169→- Geometric shapes must not obstruct text
+  1170→- Both languages must feel equally important (no hierarchy 
+  1171→  implying one is secondary)
+  1172→
+  1173→INTERPRETATION: Convey innovation, bilingual sophistication, 
+  1174→and premium tech-conference energy. The banner should feel 
+  1175→like it belongs at TED, Web Summit, or LEAP conference.
+  1176→```
+  1177→
+  1178→---
+  1179→
+  1180→## 💎 القسم الثالث عشر: القواعد الذهبية التي يجب حفظها
+  1181→
+  1182→### 🥇 القواعد العشر الذهبية لكتابة Prompts لـ Nano Banana Pro/2
+  1183→
+  1184→1. **اكتب جملاً كاملة، لا كلمات مفتاحية** — النموذج يفهم اللغة الطبيعية
+  1185→2. **استخدم الإطار الخماسي:** Subject + Action + Location + Composition + Style
+  1186→3. **التأطير الإيجابي دائماً:** صف ما تريده، لا ما لا تريده
+  1187→4. **للنصوص:** استخدم تقنية الخطوتين (تأكيد النص أولاً، ثم توليد الصورة)
+  1188→5. **للنصوص:** ابقَ تحت 25 حرفاً (8 للعربية)، واستخدم علامات تنصيص مزدوجة
+  1189→6. **للنصوص الحرجة:** استخدم دقة 2K على الأقل (GDELT: تحل مشاكل النص)
+  1190→7. **للنصوص العربية:** حدد RTL صراحةً، واستخدم "bold Arabic calligraphy font"
+  1191→8. **للـ texture:** كن دقيقاً ("navy blue tweed" ليس "suit jacket")
+  1192→9. **للإضاءة:** استخدم مصطلحات سينمائية ("Chiaroscuro", "three-point softbox")
+  1193→10. **للتحرير:** "Edit, Don't Re-roll" — حرّر تحادثياً، لا تعد التوليد
+  1194→
+  1195→### 🚫 الأخطاء الشائعة التي يجب تجنّبها
+  1196→
+  1197→| الخطأ | الصواب |
+  1198→|------|--------|
+  1199→| "أحمر" | "deep cherry red" |
+  1200→| "كوب" | "minimalist ceramic coffee mug with matte glaze" |
+  1201→| "بدلة" | "navy blue tweed suit jacket" |
+  1202→| no cars | empty street |
+  1203→| Generate text Welcome | Generate the exact text "Welcome" |
+  1204→| خط عادي | bold serif font (الأعلى دقة) |
+  1205→| نص عربي بدون RTL | "with right-to-left (RTL) text direction" |
+  1206→| دقة 1K للنصوص الحرجة | دقة 2K على الأقل |
+  1207→| إعادة توليد عند الخطأ | تحرير تحادثي مباشر |
+  1208→| كلمات مفتاحية قصيرة | جمل كاملة وصفية |
+  1209→
+  1210→### ✅ قائمة التحقق قبل إرسال الـ Prompt
+  1211→
+  1212→- [ ] هل استخدمت جملاً كاملة؟
+  1213→- [ ] هل حددت Subject + Action + Location + Composition + Style؟
+  1214→- [ ] هل وصفت الـ texture بدقة؟
+  1215→- [ ] هل حددت الإضاءة بمصطلحات سينمائية؟
+  1216→- [ ] هل حددت الـ aspect ratio؟
+  1217→- [ ] هل حددت الدقة (2K/4K للنصوص)؟
+  1218→- [ ] هل وضعت النصوص داخل علامات تنصيص مزدوجة؟
+  1219→- [ ] هل حددت نوع الخط ووزنه؟
+  1220→- [ ] (للعربية) هل حددت RTL صراحةً؟
+  1221→- [ ] (للعربية) هل النص ≤8 أحرف؟
+  1222→- [ ] هل استخدمت التأطير الإيجابي؟
+  1223→- [ ] هل أضفت قيوداً (constraints) لمنع المشاكل؟
+  1224→
+  1225→---
+  1226→
+  1227→## 📚 القسم الرابع عشر: قائمة المصادر الموثوقة الكاملة
+  1228→
+  1229→### المصادر الرسمية من Google
+  1230→
+  1231→1. **Google Cloud Blog - Ultimate Prompting Guide for Nano Banana** (March 6, 2026)  
+  1232→   cloud.google.com/blog/products/ai-machine-learning/ultimate-prompting-guide-for-nano-banana
+  1233→
+  1234→2. **Google Blog - 7 Tips for Nano Banana Pro** (November 20, 2025)  
+  1235→   blog.google/products-and-platforms/products/gemini/prompting-tips-nano-banana-pro
+  1236→
+  1237→3. **Google Blog - Introducing Nano Banana Pro** (November 20, 2025)  
+  1238→   blog.google/innovation-and-ai/products/nano-banana-pro
+  1239→
+  1240→4. **Google Blog - Introducing Nano Banana 2** (February 26, 2026)  
+  1241→   blog.google/innovation-and-ai/technology/ai/nano-banana-2
+  1242→
+  1243→5. **Google DeepMind - Nano Banana Pro Page**  
+  1244→   deepmind.google/models/gemini-image/pro
+  1245→
+  1246→6. **Google AI Studio - Nano Banana**  
+  1247→   aistudio.google.com/models/nano-banana
+  1248→
+  1249→7. **Google AI API Documentation** (Updated June 22, 2026)  
+  1250→   ai.google.dev/gemini-api/docs/image-generation
+  1251→
+  1252→8. **Google Cloud - What is Prompt Engineering?**  
+  1253→   cloud.google.com/discover/what-is-prompt-engineering
+  1254→
+  1255→9. **Google Prompting Essentials Course (Coursera)**  
+  1256→   coursera.org/specializations/prompting-essentials-google
+  1257→
+  1258→10. **Google AI Professional Certificate**  
+  1259→    grow.google/ai-professional/
+  1260→
+  1261→### المصادر التقنية التحليلية المعتمدة
+  1262→
+  1263→11. **The Decoder - Differences between Nano Banana models** (March 13, 2026)  
+  1264→    the-decoder.com/google-explains-the-differences-between-its-three-nano-banana-image-generation-models
+  1265→
+  1266→12. **GDELT Project - Text Rendering & Resolution Analysis** (December 16, 2025)  
+  1267→    blog.gdeltproject.org/addressing-the-text-rendering-translation-issues-of-our-nano-banana-pro-experiments-by-changing-the-resolution-prompt
+  1268→
+  1269→13. **APIYI - 6 Tips for Text Rendering Accuracy** (March 3, 2026)  
+  1270→    help.apiyi.com/en/nano-banana-text-rendering-consistency-guide-en.html
+  1271→
+  1272→14. **Radical Curiosity - How to Create an Effective Prompt** (November 27, 2025)  
+  1273→    radicalcuriosity.xyz/p/how-to-create-an-effective-prompt
+  1274→
+  1275→15. **DEV Community - Nano Banana Pro Prompting Guide**  
+  1276→    dev.to/googleai/nano-banana-pro-prompting-guide-strategies-1h9n
+  1277→
+  1278→16. **LTX Blog - Nano Banana Pro Prompt Guide**  
+  1279→    ltx.io/blog/nano-banana-prompt-guide
+  1280→
+  1281→17. **Google AI Developers Forum - Arabic RTL Issues** (June 2025)  
+  1282→    discuss.ai.google.dev/t/issues-with-arabic-language-support-small-font-size-and-lack-of-right-to-left-rtl-text-direction/89158
+  1283→
+  1284→18. **TechCrunch - Google releases Nano Banana Pro** (November 20, 2025)  
+  1285→    techcrunch.com/2025/11/20/google-releases-nano-banana-pro-its-latest-image-generation-model
+  1286→
+  1287→19. **TechCrunch - Google launches Nano Banana 2** (February 26, 2026)  
+  1288→    techcrunch.com/2026/02/26/google-launches-nano-banana-2-model-with-faster-image-generation
+  1289→
+  1290→---
+  1291→
+  1292→## 🎯 الخلاصة التنفيذية
+  1293→
+  1294→هذا الدليل هو **مرجعي الداخلي** لكتابة أوامر احترافية لـ Nano Banana Pro و Nano Banana 2. عندما يطلب مني المستخدم تصميم صورة، سأطبق:
+  1295→
+  1296→1. **الإطار الخماسي** (Subject + Action + Location + Composition + Style)
+  1297→2. **الـ Creative Director mode** (إضاءة + كاميرا + color grading + texture)
+  1298→3. **للنصوص العربية:** تقنية الخطوتين + RTL صراحةً + دقة 2K+ + خط Arabic calligraphy
+  1299→4. **للنصوص الإنجليزية:** تنصيص مزدوج + bold serif + ≤25 حرف
+  1300→5. **للـ Brand Identity:** استخدم Pro + 14 reference images + brand consistency
+  1301→6. **للـ Iteration:** Edit, don't re-roll
+  1302→7. **اختيار النموذج:** NB2 للسرعة/الإنتاج الضخم، Pro للجودة النهائية الاحترافية
+  1303→8. **الـ Constraints:** أضف دائماً قيوداً لمنع المشاكل
+  1304→9. **الـ Interpretation:** أضف توجيهات للإحساس العام المطلوب
+  1305→
+  1306→**الهدف:** إخراج صور وتصاميم جرافيك بمستوى مصمم بخبرة 30 سنة، بتفاصيل عميقة، وبكتابة عربية احترافية داخل الصور.
+  1307→

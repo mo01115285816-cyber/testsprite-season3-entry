@@ -1,0 +1,14 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "Monaco Editor loads with syntax highlighting",
+  "description": "When the user opens the editor tab, a Monaco Editor (VS Code-style editor) loads with syntax highlighting, line numbers, and the default HTML file content visible.",
+  "priority": "p0",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "assertion", "description": "Verify the editor view is active" },
+    { "type": "assertion", "description": "Verify a Monaco Editor instance is visible in the main content area with line numbers on the left side" },
+    { "type": "assertion", "description": "Verify the editor contains HTML code with syntax highlighting (colored tags, attributes, and strings)" },
+    { "type": "assertion", "description": "Verify the editor has a cursor that can be placed by clicking" }
+  ]
+}

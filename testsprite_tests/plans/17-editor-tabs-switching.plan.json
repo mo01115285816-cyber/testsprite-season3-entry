@@ -1,0 +1,17 @@
+{
+  "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
+  "type": "frontend",
+  "name": "Editor tabs allow switching between open files",
+  "description": "When multiple files are open, the user can switch between them by clicking the editor tabs at the top of the editor area.",
+  "priority": "p1",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "action", "description": "Open the file style.css from the file explorer sidebar" },
+    { "type": "action", "description": "Open the file app.js from the file explorer sidebar" },
+    { "type": "assertion", "description": "Verify at least two editor tabs are visible at the top of the editor area" },
+    { "type": "action", "description": "Click on the tab for index.html (or the first tab)" },
+    { "type": "assertion", "description": "Verify the editor content switches to show HTML code" },
+    { "type": "action", "description": "Click on the tab for style.css" },
+    { "type": "assertion", "description": "Verify the editor content switches to show CSS code" }
+  ]
+}

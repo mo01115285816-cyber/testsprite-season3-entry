@@ -387,24 +387,17 @@ export default function ChatAgent({
             
             {/* الشعار المبتكر والاحترافي لـ NEXUS */}
             <div className="flex items-center gap-3">
-              {/* أيقونة الشعار الهندسية الفريدة */}
+              {/* NEXUS logo */}
               <div className="relative flex items-center justify-center">
-                <svg className="w-5.5 h-5.5 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <linearGradient id="nexusLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#ffffff" />
-                      <stop offset="50%" stopColor="#a1a1aa" />
-                      <stop offset="100%" stopColor="#3f3f46" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M25 25V75L45 50L25 25Z" fill="url(#nexusLogoGrad)" />
-                  <path d="M75 75V25L55 50L75 75Z" fill="url(#nexusLogoGrad)" />
-                  <circle cx="50" cy="50" r="10" stroke="white" strokeWidth="4" className="animate-pulse" />
-                </svg>
-                {/* نقطة مضيئة للدلالة على الذكاء التفاعلي النشط */}
-                <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#30D158] shadow-[0_0_8px_#30D158]"></div>
+                <img
+                  src="/nexus-logo.webp"
+                  alt="NEXUS logo"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6 object-contain drop-shadow-[0_0_6px_rgba(93,214,44,0.5)]"
+                />
               </div>
-              
+
               {/* النص المكتوب للشعار الإنجليزي الفخم */}
               <h1 className="text-xs font-black tracking-[0.2em] text-white font-mono uppercase">
                 NEXUS
@@ -428,7 +421,7 @@ export default function ChatAgent({
       {/* مساحة عرض المحادثات الرئيسية المريحة للعين */}
       <div 
         ref={chatScrollRef}
-        className="flex-1 overflow-y-auto hide-scrollbar px-5 pt-[98px] pb-[120px] md:pt-[116px] md:pb-[136px] space-y-8 z-10 flex flex-col"
+        className="flex-1 overflow-y-auto hide-scrollbar px-5 pt-[98px] pb-[160px] md:pt-[116px] md:pb-[170px] space-y-8 z-10 flex flex-col"
       >
         <div className="max-w-3xl mx-auto w-full space-y-10 flex-1 flex flex-col justify-center">
           {messages.length === 0 ? (
@@ -616,8 +609,8 @@ export default function ChatAgent({
         </div>
       </div>
 
-      {/* صندوق الإدخال الثابت كلياً بالأسفل - بارتفاع مطابق تماماً للهيدر العائم */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-brand-bg via-brand-bg/95 to-transparent shrink-0 z-20 pointer-events-none">
+      {/* صندوق الإدخال الثابت فوق شريط التنقل السفلي — مسافة مدروسة، بدون تداخل */}
+      <div className="absolute bottom-[76px] left-0 right-0 px-4 md:px-6 pb-1 shrink-0 z-20 pointer-events-none">
         <div className="max-w-3xl mx-auto relative pointer-events-auto">
           
           {/* كبسولة إرسال متكاملة تماماً بارتفاع 50px في وضعها الأساسي لتطابق الهيدر */}
