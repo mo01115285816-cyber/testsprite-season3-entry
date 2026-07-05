@@ -14,8 +14,18 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'NEXUS',
+  title: 'NEXUS — AI-Powered Arabic IDE',
   description: 'بيئة تطوير ذكية لكتابة ومعاينة الأكواد مع محرك أمان سيبراني متقدم مدعوم بالذكاء الاصطناعي',
+  icons: {
+    icon: '/nexus-logo.webp',
+    shortcut: '/nexus-logo.webp',
+    apple: '/nexus-logo.webp',
+  },
+  openGraph: {
+    title: 'NEXUS — AI-Powered Arabic IDE',
+    description: 'بيئة تطوير ذكية لكتابة ومعاينة الأكواد مع محرك أمان سيبراني متقدم مدعوم بالذكاء الاصطناعي',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {

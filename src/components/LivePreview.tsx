@@ -28,9 +28,9 @@ export default function LivePreview({
   setInspectModeActive,
 }: LivePreviewProps) {
   return (
-    <div className="flex-1 min-h-0 flex flex-col bg-brand-bg relative overflow-hidden" dir="rtl">
-      {/* Simulation Controls Toolbar */}
-      <div className="h-12 bg-brand-card/90 backdrop-blur-md border-b border-brand-accent/15 px-4 flex items-center justify-between shrink-0 select-none">
+    <div className="flex-1 min-h-0 flex flex-col bg-brand-bg relative overflow-hidden pt-6" dir="rtl">
+      {/* Simulation Controls Toolbar — floating pill design matching editor header */}
+      <div className="shrink-0 max-w-5xl w-[calc(100%-2.5rem)] mx-auto bg-brand-card/90 backdrop-blur-md rounded-full border border-brand-accent/20 shadow-[0_0_35px_rgba(93,214,44,0.08)] px-4 h-[58px] flex items-center justify-between text-brand-text select-none mb-4 z-20">
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => setPreviewSize('desktop')}

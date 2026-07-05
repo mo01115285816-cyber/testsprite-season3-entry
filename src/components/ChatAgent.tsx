@@ -406,22 +406,15 @@ export default function ChatAgent({
             
             {/* الشعار المبتكر والاحترافي لـ NEXUS */}
             <div className="flex items-center gap-3">
-              {/* أيقونة الشعار الهندسية الفريدة */}
+              {/* شعار NEXUS الرسمي */}
               <div className="relative flex items-center justify-center">
-                <svg className="w-5.5 h-5.5 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <linearGradient id="nexusLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#ffffff" />
-                      <stop offset="50%" stopColor="#a1a1aa" />
-                      <stop offset="100%" stopColor="#3f3f46" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M25 25V75L45 50L25 25Z" fill="url(#nexusLogoGrad)" />
-                  <path d="M75 75V25L55 50L75 75Z" fill="url(#nexusLogoGrad)" />
-                  <circle cx="50" cy="50" r="10" stroke="white" strokeWidth="4" className="animate-pulse" />
-                </svg>
-                {/* نقطة مضيئة للدلالة على الذكاء التفاعلي النشط */}
-                <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#30D158] shadow-[0_0_8px_#30D158]"></div>
+                <img
+                  src="/nexus-logo.webp"
+                  alt="NEXUS logo"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6 object-contain drop-shadow-[0_0_6px_rgba(93,214,44,0.5)]"
+                />
               </div>
               
               {/* النص المكتوب للشعار الإنجليزي الفخم */}
