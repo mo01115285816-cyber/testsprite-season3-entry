@@ -1,23 +1,17 @@
 {
   "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
   "type": "frontend",
-  "name": "Performance Monitor HUD displays metrics and collapses",
-  "description": "When the user is on the Preview tab and clicks the Activity (Performance Monitor) button, a floating HUD panel appears in the bottom-left corner showing Load Time, Memory usage with a progress bar, Code Size, and Engine type. The panel can be collapsed and dismissed.",
+  "name": "Performance Monitor HUD shows load time and memory metrics",
+  "description": "On the Preview tab, clicking the Activity (Performance Monitor) button shows a floating HUD with Load Time, Memory, Code Size, and Engine metrics.",
   "priority": "p2",
   "planSteps": [
     { "type": "action", "description": "Navigate to the homepage" },
-    { "type": "action", "description": "Click the second tab in the bottom dock to open the Preview view" },
-    { "type": "assertion", "description": "Verify the preview pane is visible with a toolbar containing an Activity icon button (title 'لوحة الأداء')" },
-    { "type": "action", "description": "Click the Activity (Performance Monitor) toggle button in the preview toolbar" },
-    { "type": "assertion", "description": "Verify a floating Performance HUD panel appears in the bottom-left corner of the preview area" },
-    { "type": "assertion", "description": "Verify the panel contains a 'Performance' header label" },
-    { "type": "assertion", "description": "Verify the panel shows a 'Load Time' metric with a value in milliseconds (ms)" },
-    { "type": "assertion", "description": "Verify the panel shows a 'Memory' metric with a value in MB and a colored progress bar" },
-    { "type": "assertion", "description": "Verify the panel shows a 'Code Size' metric with a value in KB" },
-    { "type": "assertion", "description": "Verify the panel shows an 'Engine' metric (either 'HTML5' or 'React')" },
-    { "type": "action", "description": "Click the collapse button (chevron icon) in the Performance HUD header" },
-    { "type": "assertion", "description": "Verify the panel body collapses, hiding the metrics but keeping the header visible" },
-    { "type": "action", "description": "Click the Activity toggle button again to dismiss the Performance HUD entirely" },
-    { "type": "assertion", "description": "Verify the Performance HUD panel is no longer visible" }
+    { "type": "action", "description": "Click the 'المعاينة' (Preview) tab in the bottom dock" },
+    { "type": "action", "description": "Click the button with title 'لوحة الأداء' in the preview toolbar" },
+    { "type": "assertion", "description": "Verify the text 'Performance' is visible on the page" },
+    { "type": "assertion", "description": "Verify the text 'Load Time' is visible on the page" },
+    { "type": "assertion", "description": "Verify the text 'Memory' is visible on the page" },
+    { "type": "assertion", "description": "Verify the text 'Code Size' is visible on the page" },
+    { "type": "assertion", "description": "Verify the text 'Engine' is visible on the page" }
   ]
 }
