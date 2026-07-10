@@ -17,11 +17,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Inter:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* ================================================================
-   NEXUS — WORLD-CLASS LANDING PAGE
-   Philosophy: Premium, High-Performance, Super Ellipse, Magnetic.
-   ================================================================ */
-
 :root{
   --bg: #0a0a0b;
   --bg-elevated: #111113;
@@ -43,11 +38,9 @@
   --ease-out: cubic-bezier(0.32,0.72,0,1);
   --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
 }
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 html,body{overflow-x:hidden;max-width:100%;width:100%}
-
 body{
   font-family:var(--ff-ar);
   background:var(--bg);
@@ -60,33 +53,22 @@ body{
   position:relative;
   letter-spacing:-0.01em;
 }
-
 html[lang="en"] body{font-family:var(--ff-en)}
-
 img{max-width:100%;height:auto;display:block}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 ::selection{background:var(--accent);color:var(--bg)}
 
-/* ================================================================
-   ATMOSPHERIC MESH GRADIENTS & NOISE
-   ================================================================ */
-.mesh-bg {
+/* WebGL Shader Background */
+#shader-canvas {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 0;
   pointer-events: none;
-  background: 
-    radial-gradient(ellipse 60% 60% at 20% 0%, rgba(93, 214, 44, 0.05), transparent 70%),
-    radial-gradient(ellipse 70% 70% at 80% 100%, rgba(10, 30, 60, 0.1), transparent 70%);
-  animation: meshPan 30s infinite alternate ease-in-out;
 }
-
-@keyframes meshPan {
-  0% { transform: scale(1) translate(0, 0); }
-  100% { transform: scale(1.1) translate(-2%, 5%); }
-}
-
 body::after{
   content:'';
   position:fixed;
@@ -97,9 +79,21 @@ body::after{
   opacity:0.5;
 }
 
-/* ================================================================
-   NAV
-   ================================================================ */
+/* Kinetic Typography */
+.kinetic-text { display: inline-block; }
+.kinetic-char {
+  display: inline-block;
+  transform: translateY(120%) rotateX(-90deg);
+  opacity: 0;
+  transform-origin: center bottom;
+}
+.kinetic-char.revealed {
+  transform: translateY(0) rotateX(0);
+  opacity: 1;
+  transition: transform 0.8s var(--ease-spring), opacity 0.6s var(--ease);
+}
+
+/* NAV */
 .nav{
   position:fixed;
   top:1.25rem;
@@ -132,25 +126,25 @@ body::after{
 .nav-brand-icon img{ width:100%; height:100%; object-fit:cover; }
 .nav-brand-text{ font-weight:800; letter-spacing:-0.02em; }
 .nav-links{ display:flex; align-items:center; gap:0.25rem; }
-.nav-link{ font-size:0.875rem; font-weight:500; color:var(--text-secondary); padding:0.5rem 0.875rem; border-radius:8px; transition:all 0.2s var(--ease); }
+.nav-link{ font-size:0.875rem; font-weight:500; color:var(--text-secondary); padding:0.5rem 0.875rem; border-radius:8px; transition:all 0.2s var(--ease); position: relative; }
 .nav-link:hover{ color:var(--text); background:var(--surface); }
 .nav-cta{ display:inline-flex; align-items:center; gap:0.375rem; background:var(--text); color:var(--bg); font-size:0.8125rem; font-weight:600; padding:0.5rem 1rem; border-radius:9999px; transition:all 0.2s var(--ease); }
 .nav-cta:hover{ transform:translateY(-1px); box-shadow:0 4px 12px rgba(255,255,255,0.15); }
-
 @media(max-width:900px){
   .nav { width: calc(100% - 1.5rem); top: 0.75rem; padding: 0 1.25rem; }
   .nav.scrolled { top: 0.5rem; }
   .nav-links{ display:none; }
 }
+@media(max-width:480px){
+  .nav-cta { font-size: 0.75rem; padding: 0.4rem 0.75rem; }
+  .nav-brand { font-size: 0.9375rem; }
+  .nav-brand-icon { width: 24px; height: 24px; font-size: 0.75rem; }
+}
 
-/* ================================================================
-   TYPOGRAPHY, BUTTONS & SHIMMER EFFECT
-   ================================================================ */
+/* Typography */
 .eyebrow{ display:inline-flex; align-items:center; gap:0.5rem; font-family:var(--ff-mono); font-size:0.75rem; font-weight:500; color:var(--accent); letter-spacing:0.02em; margin-bottom:1.5rem; }
 .eyebrow::before{ content:''; width:6px; height:6px; background:var(--accent); border-radius:50%; box-shadow:0 0 8px var(--accent); }
 h1,h2,h3{ letter-spacing:-0.03em; line-height:1.05; }
-
-/* Shimmering Typography */
 .shimmer-text {
   background: linear-gradient(135deg, var(--accent) 20%, #ffffff 50%, var(--accent) 80%);
   background-size: 250% auto;
@@ -164,24 +158,56 @@ h1,h2,h3{ letter-spacing:-0.03em; line-height:1.05; }
   100% { background-position: -200% center; }
 }
 
-.btn{ display:inline-flex; align-items:center; gap:0.5rem; font-weight:600; font-size:0.9375rem; padding:0.75rem 1.5rem; border-radius:9999px; transition:all 0.2s var(--ease); position:relative; overflow:hidden; white-space:nowrap; }
-.btn-primary{ background:var(--accent); color:var(--bg); box-shadow:0 0 0 1px var(--accent),0 4px 14px var(--accent-glow); }
-.btn-primary:hover{ transform:translateY(-1px); box-shadow:0 0 0 1px var(--accent),0 6px 20px var(--accent-glow); }
-.btn-secondary{ background:var(--surface); color:var(--text); border:1px solid var(--border); }
+/* Magnetic Buttons */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  font-weight:600;
+  font-size:0.9375rem;
+  padding:0.75rem 1.5rem;
+  border-radius:9999px;
+  transition:all 0.2s var(--ease);
+  position:relative;
+  overflow:hidden;
+  white-space:nowrap;
+  will-change: transform;
+}
+.btn-primary{
+  background:var(--accent);
+  color:var(--bg);
+  box-shadow:0 0 0 1px var(--accent),0 4px 14px var(--accent-glow);
+}
+.btn-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 0 0 1px var(--accent),0 6px 20px var(--accent-glow);
+}
+.btn-secondary{
+  background:var(--surface);
+  color:var(--text);
+  border:1px solid var(--border);
+}
 .btn-secondary:hover{ background:var(--surface-hover); border-color:var(--border-hover); }
 .btn svg{ width:1rem; height:1rem; flex-shrink:0; }
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(93,214,44,0.15), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.btn:hover::before { opacity: 1; }
 section{ position:relative; z-index:2; }
 .container{ max-width:1200px; margin:0 auto; padding:0 1.5rem; }
 
-/* ================================================================
-   GLASS CARDS (Super Ellipse / Magnetic Core)
-   ================================================================ */
+/* Glass Cards + Chromatic Aberration */
 .glass-card {
   background: linear-gradient(145deg, rgba(22,22,24,0.7) 0%, rgba(28,28,31,0.3) 100%);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-radius: 32px; /* Super Ellipse effect */
-  /* Double glass borders: inner white gleam, outer subtle edge */
+  border-radius: 32px;
   box-shadow: 
     inset 0 1px 1px rgba(255,255,255,0.1),
     0 0 0 1px rgba(255,255,255,0.05),
@@ -192,14 +218,35 @@ section{ position:relative; z-index:2; }
   transform-style: preserve-3d;
   transition: box-shadow 0.4s var(--ease), border-color 0.4s var(--ease);
 }
-/* For smaller elements */
+.glass-card::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 34px;
+  background: linear-gradient(45deg, rgba(255,0,0,0.03), transparent, rgba(0,255,255,0.03));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+.glass-card:hover::after { opacity: 1; }
 .glass-card-sm {
   border-radius: 24px;
+  background: linear-gradient(145deg, rgba(22,22,24,0.7) 0%, rgba(28,28,31,0.3) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 
+    inset 0 1px 1px rgba(255,255,255,0.1),
+    0 0 0 1px rgba(255,255,255,0.05),
+    0 24px 48px rgba(0,0,0,0.3);
+  overflow: hidden;
+  position: relative;
+  will-change: transform;
+  transform-style: preserve-3d;
+  transition: box-shadow 0.4s var(--ease), border-color 0.4s var(--ease);
 }
 
-/* ================================================================
-   HERO 
-   ================================================================ */
+/* HERO */
 .hero{ min-height:100dvh; display:flex; align-items:center; padding:140px 1.5rem 80px; position:relative; overflow:hidden; }
 .hero-grid-bg{
   position:absolute; inset:0;
@@ -223,15 +270,8 @@ html[lang="en"] .hero-title{ font-weight:800; }
 .hero-meta-label{ font-size:0.8125rem; color:var(--text-tertiary); }
 .hero-visual{ position:relative; perspective: 1000px; }
 
-/* Floating particles around code window — depth & atmosphere */
-.hero-particle{ position:absolute; border-radius:50%; pointer-events:none; }
-.hero-particle.p1{ top:-20px;right:-20px; width:80px;height:80px; background:radial-gradient(circle,var(--accent-glow),transparent 70%); filter:blur(20px); }
-.hero-particle.p2{ bottom:-30px;left:-30px; width:120px;height:120px; background:radial-gradient(circle,rgba(139,233,253,0.08),transparent 70%); filter:blur(30px); }
-
-/* Code Window Inherits Glass Card */
-.code-window{
-  border-radius: 24px;
-}
+/* Code Window */
+.code-window{ border-radius: 24px; }
 .code-titlebar{ display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1.25rem; background:rgba(0,0,0,0.4); border-bottom:1px solid var(--border); }
 .code-dots{ display:flex; gap:6px; }
 .code-dot{ width:11px; height:11px; border-radius:50%; }
@@ -241,8 +281,6 @@ html[lang="en"] .hero-title{ font-weight:800; }
 .code-line{ display:flex; gap:1rem; }
 .code-ln{ color:var(--text-faint); width:1.5rem; text-align:right; user-select:none; flex-shrink:0; }
 .code-content{ flex:1; white-space:pre; }
-
-/* Typing Cursor Utility */
 .typing-cursor::after {
   content: '▋';
   display: inline-block;
@@ -252,14 +290,13 @@ html[lang="en"] .hero-title{ font-weight:800; }
 }
 html[dir="ltr"] .typing-cursor::after { margin-left: 0; margin-right: 4px; }
 @keyframes blink { 50% { opacity: 0; } }
-
-/* Syntax colors */
 .s-tag{color:#8be9fd} .s-attr{color:#50fa7b} .s-str{color:#f1fa8c} .s-kw{color:#ff79c6} .s-fn{color:#bd93f9} .s-comment{color:var(--text-faint);font-style:italic} .s-ar{color:var(--accent);font-weight:600} .s-en{color:#8be9fd} .s-arrow{color:var(--text-tertiary)} .s-plain{color:var(--text)}
-
 .code-status{ display:flex; align-items:center; justify-content:space-between; padding:0.5rem 1.25rem; background:rgba(0,0,0,0.4); border-top:1px solid var(--border); font-family:var(--ff-mono); font-size:0.6875rem; color:var(--text-tertiary); }
 .code-status-ok{ display:flex; align-items:center; gap:0.375rem; color:var(--accent); }
 .code-status-ok::before{ content:''; width:8px; height:8px; background:var(--accent); border-radius:50%; box-shadow:0 0 6px var(--accent); }
-
+.hero-particle{ position:absolute; border-radius:50%; pointer-events:none; }
+.hero-particle.p1{ top:-20px;right:-20px; width:80px;height:80px; background:radial-gradient(circle,var(--accent-glow),transparent 70%); filter:blur(20px); }
+.hero-particle.p2{ bottom:-30px;left:-30px; width:120px;height:120px; background:radial-gradient(circle,rgba(139,233,253,0.08),transparent 70%); filter:blur(30px); }
 @media(max-width:900px){
   .hero{ padding:130px 1.25rem 60px; }
   .hero-inner{ grid-template-columns:1fr; gap:3rem; }
@@ -267,22 +304,29 @@ html[dir="ltr"] .typing-cursor::after { margin-left: 0; margin-right: 4px; }
   .hero-visual{ order:1; }
   .hero-desc{ margin:0 auto 2.5rem; }
   .hero-actions, .hero-meta{ justify-content:center; }
+  .hero-meta{ gap:1.5rem; }
+}
+@media(max-width:480px){
+  .hero{ padding:110px 1rem 40px; }
+  .hero-title{ font-size:clamp(2rem,9vw,3rem); }
+  .hero-desc{ font-size:1rem; }
+  .hero-actions{ flex-direction:column; width:100%; gap:0.75rem; }
+  .hero-actions .btn{ width:100%; justify-content:center; }
+  .hero-meta{ gap:1.5rem 1rem; justify-content:space-around; }
+  .hero-meta-value{ font-size:1.25rem; }
+  .code-body{ font-size:0.75rem; padding:1rem; overflow-x:auto; -webkit-overflow-scrolling:touch; }
 }
 
-/* ================================================================
-   I18N CSS Logic for Code Blocks
-   ================================================================ */
+/* I18N */
 html[lang="ar"] .lang-en-only { display: none !important; }
 html[lang="en"] .lang-ar-only { display: none !important; }
 
-/* ================================================================
-   SURFACES
-   ================================================================ */
+/* SURFACES */
 .surfaces{ padding:8rem 0; position:relative; }
 .surfaces-header{ text-align:center; margin-bottom:5rem; padding:0 1.5rem; }
 .surfaces-title{ font-weight:800; font-size:clamp(2rem,5vw,3.5rem); line-height:1.05; margin-bottom:1rem; }
 .surfaces-sub{ font-size:1.125rem; color:var(--text-secondary); max-width:36rem; margin:0 auto; line-height:1.65; }
-.surface-row{ display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; margin-bottom:7rem; perspective: 1000px; }
+.surface-row{ display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; margin-bottom:7rem; perspective: 1200px; transform-style: preserve-3d; }
 .surface-row:last-child{ margin-bottom:0; }
 .surface-row.reverse .surface-visual{ order:-1; }
 .surface-info{ max-width:28rem; }
@@ -292,41 +336,45 @@ html[lang="en"] .lang-ar-only { display: none !important; }
 .surface-features{ display:flex; flex-direction:column; gap:0.625rem; }
 .surface-feature{ display:flex; align-items:center; gap:0.625rem; font-size:0.9375rem; color:var(--text); font-weight:500; }
 .surface-feature-check{ width:18px; height:18px; color:var(--accent); flex-shrink:0; }
-
+.surface-feature-check svg{width:100%;height:100%;stroke-width:2.5}
+.surface-visual { transform-style: preserve-3d; transition: transform 0.8s var(--ease); }
 .mockup-titlebar{ display:flex; align-items:center; gap:0.5rem; padding:0.625rem 1rem; background:rgba(0,0,0,0.4); border-bottom:1px solid var(--border); }
 .mockup-tab{ font-family:var(--ff-mono); font-size:0.6875rem; font-weight:600; padding:0.25rem 0.625rem; border-radius:5px; color:var(--text-tertiary); }
 .mockup-tab.active{ background:var(--accent-dim); color:var(--accent); }
 .mockup-body{ padding:1rem; font-family:var(--ff-mono); font-size:0.75rem; line-height:1.8; }
 .mockup-editor-line{ display:flex; gap:0.75rem; color:var(--text-secondary); }
 .mockup-editor-line .ln{ color:var(--text-faint); width:1.25rem; text-align:right; }
-
 .mockup-preview-body{ padding:1.25rem; }
 .mockup-browser-bar{ display:flex; align-items:center; gap:0.375rem; padding:0.5rem 0.75rem; background:rgba(0,0,0,0.4); border-radius:6px 6px 0 0; border:1px solid var(--border); border-bottom:none; }
 .mockup-url{ flex:1; font-family:var(--ff-mono); font-size:0.6875rem; color:var(--text-tertiary); background:var(--bg); padding:0.25rem 0.5rem; border-radius:4px; border:1px solid var(--border); }
 .mockup-preview-content{ background:var(--bg); border:1px solid var(--border); border-radius:0 0 6px 6px; padding:1rem; min-height:120px; }
 .mockup-h1{ font-family:var(--ff-ar); font-size:1rem; font-weight:700; color:var(--text); margin-bottom:0.5rem; }
 .mockup-btn{ display:inline-block; font-family:var(--ff-mono); font-size:0.6875rem; padding:0.25rem 0.75rem; background:var(--accent); color:var(--bg); border-radius:9999px; font-weight:600; }
-
 .mockup-chat{ padding:1rem; display:flex; flex-direction:column; gap:0.75rem; }
 .mockup-msg{ max-width:80%; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.75rem; line-height:1.5; }
 .mockup-msg.user{ background:var(--accent-dim); color:var(--accent); align-self:flex-end; font-weight:500; }
 .mockup-msg.bot{ background:rgba(0,0,0,0.4); border:1px solid var(--border); color:var(--text-secondary); align-self:flex-start; }
 .mockup-mode{ display:inline-flex; align-items:center; gap:0.25rem; font-family:var(--ff-mono); font-size:0.625rem; font-weight:600; padding:0.125rem 0.375rem; border-radius:4px; margin-bottom:0.25rem; }
 .mockup-mode.code{ background:rgba(255,121,198,0.1); color:#ff79c6; }
-
+.mockup-mode.chat{ background:rgba(139,233,253,0.1); color:#8be9fd; }
+.mockup-mode.ui{ background:rgba(189,147,249,0.1); color:#bd93f9; }
 @media(max-width:900px){
+  .surfaces{ padding:5rem 0; }
   .surface-row{ display:flex; flex-direction:column; gap:2.5rem; margin-bottom:5rem; }
-  .surface-info{ max-width:100%; text-align:right; }
-  .surface-visual{ width:100%; }
+  .surface-row.reverse{ flex-direction:column; }
+  .surface-info{ order:1; max-width:100%; text-align:right; }
+  .surface-visual{ order:2; width:100%; }
+  .surfaces-header{ margin-bottom:3rem; }
+}
+@media(max-width:480px){
+  .mockup-body, .mockup-preview-body, .mockup-chat{ max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
 }
 
-/* ================================================================
-   INNOVATIONS
-   ================================================================ */
+/* INNOVATIONS */
 .innovations{ padding:8rem 0; position:relative; }
 .innovations-inner{ max-width:1200px; margin:0 auto; padding:0 1.5rem; perspective: 1000px; }
 .innovations-header{ text-align:center; margin-bottom:5rem; }
-.innovation-block{ display:grid; grid-template-columns:1fr 1.2fr; gap:3rem; align-items:center; margin-bottom:5rem; padding-bottom:5rem; }
+.innovation-block{ display:grid; grid-template-columns:1fr 1.2fr; gap:3rem; align-items:center; margin-bottom:5rem; padding-bottom:5rem; border-bottom:1px solid var(--border); }
 .innovation-block:last-child{ margin-bottom:0; padding-bottom:0; border-bottom:none; }
 .innovation-block.reverse{ direction:ltr; }
 .innovation-block.reverse > *{ direction:rtl; }
@@ -334,21 +382,39 @@ html[lang="en"] .lang-ar-only { display: none !important; }
 .innovation-num{ font-family:var(--ff-mono); font-size:0.75rem; font-weight:600; color:var(--accent); letter-spacing:0.1em; margin-bottom:0.875rem; }
 .innovation-name{ font-weight:800; font-size:clamp(1.5rem,3.5vw,2.25rem); line-height:1.1; margin-bottom:1rem; letter-spacing:-0.03em; }
 .innovation-desc{ font-size:1rem; line-height:1.7; color:var(--text-secondary); margin-bottom:1.5rem; }
-
 .innovation-code-header{ display:flex; align-items:center; justify-content:space-between; padding:0.5rem 0.875rem; background:rgba(0,0,0,0.4); border-bottom:1px solid var(--border); }
 .innovation-code-title{ font-family:var(--ff-mono); font-size:0.6875rem; color:var(--text-tertiary); }
 .innovation-code-body{ padding:1rem 1.25rem; font-family:var(--ff-mono); font-size:0.8125rem; line-height:1.9; overflow-x:auto; }
-
+.security-scanner {
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:2px;
+  background:linear-gradient(90deg, transparent, var(--accent), transparent);
+  box-shadow:0 0 8px var(--accent);
+  pointer-events:none;
+  animation:scanlineAnim 4s linear infinite;
+  z-index:10;
+}
+@keyframes scanlineAnim {
+  0% { top: 0%; opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { top: 100%; opacity: 0; }
+}
 @media(max-width:900px){
+  .innovations{ padding:5rem 0; }
   .innovation-block, .innovation-block.reverse{ display:flex; flex-direction:column; gap:2rem; margin-bottom:4rem; padding-bottom:4rem; text-align:right; }
   .innovation-block.reverse > *{ direction:rtl; }
   .innovation-info{ max-width:100%; }
   .innovation-code-block{ width:100%; }
 }
+@media(max-width:480px){
+  .innovation-code-body{ font-size:0.75rem; padding:1rem; }
+}
 
-/* ================================================================
-   THE LOOP — Glowing SVG Flow Upgrade
-   ================================================================ */
+/* THE LOOP */
 .loop{ padding:8rem 0; position:relative; }
 .loop-inner{ max-width:1000px; margin:0 auto; padding:0 1.5rem; text-align:center; }
 .loop-header{ margin-bottom:4rem; }
@@ -359,8 +425,6 @@ html[lang="en"] .lang-ar-only { display: none !important; }
 .loop-step-icon svg{ width:24px; height:24px; stroke-width:1.5; }
 .loop-step-name{ font-weight:700; font-size:0.9375rem; color:var(--text); }
 .loop-step-role{ font-family:var(--ff-mono); font-size:0.625rem; font-weight:600; color:var(--text-tertiary); letter-spacing:0.1em; }
-
-/* The Glowing Track Connector */
 .loop-connector {
   width: 64px; height: 2px;
   background: rgba(255,255,255,0.05);
@@ -378,24 +442,57 @@ html[dir="rtl"] .loop-connector::after {
 @keyframes loopFlow { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 @keyframes loopFlowRTL { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
+/* Slot Machine Stats */
 .loop-stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; max-width:700px; margin:0 auto; perspective: 1000px; }
 .loop-stat-inner{ padding:1.5rem 1rem; text-align:center; }
-.loop-stat-value{ font-family:var(--ff-mono); font-size:2.5rem; font-weight:700; color:var(--accent); line-height:1; margin-bottom:0.375rem; }
+.loop-stat-value{ 
+  font-family:var(--ff-mono); 
+  font-size:2.5rem; 
+  font-weight:700; 
+  color:var(--accent); 
+  line-height:1; 
+  margin-bottom:0.375rem;
+  position: relative;
+  overflow: hidden;
+  height: 1.2em;
+}
+.slot-digit {
+  display: inline-block;
+  position: relative;
+  width: 0.6em;
+  height: 1.2em;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.slot-digit-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: transform 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.slot-digit-inner span {
+  display: block;
+  height: 1.2em;
+  line-height: 1.2em;
+  text-align: center;
+}
 .loop-stat-label{ font-size:0.8125rem; font-weight:600; color:var(--text); margin-bottom:0.125rem; }
 .loop-stat-sub{ font-size:0.6875rem; color:var(--text-tertiary); }
-
 @media(max-width:768px){
+  .loop{ padding:5rem 0; }
   .loop-cycle{ flex-direction:column; gap:1rem; }
   .loop-connector{ width:2px; height:32px; }
   .loop-connector::after{ background: linear-gradient(180deg, transparent, var(--accent), transparent); animation: loopFlowV 1.5s infinite linear; }
   @keyframes loopFlowV { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
   .loop-stats{ grid-template-columns:repeat(2,1fr); }
 }
-@media(max-width:480px){ .loop-stats{ grid-template-columns:1fr; } }
+@media(max-width:480px){ 
+  .loop-stats{ grid-template-columns:1fr; } 
+  .loop-stat-value{ font-size:2rem; }
+}
 
-/* ================================================================
-   TECH STACK
-   ================================================================ */
+/* TECH STACK */
 .tech{ padding:6rem 0; border-top:1px solid var(--border); }
 .tech-inner{ max-width:1000px; margin:0 auto; padding:0 1.5rem; text-align:center; }
 .tech-header{ margin-bottom:3rem; }
@@ -404,21 +501,29 @@ html[dir="rtl"] .loop-connector::after {
 .tech-pill-icon{ font-family:var(--ff-mono); font-size:0.75rem; font-weight:700; color:var(--accent); }
 .tech-pill-ver{ font-family:var(--ff-mono); font-size:0.6875rem; color:var(--text-tertiary); }
 
-/* ================================================================
-   FINAL CTA
-   ================================================================ */
+/* Tech Marquee — infinite scrolling ticker */
+.tech-marquee{ overflow:hidden; position:relative; -webkit-mask-image:linear-gradient(90deg,transparent,black 8%,black 92%,transparent); mask-image:linear-gradient(90deg,transparent,black 8%,black 92%,transparent); }
+.tech-marquee-track{ display:flex; gap:0.625rem; width:max-content; animation:techScroll 40s linear infinite; }
+.tech-marquee-track:hover{ animation-play-state:paused; }
+@keyframes techScroll{ 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+html[dir="rtl"] .tech-marquee-track{ animation:techScrollRTL 40s linear infinite; }
+@keyframes techScrollRTL{ 0%{transform:translateX(-50%)} 100%{transform:translateX(0)} }
+
+/* FINAL CTA */
 .cta{ padding:8rem 1.5rem; text-align:center; }
 .cta-inner{ max-width:600px; margin:0 auto; }
 .cta-title{ font-weight:800; font-size:clamp(2.25rem,5vw,3.5rem); margin-bottom:1.25rem; }
-.cta-desc{ font-size:1.125rem; color:var(--text-secondary); margin-bottom:2.5rem; }
+.cta-desc{ font-size:1.125rem; color:var(--text-secondary); margin-bottom:2.5rem; line-height:1.65; }
 .cta-actions{ display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap; }
+@media(max-width:480px){
+  .cta-actions{ flex-direction:column; width:100%; gap:0.75rem; }
+  .cta-actions .btn{ width:100%; justify-content:center; }
+}
 
-/* ================================================================
-   FOOTER
-   ================================================================ */
+/* FOOTER */
 .footer{ padding:3rem 1.5rem 2rem; border-top:1px solid var(--border); }
 .footer-inner{ max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:1.5rem; flex-wrap:wrap; }
-.footer-brand{ display:flex; align-items:center; gap:0.5rem; font-weight:700; font-size:0.9375rem; }
+.footer-brand{ display:flex; align-items:center; gap:0.5rem; font-weight:700; font-size:0.9375rem; color:var(--text); }
 .footer-brand-icon{ width:24px; height:24px; background:var(--accent); border-radius:6px; display:grid; place-items:center; font-family:var(--ff-mono); font-size:0.75rem; color:var(--bg); }
 .footer-meta{ font-family:var(--ff-mono); font-size:0.75rem; color:var(--text-tertiary); }
 .footer-meta .accent{ color:var(--accent); }
@@ -427,41 +532,89 @@ html[dir="rtl"] .loop-connector::after {
 .footer-link:hover{ color:var(--accent); }
 @media(max-width:600px){ .footer-inner{ flex-direction:column; text-align:center; } }
 
-/* ================================================================
-   SCROLL REVEAL 
-   ================================================================ */
-.reveal{ opacity:0; transform:translateY(30px); transition:opacity 0.6s var(--ease), transform 0.6s var(--ease); }
-.reveal.visible{ opacity:1; transform:translateY(0); }
-@media(prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} .reveal{opacity:1!important;transform:none!important} }
+/* Scroll Reveal (3D Perspective) */
+.reveal{ 
+  opacity:0; 
+  transform: translateY(60px) rotateX(15deg) scale(0.95);
+  transform-origin: center bottom;
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+.reveal.visible{ 
+  opacity:1; 
+  transform: translateY(0) rotateX(0) scale(1);
+}
+.reveal-delay-1{ transition-delay:0.1s }
+.reveal-delay-2{ transition-delay:0.2s }
+.reveal-delay-3{ transition-delay:0.3s }
+@media(prefers-reduced-motion:reduce){ 
+  *{animation:none!important;transition:none!important} 
+  .reveal{opacity:1!important;transform:none!important} 
+  #shader-canvas { display: none; }
+}
 
-/* ================================================================
-   TECH MARQUEE — World-class infinite scrolling ticker
-   ================================================================ */
-.tech-marquee{
-  overflow:hidden;
-  position:relative;
-  -webkit-mask-image:linear-gradient(90deg,transparent,black 8%,black 92%,transparent);
-  mask-image:linear-gradient(90deg,transparent,black 8%,black 92%,transparent);
+/* Custom Cursor + Spotlight */
+html.custom-cursor-active,
+html.custom-cursor-active * {
+  cursor: none !important;
 }
-.tech-marquee-track{
-  display:flex;
-  gap:0.625rem;
-  width:max-content;
-  animation:techScroll 40s linear infinite;
+.custom-cursor-dot,
+.custom-cursor-outline,
+.spotlight-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity;
 }
-.tech-marquee-track:hover{ animation-play-state:paused; }
-@keyframes techScroll{ 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-html[dir="rtl"] .tech-marquee-track{ animation:techScrollRTL 40s linear infinite; }
-@keyframes techScrollRTL{ 0%{transform:translateX(-50%)} 100%{transform:translateX(0)} }
+.custom-cursor-dot {
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  background-color: var(--accent);
+  border-radius: 50%;
+  z-index: 9999999;
+  box-shadow: 0 0 10px var(--accent);
+  transition: opacity 0.3s ease, width 0.2s ease, height 0.2s ease, margin 0.2s ease;
+}
+.custom-cursor-dot.hovered {
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+}
+.custom-cursor-outline {
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border: 1.5px solid var(--accent);
+  background-color: rgba(93, 214, 44, 0.03);
+  border-radius: 50%;
+  z-index: 9999998;
+  box-shadow: 0 0 15px rgba(93, 214, 44, 0.1);
+  transition: opacity 0.3s ease, width 0.2s ease, height 0.2s ease, margin 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.custom-cursor-outline.hovered {
+  width: 42px;
+  height: 42px;
+  margin: -21px 0 0 -21px;
+  background-color: rgba(93, 214, 44, 0.12);
+}
+.spotlight-glow {
+  width: 500px;
+  height: 500px;
+  margin: -250px 0 0 -250px;
+  background: radial-gradient(circle, rgba(93, 214, 44, 0.04) 0%, rgba(93, 214, 44, 0) 70%);
+  border-radius: 50%;
+  z-index: 1;
+  filter: blur(100px);
+  transition: opacity 0.5s ease;
+}
 </style>
 </head>
 <body>
 
-<div class="mesh-bg"></div>
+<canvas id="shader-canvas"></canvas>
 
-<!-- ================================================================
-     NAV
-     ================================================================ -->
 <nav class="nav">
   <div class="nav-inner">
     <a href="#" class="nav-brand">
@@ -478,16 +631,12 @@ html[dir="rtl"] .tech-marquee-track{ animation:techScrollRTL 40s linear infinite
   </div>
 </nav>
 
-<!-- ================================================================
-     HERO
-     ================================================================ -->
 <section class="hero">
   <div class="hero-grid-bg"></div>
   <div class="hero-inner">
-
     <div class="hero-content">
       <div class="eyebrow" data-i="hero.badge">TestSprite Hackathon Season 3</div>
-      <h1 class="hero-title">
+      <h1 class="hero-title kinetic-text" id="heroTitle">
         <span data-i="hero.t1">اكتب بالعربية.</span><br>
         <span class="mono grad shimmer-text" data-i="hero.t2">NEXUS</span>
         <span data-i="hero.t3">يحوّلها لكود.</span>
@@ -496,32 +645,31 @@ html[dir="rtl"] .tech-marquee-track{ animation:techScrollRTL 40s linear infinite
         بيئة تطوير ذكية في المتصفح. محرر Monaco، معاينة حية، ووكيل ذكاء اصطناعي بثلاثة أوضاع. محرك ترجمة فوري من العربية إلى الكود، ومحلل أمان سيبراني متقدم.
       </p>
       <div class="hero-actions">
-        <a href="https://my-project-one-brown-97.vercel.app" target="_blank" rel="noopener" class="btn btn-primary">
+        <a href="https://my-project-one-brown-97.vercel.app" target="_blank" rel="noopener" class="btn btn-primary magnetic-btn">
           <span data-i="hero.cta1">جرّب الآن</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </a>
-        <a href="https://github.com/mo01115285816-cyber/testsprite-season3-entry" target="_blank" rel="noopener" class="btn btn-secondary">
+        <a href="https://github.com/mo01115285816-cyber/testsprite-season3-entry" target="_blank" rel="noopener" class="btn btn-secondary magnetic-btn">
           <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           <span data-i="hero.cta2">GitHub</span>
         </a>
       </div>
       <div class="hero-meta">
         <div class="hero-meta-item">
-          <div class="hero-meta-value">16</div>
+          <div class="hero-meta-value slot-number" data-target="16">0</div>
           <div class="hero-meta-label" data-i="hero.m1">تكرار حلقة</div>
         </div>
         <div class="hero-meta-item">
-          <div class="hero-meta-value">13</div>
+          <div class="hero-meta-value slot-number" data-target="13">0</div>
           <div class="hero-meta-label" data-i="hero.m2">اختبار مجتاز</div>
         </div>
         <div class="hero-meta-item">
-          <div class="hero-meta-value">3</div>
+          <div class="hero-meta-value slot-number" data-target="3">0</div>
           <div class="hero-meta-label" data-i="hero.m3">أسطح متكاملة</div>
         </div>
       </div>
     </div>
 
-    <!-- Live code editor mockup (Glass Card + 3D) -->
     <div class="hero-visual">
       <div class="hero-particle p1"></div>
       <div class="hero-particle p2"></div>
@@ -534,8 +682,6 @@ html[dir="rtl"] .tech-marquee-track{ animation:techScrollRTL 40s linear infinite
           </div>
           <span class="code-filename">index.html</span>
         </div>
-        
-        <!-- I18n Safe Code Wrapping + Typing Target -->
         <div class="code-body typewriter-target lang-ar-only">
           <div class="code-line"><span class="code-ln">1</span><span class="code-content"><span class="s-comment">&lt;!-- اكتب HTML بالعربية --&gt;</span></span></div>
           <div class="code-line"><span class="code-ln">2</span><span class="code-content"><span class="s-tag">&lt;</span><span class="s-ar">حاوية</span> <span class="s-attr">كلاس</span><span class="s-kw">=</span><span class="s-str">"تطبيق"</span><span class="s-tag">&gt;</span></span></div>
@@ -549,7 +695,6 @@ html[dir="rtl"] .tech-marquee-track{ animation:techScrollRTL 40s linear infinite
           <div class="code-line"><span class="code-ln">10</span><span class="code-content">&nbsp;&nbsp;<span class="s-tag">&lt;</span><span class="s-en">button</span> <span class="s-attr">onClick</span><span class="s-kw">=</span><span class="s-str">"start()"</span><span class="s-tag">&gt;</span><span class="s-plain">اضغط هنا</span><span class="s-tag">&lt;/</span><span class="s-en">button</span><span class="s-tag">&gt;</span></span></div>
           <div class="code-line"><span class="code-ln">11</span><span class="code-content"><span class="s-tag">&lt;/</span><span class="s-en">div</span><span class="s-tag">&gt;</span></span></div>
         </div>
-
         <div class="code-body typewriter-target lang-en-only">
           <div class="code-line"><span class="code-ln">1</span><span class="code-content"><span class="s-comment">&lt;!-- Write HTML natively --&gt;</span></span></div>
           <div class="code-line"><span class="code-ln">2</span><span class="code-content"><span class="s-tag">&lt;</span><span class="s-en">div</span> <span class="s-attr">class</span><span class="s-kw">=</span><span class="s-str">"app"</span><span class="s-tag">&gt;</span></span></div>
@@ -557,135 +702,164 @@ html[dir="rtl"] .tech-marquee-track{ animation:techScrollRTL 40s linear infinite
           <div class="code-line"><span class="code-ln">4</span><span class="code-content">&nbsp;&nbsp;<span class="s-tag">&lt;</span><span class="s-en">button</span> <span class="s-attr">onClick</span><span class="s-kw">=</span><span class="s-str">"start()"</span><span class="s-tag">&gt;</span><span class="s-plain">Click here</span><span class="s-tag">&lt;/</span><span class="s-en">button</span><span class="s-tag">&gt;</span></span></div>
           <div class="code-line"><span class="code-ln">5</span><span class="code-content"><span class="s-tag">&lt;/</span><span class="s-en">div</span><span class="s-tag">&gt;</span></span></div>
         </div>
-
         <div class="code-status">
           <div class="code-status-ok" data-i="hero.compiled">تم التحويل بنجاح</div>
-          <div>HTML · UTF-8</div>
+          <div>HTML · UTF-8 · Ln 11</div>
         </div>
       </div>
     </div>
-
   </div>
 </section>
 
-<!-- ================================================================
-     SURFACES
-     ================================================================ -->
 <section class="surfaces" id="surfaces">
   <div class="surfaces-header reveal">
     <div class="eyebrow" data-i="s.label">ثلاثة أسطح متكاملة</div>
-    <h2 class="surfaces-title"><span data-i="s.t1">كل أداة تحتاجها</span><br><span class="grad shimmer-text" data-i="s.t2">في مكان واحد</span></h2>
+    <h2 class="surfaces-title kinetic-text" id="surfacesTitle"><span data-i="s.t1">كل أداة تحتاجها</span><br><span class="grad shimmer-text" data-i="s.t2">في مكان واحد</span></h2>
     <p class="surfaces-sub" data-i="s.sub">محرر، معاينة، ووكيل ذكاء اصطناعي. ثلاثة أسطح تعمل معاً بسلاسة تامة.</p>
   </div>
 
   <div class="container">
-
-    <!-- Surface 1 -->
     <div class="surface-row reveal">
       <div class="surface-info">
         <div class="surface-number">01 — EDITOR</div>
         <h3 class="surface-name" data-i="s.editor.name">محرر الأكواد</h3>
         <p class="surface-desc" data-i="s.editor.desc">محرر متقدم مبني على Monaco. تمييز صيغة، أرقام أسطر، بحث واستبدال متقدم بدعم regex، نسخ دقيق بين سطرين، ومنسق أكواد ذكي.</p>
         <div class="surface-features">
-          <div class="surface-feature"><span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span><span data-i="s.editor.f1">بحث واستبدال بـ regex وحساسية الحالة</span></div>
-          <div class="surface-feature"><span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span><span data-i="s.editor.f2">نسخ دقيق للأكواد بين سطرين</span></div>
-          <div class="surface-feature"><span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span><span data-i="s.editor.f3">منسق أكواد تلقائي مدعوم بالذكاء الاصطناعي</span></div>
+          <div class="surface-feature">
+            <span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span>
+            <span data-i="s.editor.f1">بحث واستبدال بـ regex وحساسية الحالة</span>
+          </div>
+          <div class="surface-feature">
+            <span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span>
+            <span data-i="s.editor.f2">نسخ دقيق للأكواد بين سطرين</span>
+          </div>
+          <div class="surface-feature">
+            <span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span>
+            <span data-i="s.editor.f3">منسق أكواد تلقائي مدعوم بالذكاء الاصطناعي</span>
+          </div>
         </div>
       </div>
       <div class="surface-visual">
         <div class="mockup-frame glass-card 3d-card">
           <div class="mockup-titlebar">
-            <span class="mockup-tab active">index.js</span>
+            <span class="mockup-tab active">index.html</span>
+            <span class="mockup-tab">style.css</span>
+            <span class="mockup-tab">app.js</span>
           </div>
-          <div class="mockup-body typewriter-target">
-            <div class="mockup-editor-line"><span class="ln">1</span><span><span class="s-kw">const</span> <span class="s-fn">nexus</span> = () =&gt; {</span></div>
-            <div class="mockup-editor-line"><span class="ln">2</span><span>&nbsp;&nbsp;<span class="s-kw">return</span> <span class="s-tag">&lt;div&gt;</span><span class="s-plain">NEXUS Core</span><span class="s-tag">&lt;/div&gt;</span>;</span></div>
-            <div class="mockup-editor-line"><span class="ln">3</span><span>}</span></div>
+          <div class="mockup-body">
+            <div class="mockup-editor-line"><span class="ln">1</span><span><span style="color:#ff79c6">const</span> <span style="color:#8be9fd">nexus</span> = () =&gt; {</span></div>
+            <div class="mockup-editor-line"><span class="ln">2</span><span>&nbsp;&nbsp;<span style="color:#ff79c6">return</span> &lt;<span style="color:#50fa7b">div</span>&gt;</span></div>
+            <div class="mockup-editor-line"><span class="ln">3</span><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#50fa7b">h1</span>&gt;NEXUS&lt;/<span style="color:#50fa7b">h1</span>&gt;</span></div>
+            <div class="mockup-editor-line"><span class="ln">4</span><span>&nbsp;&nbsp;&lt;/<span style="color:#50fa7b">div</span>&gt;</span></div>
+            <div class="mockup-editor-line"><span class="ln">5</span><span>}</span></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Surface 2 -->
     <div class="surface-row reverse reveal">
       <div class="surface-info">
         <div class="surface-number">02 — PREVIEW</div>
         <h3 class="surface-name" data-i="s.preview.name">معاينة حية</h3>
-        <p class="surface-desc" data-i="s.preview.desc">معاينة فورية لـ HTML و React مع ثلاثة أحجام أجهزة وفاحص عناصر CSS.</p>
+        <p class="surface-desc" data-i="s.preview.desc">معاينة فورية لـ HTML و React مع ثلاثة أحجام أجهزة (سطح المكتب، اللوحي، الجوال)، وفاحص عناصر CSS بأسلوب Chrome DevTools.</p>
         <div class="surface-features">
-          <div class="surface-feature"><span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span><span data-i="s.preview.f1">ثلاثة أحجام: سطح مكتب، لوحي، جوال</span></div>
-          <div class="surface-feature"><span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span><span data-i="s.preview.f2">فاحص عناصر CSS تفاعلي</span></div>
-          <div class="surface-feature"><span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span><span data-i="s.preview.f3">تحديث فوري عند الكتابة</span></div>
+          <div class="surface-feature">
+            <span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span>
+            <span data-i="s.preview.f1">ثلاثة أحجام: سطح مكتب، لوحي، جوال</span>
+          </div>
+          <div class="surface-feature">
+            <span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span>
+            <span data-i="s.preview.f2">فاحص عناصر CSS تفاعلي</span>
+          </div>
+          <div class="surface-feature">
+            <span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span>
+            <span data-i="s.preview.f3">تحديث فوري عند الكتابة</span>
+          </div>
         </div>
       </div>
       <div class="surface-visual">
         <div class="mockup-frame glass-card 3d-card">
           <div class="mockup-preview-body">
             <div class="mockup-browser-bar">
-              <span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span>
+              <span class="code-dot r" style="width:8px;height:8px"></span>
+              <span class="code-dot y" style="width:8px;height:8px"></span>
+              <span class="code-dot g" style="width:8px;height:8px"></span>
               <span class="mockup-url">localhost:3000</span>
             </div>
             <div class="mockup-preview-content">
-              <div class="mockup-h1">NEXUS UI</div>
-              <span class="mockup-btn">Live Element</span>
+              <div class="mockup-h1">NEXUS</div>
+              <span class="mockup-btn">اضغط هنا</span>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Surface 3 -->
     <div class="surface-row reveal">
       <div class="surface-info">
         <div class="surface-number">03 — AGENT</div>
         <h3 class="surface-name" data-i="s.agent.name">وكيل الذكاء الاصطناعي</h3>
-        <p class="surface-desc" data-i="s.agent.desc">أوضاع استشارة، هندسة أكواد، وتصميم واجهات بتوجيه ذكي.</p>
+        <p class="surface-desc" data-i="s.agent.desc">ثلاثة أوضاع: مستشار CHAT، مهندس CODE، ومصمم UI_ARTIST. توجيه الطلبات، توليد الأكواد، وكتابتها مباشرة في المحرر.</p>
         <div class="surface-features">
-          <div class="surface-feature"><span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span><span data-i="s.agent.f1">وضع CHAT للمشورة والنصائح</span></div>
-          <div class="surface-feature"><span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span><span data-i="s.agent.f2">وضع CODE لكتابة وإصلاح الأكواد</span></div>
-          <div class="surface-feature"><span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span><span data-i="s.agent.f3">وضع UI_ARTIST لتصميم الواجهات</span></div>
+          <div class="surface-feature">
+            <span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span>
+            <span data-i="s.agent.f1">وضع CHAT للمشورة والنصائح</span>
+          </div>
+          <div class="surface-feature">
+            <span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span>
+            <span data-i="s.agent.f2">وضع CODE لكتابة وإصلاح الأكواد</span>
+          </div>
+          <div class="surface-feature">
+            <span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span>
+            <span data-i="s.agent.f3">وضع UI_ARTIST لتصميم الواجهات</span>
+          </div>
         </div>
       </div>
       <div class="surface-visual">
         <div class="mockup-frame glass-card 3d-card">
-          <div class="mockup-titlebar"><span class="mockup-tab active">AI Agent</span></div>
+          <div class="mockup-titlebar">
+            <span class="mockup-tab active">AI Agent</span>
+          </div>
           <div class="mockup-chat">
-            <div class="mockup-msg user">Build a login button</div>
+            <div class="mockup-msg user">اكتب لي زر تسجيل دخول</div>
             <div class="mockup-msg bot">
               <div class="mockup-mode code">CODE MODE</div>
-              Generating React component with Tailwind...
+              تم إنشاء زر تسجيل دخول مع تنسيق Tailwind. تمت كتابته في المحرر.
             </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </section>
 
-<!-- ================================================================
-     INNOVATIONS
-     ================================================================ -->
 <section class="innovations" id="innovations">
   <div class="innovations-inner">
     <div class="innovations-header reveal">
       <div class="eyebrow" data-i="in.label">ابتكارات حصرية</div>
-      <h2 class="surfaces-title"><span data-i="in.t1">ما لا تجده</span><br><span class="grad shimmer-text" data-i="in.t2">في أي IDE آخر</span></h2>
+      <h2 class="surfaces-title kinetic-text" id="innovationsTitle"><span data-i="in.t1">ما لا تجده</span><br><span class="grad shimmer-text" data-i="in.t2">في أي IDE آخر</span></h2>
     </div>
 
-    <!-- Innovation 1: Translation -->
     <div class="innovation-block reveal">
       <div class="innovation-info">
         <div class="innovation-num">01</div>
         <h3 class="innovation-name" data-i="in.ar.name">محرّم الترجمة من العربية إلى الكود</h3>
-        <p class="innovation-desc" data-i="in.ar.desc">اكتب أكواد HTML و JSX بالعربية، ويتحول فوراً إلى كود صالح للتنفيذ.</p>
+        <p class="innovation-desc" data-i="in.ar.desc">اكتب أكواد HTML و JSX بالعربية، ويتحول فوراً إلى كود صالح للتنفيذ. خريطة شاملة تربط كل وسم وخصوصية وكلمة مفتاحية.</p>
       </div>
       <div class="innovation-code-block glass-card 3d-card">
-        <div class="innovation-code-header"><span class="innovation-code-title">map.ts</span></div>
+        <div class="innovation-code-header">
+          <span class="innovation-code-title">translation-map.ts</span>
+        </div>
         <div class="innovation-code-body typewriter-target lang-ar-only">
           <div><span class="s-ar">حاوية</span> <span class="s-arrow">→</span> <span class="s-en">div</span></div>
           <div><span class="s-ar">عنوان1</span> <span class="s-arrow">→</span> <span class="s-en">h1</span></div>
           <div><span class="s-ar">زر</span> <span class="s-arrow">→</span> <span class="s-en">button</span></div>
+          <div><span class="s-ar">رابط</span> <span class="s-arrow">→</span> <span class="s-en">a</span></div>
+          <div><span class="s-ar">صورة</span> <span class="s-arrow">→</span> <span class="s-en">img</span></div>
+          <div><span class="s-ar">استيراد</span> <span class="s-arrow">→</span> <span class="s-en">import</span></div>
+          <div><span class="s-ar">دالة</span> <span class="s-arrow">→</span> <span class="s-en">function</span></div>
+          <div><span class="s-ar">ثابت</span> <span class="s-arrow">→</span> <span class="s-en">const</span></div>
+          <div><span class="s-comment">// + 40 وسم، 20 خاصية، 15 كلمة مفتاحية</span></div>
         </div>
         <div class="innovation-code-body typewriter-target lang-en-only">
           <div><span class="s-en">div</span> <span class="s-arrow">←</span> <span class="s-ar">Container</span></div>
@@ -695,24 +869,30 @@ html[dir="rtl"] .tech-marquee-track{ animation:techScrollRTL 40s linear infinite
       </div>
     </div>
 
-    <!-- Innovation 2: Security Analyzer -->
     <div class="innovation-block reverse reveal">
       <div class="innovation-info">
         <div class="innovation-num">02</div>
         <h3 class="innovation-name" data-i="in.sec.name">محلل الأمان السيبراني</h3>
-        <p class="innovation-desc" data-i="in.sec.desc">تحليل عميق لتدفق التلوث وتسلسل الهجمات.</p>
+        <p class="innovation-desc" data-i="in.sec.desc">تحليل عميق لتدفق التلوث، تسلسل الهجمات، تسجيل درجات CVSS، تصنيف CWE، وتوليد إثبات المفهوم ضد أي كود.</p>
       </div>
-      <div class="innovation-code-block glass-card 3d-card">
-        <div class="innovation-code-header"><span class="innovation-code-title">report.json</span></div>
+      <div class="innovation-code-block glass-card 3d-card" style="position: relative;">
+        <div class="security-scanner"></div>
+        <div class="innovation-code-header">
+          <span class="innovation-code-title">security-report.json</span>
+        </div>
         <div class="innovation-code-body typewriter-target">
           <div><span class="s-kw">CRITICAL</span> | CVSS <span class="s-str">9.8</span></div>
           <div><span class="s-attr">CWE-89</span> | SQL Injection</div>
+          <div><span class="s-attr">CWE-79</span> | XSS (Stored)</div>
+          <div><span class="s-attr">CWE-352</span> | CSRF</div>
+          <div>&nbsp;</div>
+          <div><span class="s-comment">// PoC exploitation generated</span></div>
+          <div><span class="s-fn">attack_chain</span>: <span class="s-str">3 steps</span></div>
           <div><span class="s-fn">taint_flow</span>: <span class="s-str">user_input → query</span></div>
         </div>
       </div>
     </div>
 
-    <!-- Innovation 3: 3-Mode Agent -->
     <div class="innovation-block reveal">
       <div class="innovation-info">
         <div class="innovation-num">03</div>
@@ -720,7 +900,9 @@ html[dir="rtl"] .tech-marquee-track{ animation:techScrollRTL 40s linear infinite
         <p class="innovation-desc" data-i="in.agent.desc">وضع CHAT للمشورة، وضع CODE لكتابة الأكواد، وضع UI_ARTIST لتصميم الواجهات. توجيه تلقائي وتوليد مباشر في المحرر.</p>
       </div>
       <div class="innovation-code-block glass-card 3d-card">
-        <div class="innovation-code-header"><span class="innovation-code-title">agent-modes.ts</span></div>
+        <div class="innovation-code-header">
+          <span class="innovation-code-title">agent-modes.ts</span>
+        </div>
         <div class="innovation-code-body typewriter-target">
           <div><span class="s-fn">CHAT</span> <span class="s-arrow">→</span> <span class="s-comment">// مستشار ونصائح</span></div>
           <div><span class="s-fn">CODE</span> <span class="s-arrow">→</span> <span class="s-comment">// مهندس أكواد</span></div>
@@ -735,39 +917,81 @@ html[dir="rtl"] .tech-marquee-track{ animation:techScrollRTL 40s linear infinite
   </div>
 </section>
 
-<!-- ================================================================
-     THE LOOP — Animated Path Upgrade
-     ================================================================ -->
 <section class="loop" id="loop">
   <div class="loop-inner">
     <div class="loop-header reveal">
       <div class="eyebrow" data-i="l.label">الحلقة</div>
-      <h2 class="surfaces-title"><span data-i="l.t1">اكتب، تحقق، أصلح،</span><br><span class="grad shimmer-text" data-i="l.t2">تحقق مرة أخرى</span></h2>
+      <h2 class="surfaces-title kinetic-text" id="loopTitle"><span data-i="l.t1">اكتب، تحقق، أصلح،</span><br><span class="grad shimmer-text" data-i="l.t2">تحقق مرة أخرى</span></h2>
       <p class="surfaces-sub" data-i="l.sub">NEXUS هو الجانب الصانع في حلقة الكتابة والتحقق. الـ TestSprite CLI هو الجانب المدقق.</p>
     </div>
 
     <div class="loop-cycle reveal">
-      <div class="loop-step"><div class="loop-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div class="loop-step-name" data-i="l.s1">اكتب</div><div class="loop-step-role">MAKER</div></div>
+      <div class="loop-step">
+        <div class="loop-step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <div class="loop-step-name" data-i="l.s1">اكتب</div>
+        <div class="loop-step-role">MAKER</div>
+      </div>
       <div class="loop-connector"></div>
-      <div class="loop-step"><div class="loop-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg></div><div class="loop-step-name" data-i="l.s2">تحقق</div><div class="loop-step-role">CHECKER</div></div>
+      <div class="loop-step">
+        <div class="loop-step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+        </div>
+        <div class="loop-step-name" data-i="l.s2">تحقق</div>
+        <div class="loop-step-role">CHECKER</div>
+      </div>
       <div class="loop-connector"></div>
-      <div class="loop-step"><div class="loop-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div><div class="loop-step-name" data-i="l.s3">أصلح</div><div class="loop-step-role">MAKER</div></div>
+      <div class="loop-step">
+        <div class="loop-step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <div class="loop-step-name" data-i="l.s3">أصلح</div>
+        <div class="loop-step-role">MAKER</div>
+      </div>
       <div class="loop-connector"></div>
-      <div class="loop-step"><div class="loop-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12a9 9 0 11-6.219-8.56M21 3v6h-6"/></svg></div><div class="loop-step-name" data-i="l.s4">تحقق مجدداً</div><div class="loop-step-role">CHECKER</div></div>
+      <div class="loop-step">
+        <div class="loop-step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12a9 9 0 11-6.219-8.56M21 3v6h-6"/></svg>
+        </div>
+        <div class="loop-step-name" data-i="l.s4">تحقق مجدداً</div>
+        <div class="loop-step-role">CHECKER</div>
+      </div>
     </div>
 
     <div class="loop-stats reveal">
-      <div class="loop-stat glass-card-sm"><div class="loop-stat-inner"><div class="loop-stat-value">16</div><div class="loop-stat-label" data-i="l.st1">تكرار حلقة</div><div class="loop-stat-sub" data-i="l.st1s">في LOOP.md</div></div></div>
-      <div class="loop-stat glass-card-sm"><div class="loop-stat-inner"><div class="loop-stat-value">13</div><div class="loop-stat-label" data-i="l.st2">اختبار مجتاز</div><div class="loop-stat-sub" data-i="l.st2s">مجموعة دائمة</div></div></div>
-      <div class="loop-stat glass-card-sm"><div class="loop-stat-inner"><div class="loop-stat-value">1</div><div class="loop-stat-label" data-i="l.st3">خلل حقيقي</div><div class="loop-stat-sub" data-i="l.st3s">اكتُشف وأُصلح</div></div></div>
-      <div class="loop-stat glass-card-sm"><div class="loop-stat-inner"><div class="loop-stat-value">8</div><div class="loop-stat-label" data-i="l.st4">نجاحات نظيفة</div><div class="loop-stat-sub" data-i="l.st4s">بدون أخطاء</div></div></div>
+      <div class="loop-stat glass-card-sm">
+        <div class="loop-stat-inner">
+          <div class="loop-stat-value slot-number" data-target="16">0</div>
+          <div class="loop-stat-label" data-i="l.st1">تكرار حلقة</div>
+          <div class="loop-stat-sub" data-i="l.st1s">في LOOP.md</div>
+        </div>
+      </div>
+      <div class="loop-stat glass-card-sm">
+        <div class="loop-stat-inner">
+          <div class="loop-stat-value slot-number" data-target="13">0</div>
+          <div class="loop-stat-label" data-i="l.st2">اختبار مجتاز</div>
+          <div class="loop-stat-sub" data-i="l.st2s">مجموعة دائمة</div>
+        </div>
+      </div>
+      <div class="loop-stat glass-card-sm">
+        <div class="loop-stat-inner">
+          <div class="loop-stat-value slot-number" data-target="1">0</div>
+          <div class="loop-stat-label" data-i="l.st3">خلل حقيقي</div>
+          <div class="loop-stat-sub" data-i="l.st3s">اكتُشف وأُصلح</div>
+        </div>
+      </div>
+      <div class="loop-stat glass-card-sm">
+        <div class="loop-stat-inner">
+          <div class="loop-stat-value slot-number" data-target="8">0</div>
+          <div class="loop-stat-label" data-i="l.st4">نجاحات نظيفة</div>
+          <div class="loop-stat-sub" data-i="l.st4s">بدون أخطاء</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ================================================================
-     TECH STACK
-     ================================================================ -->
 <section class="tech" id="tech">
   <div class="tech-inner">
     <div class="tech-header reveal">
@@ -797,163 +1021,186 @@ html[dir="rtl"] .tech-marquee-track{ animation:techScrollRTL 40s linear infinite
   </div>
 </section>
 
-<!-- ================================================================
-     FINAL CTA
-     ================================================================ -->
 <section class="cta">
   <div class="cta-inner reveal">
-    <h2 class="cta-title"><span data-i="c.t1">ابدأ الكتابة</span><br><span class="grad shimmer-text" data-i="c.t2">بالعربية الآن</span></h2>
+    <h2 class="cta-title kinetic-text" id="ctaTitle"><span data-i="c.t1">ابدأ الكتابة</span><br><span class="grad shimmer-text" data-i="c.t2">بالعربية الآن</span></h2>
     <p class="cta-desc" data-i="c.desc">NEXUS جاهز ومُنشور. جرّبه مباشرة في متصفحك، أو شاهد الفيديو التوضيحي.</p>
     <div class="cta-actions">
-      <a href="https://my-project-one-brown-97.vercel.app" class="btn btn-primary"><span data-i="c.cta1">افتح التطبيق</span></a>
-      <a href="https://github.com/mo01115285816-cyber/testsprite-season3-entry/releases/download/demo-v1/nexus-demo.webm" class="btn btn-secondary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg><span data-i="c.cta2">شاهد الفيديو</span></a>
+      <a href="https://my-project-one-brown-97.vercel.app" target="_blank" rel="noopener" class="btn btn-primary magnetic-btn">
+        <span data-i="c.cta1">افتح التطبيق</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+      <a href="https://github.com/mo01115285816-cyber/testsprite-season3-entry/releases/download/demo-v1/nexus-demo.webm" target="_blank" rel="noopener" class="btn btn-secondary magnetic-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span data-i="c.cta2">شاهد الفيديو</span>
+      </a>
     </div>
   </div>
 </section>
 
-<!-- ================================================================
-     FOOTER
-     ================================================================ -->
 <footer class="footer">
   <div class="footer-inner">
-    <div class="footer-brand"><span class="footer-brand-icon">N</span> NEXUS</div>
-    <div class="footer-links">
-      <a href="https://my-project-one-brown-97.vercel.app" class="footer-link" data-i="f.live">النسخة الحية</a>
-      <a href="https://github.com/mo01115285816-cyber/testsprite-season3-entry" class="footer-link" data-i="f.repo">GitHub</a>
-      <a href="https://github.com/mo01115285816-cyber/testsprite-season3-entry/blob/main/LOOP.md" class="footer-link" data-i="f.loop">LOOP.md</a>
+    <div class="footer-brand">
+      <span class="footer-brand-icon">N</span>
+      <span>NEXUS</span>
     </div>
-    <div class="footer-meta">Built by <span class="accent">MOAAMN SAYED</span></div>
+    <div class="footer-links">
+      <a href="https://my-project-one-brown-97.vercel.app" target="_blank" rel="noopener" class="footer-link" data-i="f.live">النسخة الحية</a>
+      <a href="https://github.com/mo01115285816-cyber/testsprite-season3-entry" target="_blank" rel="noopener" class="footer-link" data-i="f.repo">GitHub</a>
+      <a href="https://github.com/mo01115285816-cyber/testsprite-season3-entry/blob/main/LOOP.md" target="_blank" rel="noopener" class="footer-link" data-i="f.loop">LOOP.md</a>
+    </div>
+    <div class="footer-meta">Built by <span class="accent">MOAAMN SAYED</span> · MIT</div>
   </div>
 </footer>
-
 <script>
-/* ================================================================
-   I18N
-   ================================================================ */
-var I={
-'nav.surfaces':{ar:'الأسطح',en:'Surfaces'},'nav.innovations':{ar:'الابتكارات',en:'Innovations'},'nav.loop':{ar:'الحلقة',en:'Loop'},'nav.tech':{ar:'التقنيات',en:'Tech'},'nav.launch':{ar:'افتح NEXUS',en:'Launch NEXUS'},
-'hero.badge':{ar:'TestSprite Hackathon Season 3',en:'TestSprite Hackathon Season 3'},
-'hero.t1':{ar:'اكتب بالعربية.',en:'Write in Arabic.'},'hero.t2':{ar:'NEXUS',en:'NEXUS'},'hero.t3':{ar:'يحوّلها لكود.',en:'compiles to code.'},
-'hero.desc':{ar:'بيئة تطوير ذكية في المتصفح. محرر Monaco، معاينة حية، ووكيل ذكاء اصطناعي بثلاثة أوضاع. محرك ترجمة فوري من العربية إلى الكود، ومحلل أمان سيبراني متقدم.',en:'A smart IDE in the browser. Monaco editor, live preview, and a 3-mode AI agent. An instant Arabic-to-code engine, and an advanced cybersecurity analyzer.'},
-'hero.cta1':{ar:'جرّب الآن',en:'Try Now'},'hero.cta2':{ar:'GitHub',en:'GitHub'},
-'hero.m1':{ar:'تكرار حلقة',en:'Loop iterations'},'hero.m2':{ar:'اختبار مجتاز',en:'Tests passed'},'hero.m3':{ar:'أسطح متكاملة',en:'Integrated surfaces'},
-'hero.compiled':{ar:'تم التحويل بنجاح',en:'Compiled successfully'},
-'s.label':{ar:'ثلاثة أسطح متكاملة',en:'Three integrated surfaces'},'s.t1':{ar:'كل أداة تحتاجها',en:'Every tool you need'},'s.t2':{ar:'في مكان واحد',en:'in one place'},
-'s.sub':{ar:'محرر، معاينة، ووكيل ذكاء اصطناعي. ثلاثة أسطح تعمل معاً بسلاسة تامة.',en:'Editor, preview, and AI agent. Three surfaces working together seamlessly.'},
-'s.editor.name':{ar:'محرر الأكواد',en:'Code Editor'},'s.editor.desc':{ar:'محرر متقدم مبني على Monaco. تمييز صيغة، أرقام أسطر، بحث واستبدال متقدم بدعم regex، نسخ دقيق بين سطرين، ومنسق أكواد ذكي.',en:'Advanced editor built on Monaco. Syntax highlighting, line numbers, advanced regex search and replace, precise copy-range, and an AI formatter.'},
-'s.editor.f1':{ar:'بحث واستبدال بـ regex وحساسية الحالة',en:'Regex search and replace with case sensitivity'},'s.editor.f2':{ar:'نسخ دقيق للأكواد بين سطرين',en:'Precise code copy between two lines'},'s.editor.f3':{ar:'منسق أكواد تلقائي مدعوم بالذكاء الاصطناعي',en:'AI-powered auto formatter'},
-'s.preview.name':{ar:'معاينة حية',en:'Live Preview'},'s.preview.desc':{ar:'معاينة فورية لـ HTML و React مع ثلاثة أحجام أجهزة (سطح المكتب، اللوحي، الجوال)، وفاحص عناصر CSS بأسلوب Chrome DevTools.',en:'Instant HTML and React preview with three device sizes (desktop, tablet, mobile), and a Chrome-DevTools-style CSS inspector.'},
-'s.preview.f1':{ar:'ثلاثة أحجام: سطح مكتب، لوحي، جوال',en:'Three sizes: desktop, tablet, mobile'},'s.preview.f2':{ar:'فاحص عناصر CSS تفاعلي',en:'Interactive CSS element inspector'},'s.preview.f3':{ar:'تحديث فوري عند الكتابة',en:'Instant update on type'},
-'s.agent.name':{ar:'وكيل الذكاء الاصطناعي',en:'AI Agent'},'s.agent.desc':{ar:'ثلاثة أوضاع: مستشار CHAT، مهندس CODE، ومصمم UI_ARTIST. توجيه الطلبات، توليد الأكواد، وكتابتها مباشرة في المحرر.',en:'Three modes: CHAT advisor, CODE engineer, UI_ARTIST designer. Routes requests, generates code, and writes it directly into the editor.'},
-'s.agent.f1':{ar:'وضع CHAT للمشورة والنصائح',en:'CHAT mode for advice'},'s.agent.f2':{ar:'وضع CODE لكتابة وإصلاح الأكواد',en:'CODE mode for writing and fixing code'},'s.agent.f3':{ar:'وضع UI_ARTIST لتصميم الواجهات',en:'UI_ARTIST mode for interface design'},
-'in.label':{ar:'ابتكارات حصرية',en:'Unique innovations'},'in.t1':{ar:'ما لا تجده',en:'What you won\'t find'},'in.t2':{ar:'في أي IDE آخر',en:'in any other IDE'},
-'in.ar.name':{ar:'محرّم الترجمة من العربية إلى الكود',en:'Arabic-to-Code Translation Engine'},'in.ar.desc':{ar:'اكتب أكواد HTML و JSX بالعربية، ويتحول فوراً إلى كود صالح للتنفيذ. خريطة شاملة تربط كل وسم وخصوصية وكلمة مفتاحية.',en:'Write HTML and JSX in Arabic, and it instantly compiles to valid code. A comprehensive map links every Arabic tag, attribute, and keyword.'},
-'in.sec.name':{ar:'محلل الأمان السيبراني',en:'AI Security Analyzer'},'in.sec.desc':{ar:'تحليل عميق لتدفق التلوث، تسلسل الهجمات، تسجيل درجات CVSS، تصنيف CWE، وتوليد إثبات المفهوم ضد أي كود.',en:'Deep taint-flow analysis, attack chaining, CVSS scoring, CWE classification, and PoC generation against any code.'},
-'in.agent.name':{ar:'وكيل ذكاء اصطناعي بثلاثة أوضاع',en:'3-Mode AI Agent'},'in.agent.desc':{ar:'وضع CHAT للمشورة، وضع CODE لكتابة الأكواد، وضع UI_ARTIST لتصميم الواجهات. توجيه تلقائي وتوليد مباشر في المحرر.',en:'CHAT mode for advice, CODE mode for writing code, UI_ARTIST mode for interface design. Auto-routing and direct editor write.'},
-'l.label':{ar:'الحلقة',en:'The Loop'},'l.t1':{ar:'اكتب، تحقق، أصلح،',en:'Write, verify, fix,'},'l.t2':{ar:'تحقق مرة أخرى',en:'verify again'},
-'l.sub':{ar:'NEXUS هو الجانب الصانع في حلقة الكتابة والتحقق. الـ TestSprite CLI هو الجانب المدقق.',en:'NEXUS is the Maker side. The TestSprite CLI is the Checker that runs real behavioral tests.'},
-'l.s1':{ar:'اكتب',en:'Write'},'l.s2':{ar:'تحقق',en:'Verify'},'l.s3':{ar:'أصلح',en:'Fix'},'l.s4':{ar:'تحقق مجدداً',en:'Verify Again'},
-'l.st1':{ar:'تكرار حلقة',en:'Loop iterations'},'l.st1s':{ar:'في LOOP.md',en:'in LOOP.md'},'l.st2':{ar:'اختبار مجتاز',en:'Tests passed'},'l.st2s':{ar:'مجموعة دائمة',en:'durable suite'},
-'l.st3':{ar:'خلل حقيقي',en:'Real bug'},'l.st3s':{ar:'اكتُشف وأُصلح',en:'caught and fixed'},'l.st4':{ar:'نجاحات نظيفة',en:'Clean passes'},'l.st4s':{ar:'بدون أخطاء',en:'no errors'},
-'t.label':{ar:'التقنيات',en:'Tech Stack'},'t.t1':{ar:'مبني على',en:'Built on'},'t.t2':{ar:'أحدث التقنيات',en:'modern tech'},
-'c.t1':{ar:'ابدأ الكتابة',en:'Start coding'},'c.t2':{ar:'بالعربية الآن',en:'in Arabic now'},
-'c.desc':{ar:'NEXUS جاهز ومُنشور. جرّبه مباشرة في متصفحك، أو شاهد الفيديو التوضيحي.',en:'NEXUS is live and deployed. Try it directly in your browser, or watch the demo video.'},
-'c.cta1':{ar:'افتح التطبيق',en:'Launch App'},'c.cta2':{ar:'شاهد الفيديو',en:'Watch Demo'},
-'f.live':{ar:'النسخة الحية',en:'Live Demo'},'f.repo':{ar:'GitHub',en:'GitHub'},'f.loop':{ar:'LOOP.md',en:'LOOP.md'}
-};
+/* 1. WEBGL LIQUID SHADER */
+(function() {
+  var canvas = document.getElementById('shader-canvas');
+  if (!canvas) return;
+  var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) { canvas.style.display = 'none'; return; }
 
-(function(){
-  var lang=window.__L__||'ar';
-  document.querySelectorAll('[data-i]').forEach(function(el){
-    var key=el.getAttribute('data-i');
-    if(I[key]&&I[key][lang])el.textContent=I[key][lang];
-  });
+  function resize() {
+    var dpr = Math.min(window.devicePixelRatio, 2);
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var vs = `attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
+  var fs = `precision mediump float;
+uniform float t;uniform vec2 r;uniform vec2 m;
+vec3 m289(vec3 x){return x-floor(x*(1./289.))*289.;}
+vec2 m289(vec2 x){return x-floor(x*(1./289.))*289.;}
+vec3 p(vec3 x){return m289(((x*34.)+1.)*x);}
+float sn(vec2 v){
+const vec4 C=vec4(.211324865405187,.366025403784439,-.577350269189626,.024390243902439);
+vec2 i=floor(v+dot(v,C.yy));vec2 x0=v-i+dot(i,C.xx);
+vec2 i1=(x0.x>x0.y)?vec2(1.,0.):vec2(0.,1.);
+vec4 x12=x0.xyxy+C.xxzz;x12.xy-=i1;
+i=m289(i);vec3 pp=p(p(i.y+vec3(0.,i1.y,1.))+i.x+vec3(0.,i1.x,1.));
+vec3 mm=max(.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.);
+mm=mm*mm;mm=mm*mm;
+vec3 x=2.*fract(pp*C.www)-1.;
+vec3 h=abs(x)-.5;
+vec3 ox=floor(x+.5);
+vec3 a0=x-ox;
+mm*=1.79284291400159-.85373472095314*(a0*a0+h*h);
+vec3 g;g.x=a0.x*x0.x+h.x*x0.y;
+g.yz=a0.yz*x12.xz+h.yz*x12.yw;
+return 130.*dot(mm,g);
+}
+void main(){
+vec2 uv=gl_FragCoord.xy/r.xy;vec2 p=uv*2.-1.;p.x*=r.x/r.y;
+float tt=t*.15;
+float n1=sn(p*1.5+tt),n2=sn(p*2.5-tt*.7),n3=sn(p*.8+tt*.3);
+float pt=n1*.5+n2*.3+n3*.2;
+vec3 g=vec3(.365,.839,.173),d=vec3(.039,.039,.043),md=vec3(.067,.067,.075);
+float glw=smoothstep(.2,.8,pt+.5),sb=smoothstep(-.5,.5,pt)*.04;
+vec3 c=mix(d,md,sb);c+=g*glw*.08;
+vec2 mn=m/r.xy;float md2=length(uv-mn);
+c+=g*smoothstep(.5,0.,md2)*.03;
+gl_FragColor=vec4(c,1.);
+}`;
+
+  function cs(gl,t,s){var sh=gl.createShader(t);gl.shaderSource(sh,s);gl.compileShader(sh);return sh;}
+  var prog=gl.createProgram();
+  gl.attachShader(prog,cs(gl,gl.VERTEX_SHADER,vs));
+  gl.attachShader(prog,cs(gl,gl.FRAGMENT_SHADER,fs));
+  gl.linkProgram(prog);gl.useProgram(prog);
+
+  var buf=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  var pl=gl.getAttribLocation(prog,'p');
+  gl.enableVertexAttribArray(pl);gl.vertexAttribPointer(pl,2,gl.FLOAT,false,0,0);
+
+  var tl=gl.getUniformLocation(prog,'t');
+  var rl=gl.getUniformLocation(prog,'r');
+  var ml=gl.getUniformLocation(prog,'m');
+  var mx=0,my=0;
+  document.addEventListener('mousemove',function(e){mx=e.clientX;my=window.innerHeight-e.clientY;});
+  var st=Date.now(),fc=0;
+  function ren(){fc++;if(fc%2===0){var el=(Date.now()-st)/1000;gl.uniform1f(tl,el);gl.uniform2f(rl,canvas.width,canvas.height);gl.uniform2f(ml,mx,my);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);}requestAnimationFrame(ren);}
+  ren();
 })();
 
-/* Scroll reveal & Parallax Background */
-var obs=new IntersectionObserver(function(entries){
-  entries.forEach(function(e){
-    if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}
-  });
-},{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
-document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el)});
-
-window.addEventListener('scroll', function() {
-  var scrolled = window.scrollY;
-  var grid = document.querySelector('.hero-grid-bg');
-  if (grid) grid.style.transform = 'perspective(800px) rotateX(25deg) scale(1.1) translateY(' + (-50 + scrolled * 0.12) + 'px)';
-  
-  var nav = document.querySelector('.nav');
-  if(scrolled > 20) nav.classList.add('scrolled');
-  else nav.classList.remove('scrolled');
-}, {passive:true});
-
-/* Magnetic 3D Cards */
-document.querySelectorAll('.3d-card').forEach(function(card) {
-  card.addEventListener('mousemove', function(e) {
-    var rect = card.getBoundingClientRect();
-    var x = e.clientX - rect.left;
-    var y = e.clientY - rect.top;
-    var centerX = rect.width / 2;
-    var centerY = rect.height / 2;
-    var rotateX = ((y - centerY) / centerY) * -4; 
-    var rotateY = ((x - centerX) / centerX) * 4;
-    card.style.transform = 'perspective(1000px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateY(-5px)';
-  });
-  card.addEventListener('mouseleave', function() {
-    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
-  });
-});
-
-/* Professional Code Typing Animation */
-var typingObserver = new IntersectionObserver(function(entries, observer) {
-  entries.forEach(function(entry) {
-    if (entry.isIntersecting) {
-      var container = entry.target;
-      var lines = container.querySelectorAll('.code-line');
-      
-      // Hide all lines initially
-      lines.forEach(function(l) { l.style.display = 'none'; l.classList.remove('typing-cursor'); });
-      
-      var i = 0;
-      function typeNextLine() {
-        if (i > 0) lines[i-1].classList.remove('typing-cursor');
-        
-        if (i < lines.length) {
-          lines[i].style.display = 'flex';
-          lines[i].classList.add('typing-cursor');
-          i++;
-          // Randomize typing speed for realism (150ms - 400ms per line)
-          setTimeout(typeNextLine, 150 + Math.random() * 250);
+/* 2. KINETIC TYPOGRAPHY */
+function initKinetic() {
+  document.querySelectorAll('.kinetic-text').forEach(function(el) {
+    var text=el.innerHTML;
+    el.innerHTML='';
+    var temp=document.createElement('div');temp.innerHTML=text;
+    Array.from(temp.childNodes).forEach(function(node){
+      if(node.nodeType===3){
+        var txt=node.textContent;
+        for(var i=0;i<txt.length;i++){
+          var sp=document.createElement('span');
+          sp.className='kinetic-char';
+          sp.textContent=txt[i]===' '?' ':txt[i];
+          sp.style.transitionDelay=(i*.03)+'s';
+          el.appendChild(sp);
         }
+      }else if(node.nodeType===1){
+        if(node.tagName==='BR'){el.appendChild(document.createElement('br'));}
+        else{el.appendChild(node);}
       }
-      // Start typing after a short delay
-      setTimeout(typeNextLine, 300);
-      observer.unobserve(container);
-    }
+    });
   });
-}, { threshold: 0.5 });
+}
 
-document.querySelectorAll('.typewriter-target').forEach(function(el) {
-  typingObserver.observe(el);
-});
+var kObs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.querySelectorAll('.kinetic-char').forEach(function(c){c.classList.add('revealed');});kObs.unobserve(e.target);}});},{threshold:.3});
 
-/* ================================================================
-   IFRAME INTEGRATION — Launch NEXUS from landing page
-   When this page is embedded in an iframe (by the Next.js app),
-   clicking "Launch" buttons sets a flag and reloads the parent
-   to show the IDE. When viewed standalone, links work normally.
-   ================================================================ */
+/* 3. I18N */
+var I={'nav.surfaces':{ar:'الأسطح',en:'Surfaces'},'nav.innovations':{ar:'الابتكارات',en:'Innovations'},'nav.loop':{ar:'الحلقة',en:'Loop'},'nav.tech':{ar:'التقنيات',en:'Tech'},'nav.launch':{ar:'افتح NEXUS',en:'Launch NEXUS'},'hero.badge':{ar:'TestSprite Hackathon Season 3',en:'TestSprite Hackathon Season 3'},'hero.t1':{ar:'اكتب بالعربية.',en:'Write in Arabic.'},'hero.t2':{ar:'NEXUS',en:'NEXUS'},'hero.t3':{ar:'يحوّلها لكود.',en:'compiles to code.'},'hero.desc':{ar:'بيئة تطوير ذكية في المتصفح. محرر Monaco، معاينة حية، ووكيل ذكاء اصطناعي بثلاثة أوضاع. محرك ترجمة فوري من العربية إلى الكود، ومحلل أمان سيبراني متقدم.',en:'A smart IDE in the browser. Monaco editor, live preview, and a 3-mode AI agent. An instant Arabic-to-code engine, and an advanced cybersecurity analyzer.'},'hero.cta1':{ar:'جرّب الآن',en:'Try Now'},'hero.cta2':{ar:'GitHub',en:'GitHub'},'hero.m1':{ar:'تكرار حلقة',en:'Loop iterations'},'hero.m2':{ar:'اختبار مجتاز',en:'Tests passed'},'hero.m3':{ar:'أسطح متكاملة',en:'Integrated surfaces'},'hero.compiled':{ar:'تم التحويل بنجاح',en:'Compiled successfully'},'s.label':{ar:'ثلاثة أسطح متكاملة',en:'Three integrated surfaces'},'s.t1':{ar:'كل أداة تحتاجها',en:'Every tool you need'},'s.t2':{ar:'في مكان واحد',en:'in one place'},'s.sub':{ar:'محرر، معاينة، ووكيل ذكاء اصطناعي. ثلاثة أسطح تعمل معاً بسلاسة تامة.',en:'Editor, preview, and AI agent. Three surfaces working together seamlessly.'},'s.editor.name':{ar:'محرر الأكواد',en:'Code Editor'},'s.editor.desc':{ar:'محرر متقدم مبني على Monaco. تمييز صيغة، أرقام أسطر، بحث واستبدال متقدم بدعم regex، نسخ دقيق بين سطرين، ومنسق أكواد ذكي.',en:'Advanced editor built on Monaco. Syntax highlighting, line numbers, advanced regex search and replace, precise copy-range, and an AI formatter.'},'s.editor.f1':{ar:'بحث واستبدال بـ regex وحساسية الحالة',en:'Regex search and replace with case sensitivity'},'s.editor.f2':{ar:'نسخ دقيق للأكواد بين سطرين',en:'Precise code copy between two lines'},'s.editor.f3':{ar:'منسق أكواد تلقائي مدعوم بالذكاء الاصطناعي',en:'AI-powered auto formatter'},'s.preview.name':{ar:'معاينة حية',en:'Live Preview'},'s.preview.desc':{ar:'معاينة فورية لـ HTML و React مع ثلاثة أحجام أجهزة (سطح المكتب، اللوحي، الجوال)، وفاحص عناصر CSS بأسلوب Chrome DevTools.',en:'Instant HTML and React preview with three device sizes (desktop, tablet, mobile), and a Chrome-DevTools-style CSS inspector.'},'s.preview.f1':{ar:'ثلاثة أحجام: سطح مكتب، لوحي، جوال',en:'Three sizes: desktop, tablet, mobile'},'s.preview.f2':{ar:'فاحص عناصر CSS تفاعلي',en:'Interactive CSS element inspector'},'s.preview.f3':{ar:'تحديث فوري عند الكتابة',en:'Instant update on type'},'s.agent.name':{ar:'وكيل الذكاء الاصطناعي',en:'AI Agent'},'s.agent.desc':{ar:'ثلاثة أوضاع: مستشار CHAT، مهندس CODE، ومصمم UI_ARTIST. توجيه الطلبات، توليد الأكواد، وكتابتها مباشرة في المحرر.',en:'Three modes: CHAT advisor, CODE engineer, UI_ARTIST designer. Routes requests, generates code, and writes it directly into the editor.'},'s.agent.f1':{ar:'وضع CHAT للمشورة والنصائح',en:'CHAT mode for advice'},'s.agent.f2':{ar:'وضع CODE لكتابة وإصلاح الأكواد',en:'CODE mode for writing and fixing code'},'s.agent.f3':{ar:'وضع UI_ARTIST لتصميم الواجهات',en:'UI_ARTIST mode for interface design'},'in.label':{ar:'ابتكارات حصرية',en:'Unique innovations'},'in.t1':{ar:'ما لا تجده',en:"What you won't find"},'in.t2':{ar:'في أي IDE آخر',en:'in any other IDE'},'in.ar.name':{ar:'محرّم الترجمة من العربية إلى الكود',en:'Arabic-to-Code Translation Engine'},'in.ar.desc':{ar:'اكتب أكواد HTML و JSX بالعربية، ويتحول فوراً إلى كود صالح للتنفيذ. خريطة شاملة تربط كل وسم وخصوصية وكلمة مفتاحية.',en:'Write HTML and JSX in Arabic, and it instantly compiles to valid code. A comprehensive map links every Arabic tag, attribute, and keyword.'},'in.sec.name':{ar:'محلل الأمان السيبراني',en:'AI Security Analyzer'},'in.sec.desc':{ar:'تحليل عميق لتدفق التلوث، تسلسل الهجمات، تسجيل درجات CVSS، تصنيف CWE، وتوليد إثبات المفهوم ضد أي كود.',en:'Deep taint-flow analysis, attack chaining, CVSS scoring, CWE classification, and PoC generation against any code.'},'in.agent.name':{ar:'وكيل ذكاء اصطناعي بثلاثة أوضاع',en:'3-Mode AI Agent'},'in.agent.desc':{ar:'وضع CHAT للمشورة، وضع CODE لكتابة الأكواد، وضع UI_ARTIST لتصميم الواجهات. توجيه تلقائي وتوليد مباشر في المحرر.',en:'CHAT mode for advice, CODE mode for writing code, UI_ARTIST mode for interface design. Auto-routing and direct editor write.'},'l.label':{ar:'الحلقة',en:'The Loop'},'l.t1':{ar:'اكتب، تحقق، أصلح،',en:'Write, verify, fix,'},'l.t2':{ar:'تحقق مرة أخرى',en:'verify again'},'l.sub':{ar:'NEXUS هو الجانب الصانع في حلقة الكتابة والتحقق. الـ TestSprite CLI هو الجانب المدقق.',en:'NEXUS is the Maker side. The TestSprite CLI is the Checker that runs real behavioral tests.'},'l.s1':{ar:'اكتب',en:'Write'},'l.s2':{ar:'تحقق',en:'Verify'},'l.s3':{ar:'أصلح',en:'Fix'},'l.s4':{ar:'تحقق مجدداً',en:'Verify Again'},'l.st1':{ar:'تكرار حلقة',en:'Loop iterations'},'l.st1s':{ar:'في LOOP.md',en:'in LOOP.md'},'l.st2':{ar:'اختبار مجتاز',en:'Tests passed'},'l.st2s':{ar:'مجموعة دائمة',en:'durable suite'},'l.st3':{ar:'خلل حقيقي',en:'Real bug'},'l.st3s':{ar:'اكتُشف وأُصلح',en:'caught and fixed'},'l.st4':{ar:'نجاحات نظيفة',en:'Clean passes'},'l.st4s':{ar:'بدون أخطاء',en:'no errors'},'t.label':{ar:'التقنيات',en:'Tech Stack'},'t.t1':{ar:'مبني على',en:'Built on'},'t.t2':{ar:'أحدث التقنيات',en:'modern tech'},'c.t1':{ar:'ابدأ الكتابة',en:'Start coding'},'c.t2':{ar:'بالعربية الآن',en:'in Arabic now'},'c.desc':{ar:'NEXUS جاهز ومُنشور. جرّبه مباشرة في متصفحك، أو شاهد الفيديو التوضيحي.',en:'NEXUS is live and deployed. Try it directly in your browser, or watch the demo video.'},'c.cta1':{ar:'افتح التطبيق',en:'Launch App'},'c.cta2':{ar:'شاهد الفيديو',en:'Watch Demo'},'f.live':{ar:'النسخة الحية',en:'Live Demo'},'f.repo':{ar:'GitHub',en:'GitHub'},'f.loop':{ar:'LOOP.md',en:'LOOP.md'}};
+
+(function(){var lang=window.__L__||'ar';document.querySelectorAll('[data-i]').forEach(function(el){var key=el.getAttribute('data-i');if(I[key]&&I[key][lang])el.textContent=I[key][lang];});})();
+
+/* 4. SCROLL REVEAL */
+var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+
+/* 5. PARALLAX & NAV */
+window.addEventListener('scroll',function(){var s=window.scrollY;var g=document.querySelector('.hero-grid-bg');if(g)g.style.transform='perspective(800px) rotateX(25deg) scale(1.1) translateY('+(-50+s*.12)+'px)';var n=document.querySelector('.nav');if(s>20)n.classList.add('scrolled');else n.classList.remove('scrolled');},{passive:true});
+
+document.querySelectorAll('a[href^="#"]').forEach(function(l){l.addEventListener('click',function(e){var h=l.getAttribute('href');if(h.length>1){var t=document.querySelector(h);if(t){e.preventDefault();window.scrollTo({top:t.getBoundingClientRect().top+window.scrollY-64,behavior:'smooth'});}}});});
+
+/* 6. MAGNETIC 3D CARDS */
+document.querySelectorAll('.3d-card').forEach(function(c){c.addEventListener('mousemove',function(e){var r=c.getBoundingClientRect();var x=e.clientX-r.left,y=e.clientY-r.top;var cx=r.width/2,cy=r.height/2;var rx=((y-cy)/cy)*-4,ry=((x-cx)/cx)*4;c.style.transform='perspective(1000px) rotateX('+rx+'deg) rotateY('+ry+'deg) translateY(-5px)';});c.addEventListener('mouseleave',function(){c.style.transform='perspective(1000px) rotateX(0) rotateY(0) translateY(0)';});});
+
+/* 7. MAGNETIC BUTTONS */
+document.querySelectorAll('.magnetic-btn').forEach(function(b){b.addEventListener('mousemove',function(e){var r=b.getBoundingClientRect();var x=((e.clientX-r.left)/r.width)*100,y=((e.clientY-r.top)/r.height)*100;b.style.setProperty('--mouse-x',x+'%');b.style.setProperty('--mouse-y',y+'%');});});
+
+/* 8. TYPEWRITER */
+var tObs=new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting){var c=e.target,ls=c.querySelectorAll('.code-line');ls.forEach(function(l){l.style.display='none';l.classList.remove('typing-cursor');});var i=0;function tn(){if(i>0)ls[i-1].classList.remove('typing-cursor');if(i<ls.length){ls[i].style.display='flex';ls[i].classList.add('typing-cursor');i++;setTimeout(tn,150+Math.random()*250);}}setTimeout(tn,300);o.unobserve(c);}});},{threshold:.5});
+document.querySelectorAll('.typewriter-target').forEach(function(e){tObs.observe(e);});
+
+/* 9. SLOT MACHINE NUMBERS */
+function createSlot(el,target){var ds=target.toString().split('');el.innerHTML='';ds.forEach(function(d,idx){var slot=document.createElement('span');slot.className='slot-digit';var inner=document.createElement('span');inner.className='slot-digit-inner';for(var i=0;i<=9;i++){var s=document.createElement('span');s.textContent=i;inner.appendChild(s);}var ts=document.createElement('span');ts.textContent=d;inner.appendChild(ts);slot.appendChild(inner);el.appendChild(slot);setTimeout(function(){inner.style.transform='translateY(-'+(parseInt(d)+10)*1.2+'em)';},100+idx*200);});}
+var sObs=new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting){var el=e.target,t=parseInt(el.getAttribute('data-target'),10);if(!isNaN(t))createSlot(el,t);o.unobserve(el);}});},{threshold:.5});
+document.querySelectorAll('.slot-number').forEach(function(e){sObs.observe(e);});
+
+/* 10. CUSTOM CURSOR */
+(function(){var d=document.createElement('div'),o=document.createElement('div'),s=document.createElement('div');d.className='custom-cursor-dot';o.className='custom-cursor-outline';s.className='spotlight-glow';document.body.appendChild(d);document.body.appendChild(o);document.body.appendChild(s);var mx=window.innerWidth/2,my=window.innerHeight/2,dx=mx,dy=my,ox=mx,oy=my,sx=mx,sy=my,moved=false,touchT=0;window.addEventListener('touchstart',function(){touchT=Date.now();if(moved){moved=false;document.documentElement.classList.remove('custom-cursor-active');d.style.opacity='0';o.style.opacity='0';s.style.opacity='0';}},{passive:true});window.addEventListener('mousemove',function(e){if(Date.now()-touchT<500)return;if(!moved){document.documentElement.classList.add('custom-cursor-active');moved=true;dx=e.clientX;dy=e.clientY;ox=e.clientX;oy=e.clientY;sx=e.clientX;sy=e.clientY;d.style.opacity='1';o.style.opacity='1';s.style.opacity='1';}mx=e.clientX;my=e.clientY;});document.addEventListener('mouseleave',function(){if(moved){d.style.opacity='0';o.style.opacity='0';s.style.opacity='0';}});document.addEventListener('mouseenter',function(){if(moved){d.style.opacity='1';o.style.opacity='1';s.style.opacity='1';}});function up(){if(moved){dx+=(mx-dx)*.3;dy+=(my-dy)*.3;ox+=(mx-ox)*.15;oy+=(my-oy)*.15;sx+=(mx-sx)*.05;sy+=(my-sy)*.05;d.style.transform='translate3d('+dx+'px,'+dy+'px,0)';o.style.transform='translate3d('+ox+'px,'+oy+'px,0)';s.style.transform='translate3d('+sx+'px,'+sy+'px,0)';}requestAnimationFrame(up);}up();document.querySelectorAll('a,button,[role="button"],input,select,textarea').forEach(function(el){el.addEventListener('mouseenter',function(){d.classList.add('hovered');o.classList.add('hovered');});el.addEventListener('mouseleave',function(){d.classList.remove('hovered');o.classList.remove('hovered');});});})();
+
+/* 11. 3D SCROLL PERSPECTIVE FOR SURFACES */
+var pObs=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target.querySelector('.surface-visual');if(!v)return;var r=e.target.getBoundingClientRect();var vh=window.innerHeight;var p=(vh-r.top)/(vh+r.height);p=Math.max(0,Math.min(1,p));var rx=(p-.5)*10,tz=(p-.5)*-50;if(e.isIntersecting){v.style.transform='perspective(1200px) rotateX('+rx+'deg) translateZ('+tz+'px)';}});},{threshold:[0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1]});
+document.querySelectorAll('.surface-row').forEach(function(r){pObs.observe(r);});
+
+/* 12. INIT KINETIC */
+document.addEventListener('DOMContentLoaded',function(){initKinetic();document.querySelectorAll('.kinetic-text').forEach(function(e){kObs.observe(e);});});
+
+/* 13. IFRAME INTEGRATION — Launch NEXUS from landing page */
 (function(){
-  if(window.self === window.top) return; // Not in iframe, skip
-  var launchLinks = document.querySelectorAll('.nav-cta, .hero .btn-primary, .cta .btn-primary');
+  if(window.self===window.top) return;
+  var launchLinks=document.querySelectorAll('.nav-cta, .hero .btn-primary, .cta .btn-primary');
   launchLinks.forEach(function(link){
-    link.addEventListener('click', function(e){
+    link.addEventListener('click',function(e){
       e.preventDefault();
-      try{
-        window.top.localStorage.setItem('nexus-visited', 'true');
-      }catch(err){}
-      window.top.location.href = '/';
+      try{window.top.localStorage.setItem('nexus-visited','true');}catch(err){}
+      window.top.location.href='/';
     });
   });
 })();
