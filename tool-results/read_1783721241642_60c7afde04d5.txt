@@ -1,0 +1,854 @@
+     1→<!DOCTYPE html>
+     2→<html lang="ar" dir="rtl" data-theme="dark">
+     3→<head>
+     4→<meta charset="UTF-8">
+     5→<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+     6→<meta name="theme-color" content="#0a0a0b">
+     7→<title>NEXUS — AI-Powered Arabic-First IDE</title>
+     8→<meta name="description" content="NEXUS is an Arabic-first browser IDE with AI agent, live preview, and Arabic-to-code translation engine.">
+     9→
+    10→<script>
+    11→(function(){
+    12→  var lang='ar';try{var s=localStorage.getItem('nexus-lang');if(s==='ar'||s==='en')lang=s;else{var m=document.cookie.match(/nexus-lang=([^;]+)/);if(m){var v=m[1].trim();if(v==='ar'||v==='en')lang=v;else{var ls=navigator.languages||[navigator.language];for(var i=0;i<ls.length;i++){var l=(ls[i]||'').toLowerCase();if(l.indexOf('ar')===0){lang='ar';break}if(l.indexOf('en')===0){lang='en';break}}}}else{var ls2=navigator.languages||[navigator.language];for(var j=0;j<ls2.length;j++){var l2=(ls2[j]||'').toLowerCase();if(l2.indexOf('ar')===0){lang='ar';break}if(l2.indexOf('en')===0){lang='en';break}}}}}catch(e){lang='ar'}try{localStorage.setItem('nexus-lang',lang)}catch(e){}try{document.cookie='nexus-lang='+lang+';path=/;max-age=31536000;samesite=lax'}catch(e){}var h=document.documentElement;h.setAttribute('lang',lang);h.setAttribute('dir',lang==='ar'?'rtl':'ltr');h.setAttribute('data-lang',lang);window.__L__=lang})();
+    13→</script>
+    14→
+    15→<link rel="preconnect" href="https://fonts.googleapis.com">
+    16→<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    17→<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Inter:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    18→
+    19→<style>
+    20→/* ================================================================
+    21→   NEXUS — WORLD-CLASS LANDING PAGE
+    22→   Philosophy: Premium, High-Performance, Super Ellipse, Magnetic.
+    23→   ================================================================ */
+    24→
+    25→:root{
+    26→  --bg: #0a0a0b;
+    27→  --bg-elevated: #111113;
+    28→  --surface: #161618;
+    29→  --surface-hover: #1c1c1f;
+    30→  --border: rgba(255,255,255,0.06);
+    31→  --border-hover: rgba(255,255,255,0.12);
+    32→  --accent: #5dd62c;
+    33→  --accent-dim: rgba(93,214,44,0.12);
+    34→  --accent-glow: rgba(93,214,44,0.25);
+    35→  --text: #f0f0f2;
+    36→  --text-secondary: #a1a1a6;
+    37→  --text-tertiary: #6b6b70;
+    38→  --text-faint: #3a3a3e;
+    39→  --ff-ar: 'Almarai', sans-serif;
+    40→  --ff-en: 'Inter', -apple-system, sans-serif;
+    41→  --ff-mono: 'JetBrains Mono', monospace;
+    42→  --ease: cubic-bezier(0.16,1,0.3,1);
+    43→  --ease-out: cubic-bezier(0.32,0.72,0,1);
+    44→  --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
+    45→}
+    46→
+    47→*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    48→html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+    49→html,body{overflow-x:hidden;max-width:100%;width:100%}
+    50→
+    51→body{
+    52→  font-family:var(--ff-ar);
+    53→  background:var(--bg);
+    54→  color:var(--text);
+    55→  line-height:1.6;
+    56→  font-size:16px;
+    57→  -webkit-font-smoothing:antialiased;
+    58→  -moz-osx-font-smoothing:grayscale;
+    59→  min-height:100dvh;
+    60→  position:relative;
+    61→  letter-spacing:-0.01em;
+    62→}
+    63→
+    64→html[lang="en"] body{font-family:var(--ff-en)}
+    65→
+    66→img{max-width:100%;height:auto;display:block}
+    67→a{color:inherit;text-decoration:none}
+    68→button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+    69→::selection{background:var(--accent);color:var(--bg)}
+    70→
+    71→/* ================================================================
+    72→   ATMOSPHERIC MESH GRADIENTS & NOISE
+    73→   ================================================================ */
+    74→.mesh-bg {
+    75→  position: fixed;
+    76→  inset: 0;
+    77→  z-index: 0;
+    78→  pointer-events: none;
+    79→  background: 
+    80→    radial-gradient(ellipse 60% 60% at 20% 0%, rgba(93, 214, 44, 0.05), transparent 70%),
+    81→    radial-gradient(ellipse 70% 70% at 80% 100%, rgba(10, 30, 60, 0.1), transparent 70%);
+    82→  animation: meshPan 30s infinite alternate ease-in-out;
+    83→}
+    84→
+    85→@keyframes meshPan {
+    86→  0% { transform: scale(1) translate(0, 0); }
+    87→  100% { transform: scale(1.1) translate(-2%, 5%); }
+    88→}
+    89→
+    90→body::after{
+    91→  content:'';
+    92→  position:fixed;
+    93→  inset:0;
+    94→  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    95→  pointer-events:none;
+    96→  z-index:1;
+    97→  opacity:0.5;
+    98→}
+    99→
+   100→/* ================================================================
+   101→   NAV
+   102→   ================================================================ */
+   103→.nav{
+   104→  position:fixed;
+   105→  top:1.25rem;
+   106→  left:50%;
+   107→  transform:translateX(-50%);
+   108→  z-index:1000;
+   109→  width:calc(100% - 3rem);
+   110→  max-width:1200px;
+   111→  height:64px;
+   112→  display:flex;
+   113→  align-items:center;
+   114→  justify-content:center;
+   115→  padding:0 1.5rem;
+   116→  background:rgba(10,10,11,0.6);
+   117→  backdrop-filter:blur(20px) saturate(180%);
+   118→  -webkit-backdrop-filter:blur(20px) saturate(180%);
+   119→  border:1px solid var(--border);
+   120→  border-radius:9999px;
+   121→  box-shadow:0 8px 32px rgba(0, 0, 0, 0.4);
+   122→  transition:all 0.4s var(--ease);
+   123→}
+   124→.nav.scrolled {
+   125→  background:rgba(10,10,11,0.9);
+   126→  box-shadow:0 12px 40px rgba(0, 0, 0, 0.5);
+   127→  top:0.75rem;
+   128→}
+   129→.nav-inner{ width:100%; max-width:1200px; display:flex; align-items:center; justify-content:space-between; gap:2rem; }
+   130→.nav-brand{ display:flex; align-items:center; gap:0.625rem; font-weight:700; font-size:1.0625rem; letter-spacing:-0.02em; color:var(--text); }
+   131→.nav-brand-icon{ width:28px; height:28px; background:var(--accent); border-radius:7px; display:grid; place-items:center; font-family:var(--ff-mono); font-weight:700; font-size:0.875rem; color:var(--bg); box-shadow:0 0 20px var(--accent-glow); }
+   132→.nav-links{ display:flex; align-items:center; gap:0.25rem; }
+   133→.nav-link{ font-size:0.875rem; font-weight:500; color:var(--text-secondary); padding:0.5rem 0.875rem; border-radius:8px; transition:all 0.2s var(--ease); }
+   134→.nav-link:hover{ color:var(--text); background:var(--surface); }
+   135→.nav-cta{ display:inline-flex; align-items:center; gap:0.375rem; background:var(--text); color:var(--bg); font-size:0.8125rem; font-weight:600; padding:0.5rem 1rem; border-radius:9999px; transition:all 0.2s var(--ease); }
+   136→.nav-cta:hover{ transform:translateY(-1px); box-shadow:0 4px 12px rgba(255,255,255,0.15); }
+   137→
+   138→@media(max-width:900px){
+   139→  .nav { width: calc(100% - 1.5rem); top: 0.75rem; padding: 0 1.25rem; }
+   140→  .nav.scrolled { top: 0.5rem; }
+   141→  .nav-links{ display:none; }
+   142→}
+   143→
+   144→/* ================================================================
+   145→   TYPOGRAPHY, BUTTONS & SHIMMER EFFECT
+   146→   ================================================================ */
+   147→.eyebrow{ display:inline-flex; align-items:center; gap:0.5rem; font-family:var(--ff-mono); font-size:0.75rem; font-weight:500; color:var(--accent); letter-spacing:0.02em; margin-bottom:1.5rem; }
+   148→.eyebrow::before{ content:''; width:6px; height:6px; background:var(--accent); border-radius:50%; box-shadow:0 0 8px var(--accent); }
+   149→h1,h2,h3{ letter-spacing:-0.03em; line-height:1.05; }
+   150→
+   151→/* Shimmering Typography */
+   152→.shimmer-text {
+   153→  background: linear-gradient(135deg, var(--accent) 20%, #ffffff 50%, var(--accent) 80%);
+   154→  background-size: 250% auto;
+   155→  -webkit-background-clip: text;
+   156→  background-clip: text;
+   157→  -webkit-text-fill-color: transparent;
+   158→  animation: shimmer 4s infinite linear;
+   159→}
+   160→@keyframes shimmer {
+   161→  0% { background-position: 200% center; }
+   162→  100% { background-position: -200% center; }
+   163→}
+   164→
+   165→.btn{ display:inline-flex; align-items:center; gap:0.5rem; font-weight:600; font-size:0.9375rem; padding:0.75rem 1.5rem; border-radius:9999px; transition:all 0.2s var(--ease); position:relative; overflow:hidden; white-space:nowrap; }
+   166→.btn-primary{ background:var(--accent); color:var(--bg); box-shadow:0 0 0 1px var(--accent),0 4px 14px var(--accent-glow); }
+   167→.btn-primary:hover{ transform:translateY(-1px); box-shadow:0 0 0 1px var(--accent),0 6px 20px var(--accent-glow); }
+   168→.btn-secondary{ background:var(--surface); color:var(--text); border:1px solid var(--border); }
+   169→.btn-secondary:hover{ background:var(--surface-hover); border-color:var(--border-hover); }
+   170→.btn svg{ width:1rem; height:1rem; flex-shrink:0; }
+   171→section{ position:relative; z-index:2; }
+   172→.container{ max-width:1200px; margin:0 auto; padding:0 1.5rem; }
+   173→
+   174→/* ================================================================
+   175→   GLASS CARDS (Super Ellipse / Magnetic Core)
+   176→   ================================================================ */
+   177→.glass-card {
+   178→  background: linear-gradient(145deg, rgba(22,22,24,0.7) 0%, rgba(28,28,31,0.3) 100%);
+   179→  backdrop-filter: blur(20px);
+   180→  -webkit-backdrop-filter: blur(20px);
+   181→  border-radius: 32px; /* Super Ellipse effect */
+   182→  /* Double glass borders: inner white gleam, outer subtle edge */
+   183→  box-shadow: 
+   184→    inset 0 1px 1px rgba(255,255,255,0.1),
+   185→    0 0 0 1px rgba(255,255,255,0.05),
+   186→    0 24px 48px rgba(0,0,0,0.3);
+   187→  overflow: hidden;
+   188→  position: relative;
+   189→  will-change: transform;
+   190→  transform-style: preserve-3d;
+   191→  transition: box-shadow 0.4s var(--ease), border-color 0.4s var(--ease);
+   192→}
+   193→/* For smaller elements */
+   194→.glass-card-sm {
+   195→  border-radius: 24px;
+   196→}
+   197→
+   198→/* ================================================================
+   199→   HERO 
+   200→   ================================================================ */
+   201→.hero{ min-height:100dvh; display:flex; align-items:center; padding:140px 1.5rem 80px; position:relative; overflow:hidden; }
+   202→.hero-grid-bg{
+   203→  position:absolute; inset:0;
+   204→  background-image: linear-gradient(rgba(93,214,44,0.02) 1px,transparent 1px), linear-gradient(90deg,rgba(93,214,44,0.02) 1px,transparent 1px);
+   205→  background-size:60px 60px; background-position:center;
+   206→  transform:perspective(800px) rotateX(25deg) scale(1.1) translateY(-50px); transform-origin:top center;
+   207→  mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,black 20%,transparent 80%);
+   208→  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,black 20%,transparent 80%);
+   209→  pointer-events:none; z-index:0; transition:transform 0.1s ease-out;
+   210→}
+   211→.hero-inner{ max-width:1200px; margin:0 auto; width:100%; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; position:relative; z-index:2; }
+   212→.hero-content{ max-width:36rem; }
+   213→.hero-title{ font-weight:800; font-size:clamp(2.75rem,6vw,4.5rem); line-height:1.02; letter-spacing:-0.04em; margin-bottom:1.5rem; }
+   214→html[lang="en"] .hero-title{ font-weight:800; }
+   215→.hero-title .mono{ font-family:var(--ff-mono); font-weight:700; }
+   216→.hero-desc{ font-size:1.125rem; line-height:1.65; color:var(--text-secondary); margin-bottom:2.5rem; max-width:32rem; }
+   217→.hero-actions{ display:flex; gap:0.75rem; margin-bottom:3rem; flex-wrap:wrap; }
+   218→.hero-meta{ display:flex; gap:2.5rem; flex-wrap:wrap; }
+   219→.hero-meta-item{ display:flex; flex-direction:column; gap:0.125rem; }
+   220→.hero-meta-value{ font-family:var(--ff-mono); font-size:1.5rem; font-weight:700; color:var(--text); letter-spacing:-0.02em; line-height:1; }
+   221→.hero-meta-label{ font-size:0.8125rem; color:var(--text-tertiary); }
+   222→.hero-visual{ position:relative; perspective: 1000px; }
+   223→
+   224→/* Code Window Inherits Glass Card */
+   225→.code-window{
+   226→  border-radius: 24px;
+   227→}
+   228→.code-titlebar{ display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1.25rem; background:rgba(0,0,0,0.4); border-bottom:1px solid var(--border); }
+   229→.code-dots{ display:flex; gap:6px; }
+   230→.code-dot{ width:11px; height:11px; border-radius:50%; }
+   231→.code-dot.r{ background:#ff5f57; } .code-dot.y{ background:#febc2e; } .code-dot.g{ background:#28c840; }
+   232→.code-filename{ font-family:var(--ff-mono); font-size:0.75rem; color:var(--text-tertiary); }
+   233→.code-body{ padding:1.25rem 1.5rem; font-family:var(--ff-mono); font-size:0.8125rem; line-height:1.9; min-height:340px; position:relative; }
+   234→.code-line{ display:flex; gap:1rem; }
+   235→.code-ln{ color:var(--text-faint); width:1.5rem; text-align:right; user-select:none; flex-shrink:0; }
+   236→.code-content{ flex:1; white-space:pre; }
+   237→
+   238→/* Typing Cursor Utility */
+   239→.typing-cursor::after {
+   240→  content: '▋';
+   241→  display: inline-block;
+   242→  color: var(--accent);
+   243→  animation: blink 1s step-end infinite;
+   244→  margin-left: 4px;
+   245→}
+   246→html[dir="ltr"] .typing-cursor::after { margin-left: 0; margin-right: 4px; }
+   247→@keyframes blink { 50% { opacity: 0; } }
+   248→
+   249→/* Syntax colors */
+   250→.s-tag{color:#8be9fd} .s-attr{color:#50fa7b} .s-str{color:#f1fa8c} .s-kw{color:#ff79c6} .s-fn{color:#bd93f9} .s-comment{color:var(--text-faint);font-style:italic} .s-ar{color:var(--accent);font-weight:600} .s-en{color:#8be9fd} .s-arrow{color:var(--text-tertiary)} .s-plain{color:var(--text)}
+   251→
+   252→.code-status{ display:flex; align-items:center; justify-content:space-between; padding:0.5rem 1.25rem; background:rgba(0,0,0,0.4); border-top:1px solid var(--border); font-family:var(--ff-mono); font-size:0.6875rem; color:var(--text-tertiary); }
+   253→.code-status-ok{ display:flex; align-items:center; gap:0.375rem; color:var(--accent); }
+   254→.code-status-ok::before{ content:''; width:8px; height:8px; background:var(--accent); border-radius:50%; box-shadow:0 0 6px var(--accent); }
+   255→
+   256→@media(max-width:900px){
+   257→  .hero{ padding:130px 1.25rem 60px; }
+   258→  .hero-inner{ grid-template-columns:1fr; gap:3rem; }
+   259→  .hero-content{ order:2; text-align:center; max-width:100%; }
+   260→  .hero-visual{ order:1; }
+   261→  .hero-desc{ margin:0 auto 2.5rem; }
+   262→  .hero-actions, .hero-meta{ justify-content:center; }
+   263→}
+   264→
+   265→/* ================================================================
+   266→   I18N CSS Logic for Code Blocks
+   267→   ================================================================ */
+   268→html[lang="ar"] .lang-en-only { display: none !important; }
+   269→html[lang="en"] .lang-ar-only { display: none !important; }
+   270→
+   271→/* ================================================================
+   272→   SURFACES
+   273→   ================================================================ */
+   274→.surfaces{ padding:8rem 0; position:relative; }
+   275→.surfaces-header{ text-align:center; margin-bottom:5rem; padding:0 1.5rem; }
+   276→.surfaces-title{ font-weight:800; font-size:clamp(2rem,5vw,3.5rem); line-height:1.05; margin-bottom:1rem; }
+   277→.surfaces-sub{ font-size:1.125rem; color:var(--text-secondary); max-width:36rem; margin:0 auto; line-height:1.65; }
+   278→.surface-row{ display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; margin-bottom:7rem; perspective: 1000px; }
+   279→.surface-row:last-child{ margin-bottom:0; }
+   280→.surface-row.reverse .surface-visual{ order:-1; }
+   281→.surface-info{ max-width:28rem; }
+   282→.surface-number{ font-family:var(--ff-mono); font-size:0.75rem; font-weight:600; color:var(--accent); letter-spacing:0.05em; margin-bottom:1rem; }
+   283→.surface-name{ font-weight:800; font-size:clamp(1.75rem,4vw,2.5rem); line-height:1.1; margin-bottom:1rem; letter-spacing:-0.03em; }
+   284→.surface-desc{ font-size:1.0625rem; line-height:1.7; color:var(--text-secondary); margin-bottom:1.5rem; }
+   285→.surface-features{ display:flex; flex-direction:column; gap:0.625rem; }
+   286→.surface-feature{ display:flex; align-items:center; gap:0.625rem; font-size:0.9375rem; color:var(--text); font-weight:500; }
+   287→.surface-feature-check{ width:18px; height:18px; color:var(--accent); flex-shrink:0; }
+   288→
+   289→.mockup-titlebar{ display:flex; align-items:center; gap:0.5rem; padding:0.625rem 1rem; background:rgba(0,0,0,0.4); border-bottom:1px solid var(--border); }
+   290→.mockup-tab{ font-family:var(--ff-mono); font-size:0.6875rem; font-weight:600; padding:0.25rem 0.625rem; border-radius:5px; color:var(--text-tertiary); }
+   291→.mockup-tab.active{ background:var(--accent-dim); color:var(--accent); }
+   292→.mockup-body{ padding:1rem; font-family:var(--ff-mono); font-size:0.75rem; line-height:1.8; }
+   293→.mockup-editor-line{ display:flex; gap:0.75rem; color:var(--text-secondary); }
+   294→.mockup-editor-line .ln{ color:var(--text-faint); width:1.25rem; text-align:right; }
+   295→
+   296→.mockup-preview-body{ padding:1.25rem; }
+   297→.mockup-browser-bar{ display:flex; align-items:center; gap:0.375rem; padding:0.5rem 0.75rem; background:rgba(0,0,0,0.4); border-radius:6px 6px 0 0; border:1px solid var(--border); border-bottom:none; }
+   298→.mockup-url{ flex:1; font-family:var(--ff-mono); font-size:0.6875rem; color:var(--text-tertiary); background:var(--bg); padding:0.25rem 0.5rem; border-radius:4px; border:1px solid var(--border); }
+   299→.mockup-preview-content{ background:var(--bg); border:1px solid var(--border); border-radius:0 0 6px 6px; padding:1rem; min-height:120px; }
+   300→.mockup-h1{ font-family:var(--ff-ar); font-size:1rem; font-weight:700; color:var(--text); margin-bottom:0.5rem; }
+   301→.mockup-btn{ display:inline-block; font-family:var(--ff-mono); font-size:0.6875rem; padding:0.25rem 0.75rem; background:var(--accent); color:var(--bg); border-radius:9999px; font-weight:600; }
+   302→
+   303→.mockup-chat{ padding:1rem; display:flex; flex-direction:column; gap:0.75rem; }
+   304→.mockup-msg{ max-width:80%; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.75rem; line-height:1.5; }
+   305→.mockup-msg.user{ background:var(--accent-dim); color:var(--accent); align-self:flex-end; font-weight:500; }
+   306→.mockup-msg.bot{ background:rgba(0,0,0,0.4); border:1px solid var(--border); color:var(--text-secondary); align-self:flex-start; }
+   307→.mockup-mode{ display:inline-flex; align-items:center; gap:0.25rem; font-family:var(--ff-mono); font-size:0.625rem; font-weight:600; padding:0.125rem 0.375rem; border-radius:4px; margin-bottom:0.25rem; }
+   308→.mockup-mode.code{ background:rgba(255,121,198,0.1); color:#ff79c6; }
+   309→
+   310→@media(max-width:900px){
+   311→  .surface-row{ display:flex; flex-direction:column; gap:2.5rem; margin-bottom:5rem; }
+   312→  .surface-info{ max-width:100%; text-align:right; }
+   313→  .surface-visual{ width:100%; }
+   314→}
+   315→
+   316→/* ================================================================
+   317→   INNOVATIONS
+   318→   ================================================================ */
+   319→.innovations{ padding:8rem 0; position:relative; }
+   320→.innovations-inner{ max-width:1200px; margin:0 auto; padding:0 1.5rem; perspective: 1000px; }
+   321→.innovations-header{ text-align:center; margin-bottom:5rem; }
+   322→.innovation-block{ display:grid; grid-template-columns:1fr 1.2fr; gap:3rem; align-items:center; margin-bottom:5rem; padding-bottom:5rem; }
+   323→.innovation-block:last-child{ margin-bottom:0; padding-bottom:0; border-bottom:none; }
+   324→.innovation-block.reverse{ direction:ltr; }
+   325→.innovation-block.reverse > *{ direction:rtl; }
+   326→.innovation-info{ max-width:26rem; }
+   327→.innovation-num{ font-family:var(--ff-mono); font-size:0.75rem; font-weight:600; color:var(--accent); letter-spacing:0.1em; margin-bottom:0.875rem; }
+   328→.innovation-name{ font-weight:800; font-size:clamp(1.5rem,3.5vw,2.25rem); line-height:1.1; margin-bottom:1rem; letter-spacing:-0.03em; }
+   329→.innovation-desc{ font-size:1rem; line-height:1.7; color:var(--text-secondary); margin-bottom:1.5rem; }
+   330→
+   331→.innovation-code-header{ display:flex; align-items:center; justify-content:space-between; padding:0.5rem 0.875rem; background:rgba(0,0,0,0.4); border-bottom:1px solid var(--border); }
+   332→.innovation-code-title{ font-family:var(--ff-mono); font-size:0.6875rem; color:var(--text-tertiary); }
+   333→.innovation-code-body{ padding:1rem 1.25rem; font-family:var(--ff-mono); font-size:0.8125rem; line-height:1.9; overflow-x:auto; }
+   334→
+   335→@media(max-width:900px){
+   336→  .innovation-block, .innovation-block.reverse{ display:flex; flex-direction:column; gap:2rem; margin-bottom:4rem; padding-bottom:4rem; text-align:right; }
+   337→  .innovation-block.reverse > *{ direction:rtl; }
+   338→  .innovation-info{ max-width:100%; }
+   339→  .innovation-code-block{ width:100%; }
+   340→}
+   341→
+   342→/* ================================================================
+   343→   THE LOOP — Glowing SVG Flow Upgrade
+   344→   ================================================================ */
+   345→.loop{ padding:8rem 0; position:relative; }
+   346→.loop-inner{ max-width:1000px; margin:0 auto; padding:0 1.5rem; text-align:center; }
+   347→.loop-header{ margin-bottom:4rem; }
+   348→.loop-cycle{ display:flex; align-items:center; justify-content:center; gap:0; margin-bottom:4rem; flex-wrap:wrap; position: relative; }
+   349→.loop-step{ display:flex; flex-direction:column; align-items:center; gap:0.75rem; min-width:7rem; z-index: 2; }
+   350→.loop-step-icon{ width:64px; height:64px; background:var(--surface); border:1px solid var(--border); border-radius:16px; display:grid; place-items:center; color:var(--accent); position:relative; }
+   351→.loop-step:nth-child(1) .loop-step-icon, .loop-step:nth-child(7) .loop-step-icon{ background:var(--accent-dim); border-color:var(--accent); }
+   352→.loop-step-icon svg{ width:24px; height:24px; stroke-width:1.5; }
+   353→.loop-step-name{ font-weight:700; font-size:0.9375rem; color:var(--text); }
+   354→.loop-step-role{ font-family:var(--ff-mono); font-size:0.625rem; font-weight:600; color:var(--text-tertiary); letter-spacing:0.1em; }
+   355→
+   356→/* The Glowing Track Connector */
+   357→.loop-connector {
+   358→  width: 64px; height: 2px;
+   359→  background: rgba(255,255,255,0.05);
+   360→  position: relative; overflow: hidden;
+   361→  border-radius: 2px;
+   362→}
+   363→.loop-connector::after {
+   364→  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+   365→  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+   366→  animation: loopFlow 1.5s infinite linear;
+   367→}
+   368→html[dir="rtl"] .loop-connector::after {
+   369→  animation: loopFlowRTL 1.5s infinite linear;
+   370→}
+   371→@keyframes loopFlow { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+   372→@keyframes loopFlowRTL { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+   373→
+   374→.loop-stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; max-width:700px; margin:0 auto; perspective: 1000px; }
+   375→.loop-stat-inner{ padding:1.5rem 1rem; text-align:center; }
+   376→.loop-stat-value{ font-family:var(--ff-mono); font-size:2.5rem; font-weight:700; color:var(--accent); line-height:1; margin-bottom:0.375rem; }
+   377→.loop-stat-label{ font-size:0.8125rem; font-weight:600; color:var(--text); margin-bottom:0.125rem; }
+   378→.loop-stat-sub{ font-size:0.6875rem; color:var(--text-tertiary); }
+   379→
+   380→@media(max-width:768px){
+   381→  .loop-cycle{ flex-direction:column; gap:1rem; }
+   382→  .loop-connector{ width:2px; height:32px; }
+   383→  .loop-connector::after{ background: linear-gradient(180deg, transparent, var(--accent), transparent); animation: loopFlowV 1.5s infinite linear; }
+   384→  @keyframes loopFlowV { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+   385→  .loop-stats{ grid-template-columns:repeat(2,1fr); }
+   386→}
+   387→@media(max-width:480px){ .loop-stats{ grid-template-columns:1fr; } }
+   388→
+   389→/* ================================================================
+   390→   TECH STACK
+   391→   ================================================================ */
+   392→.tech{ padding:6rem 0; border-top:1px solid var(--border); }
+   393→.tech-inner{ max-width:1000px; margin:0 auto; padding:0 1.5rem; text-align:center; }
+   394→.tech-header{ margin-bottom:3rem; }
+   395→.tech-grid{ display:flex; flex-wrap:wrap; justify-content:center; gap:0.625rem; perspective: 1000px; }
+   396→.tech-pill{ padding:0.625rem 1rem; display:flex; align-items:center; gap:0.5rem; font-size:0.875rem; font-weight:500; color:var(--text-secondary); cursor: default; }
+   397→.tech-pill-icon{ font-family:var(--ff-mono); font-size:0.75rem; font-weight:700; color:var(--accent); }
+   398→.tech-pill-ver{ font-family:var(--ff-mono); font-size:0.6875rem; color:var(--text-tertiary); }
+   399→
+   400→/* ================================================================
+   401→   FINAL CTA
+   402→   ================================================================ */
+   403→.cta{ padding:8rem 1.5rem; text-align:center; }
+   404→.cta-inner{ max-width:600px; margin:0 auto; }
+   405→.cta-title{ font-weight:800; font-size:clamp(2.25rem,5vw,3.5rem); margin-bottom:1.25rem; }
+   406→.cta-desc{ font-size:1.125rem; color:var(--text-secondary); margin-bottom:2.5rem; }
+   407→.cta-actions{ display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap; }
+   408→
+   409→/* ================================================================
+   410→   FOOTER
+   411→   ================================================================ */
+   412→.footer{ padding:3rem 1.5rem 2rem; border-top:1px solid var(--border); }
+   413→.footer-inner{ max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:1.5rem; flex-wrap:wrap; }
+   414→.footer-brand{ display:flex; align-items:center; gap:0.5rem; font-weight:700; font-size:0.9375rem; }
+   415→.footer-brand-icon{ width:24px; height:24px; background:var(--accent); border-radius:6px; display:grid; place-items:center; font-family:var(--ff-mono); font-size:0.75rem; color:var(--bg); }
+   416→.footer-meta{ font-family:var(--ff-mono); font-size:0.75rem; color:var(--text-tertiary); }
+   417→.footer-meta .accent{ color:var(--accent); }
+   418→.footer-links{ display:flex; gap:1.5rem; }
+   419→.footer-link{ font-size:0.8125rem; color:var(--text-secondary); transition:color 0.2s var(--ease); }
+   420→.footer-link:hover{ color:var(--accent); }
+   421→@media(max-width:600px){ .footer-inner{ flex-direction:column; text-align:center; } }
+   422→
+   423→/* ================================================================
+   424→   SCROLL REVEAL 
+   425→   ================================================================ */
+   426→.reveal{ opacity:0; transform:translateY(30px); transition:opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+   427→.reveal.visible{ opacity:1; transform:translateY(0); }
+   428→@media(prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} .reveal{opacity:1!important;transform:none!important} }
+   429→</style>
+   430→</head>
+   431→<body>
+   432→
+   433→<div class="mesh-bg"></div>
+   434→
+   435→<!-- ================================================================
+   436→     NAV
+   437→     ================================================================ -->
+   438→<nav class="nav">
+   439→  <div class="nav-inner">
+   440→    <a href="#" class="nav-brand">
+   441→      <span class="nav-brand-icon">N</span>
+   442→      <span>NEXUS</span>
+   443→    </a>
+   444→    <div class="nav-links">
+   445→      <a href="#surfaces" class="nav-link" data-i="nav.surfaces">الأسطح</a>
+   446→      <a href="#innovations" class="nav-link" data-i="nav.innovations">الابتكارات</a>
+   447→      <a href="#loop" class="nav-link" data-i="nav.loop">الحلقة</a>
+   448→      <a href="#tech" class="nav-link" data-i="nav.tech">التقنيات</a>
+   449→    </div>
+   450→    <a href="https://my-project-one-brown-97.vercel.app" target="_blank" rel="noopener" class="nav-cta" data-i="nav.launch">افتح NEXUS</a>
+   451→  </div>
+   452→</nav>
+   453→
+   454→<!-- ================================================================
+   455→     HERO
+   456→     ================================================================ -->
+   457→<section class="hero">
+   458→  <div class="hero-grid-bg"></div>
+   459→  <div class="hero-inner">
+   460→
+   461→    <div class="hero-content">
+   462→      <div class="eyebrow" data-i="hero.badge">TestSprite Hackathon Season 3</div>
+   463→      <h1 class="hero-title">
+   464→        <span data-i="hero.t1">اكتب بالعربية.</span><br>
+   465→        <span class="mono grad shimmer-text" data-i="hero.t2">NEXUS</span>
+   466→        <span data-i="hero.t3">يحوّلها لكود.</span>
+   467→      </h1>
+   468→      <p class="hero-desc" data-i="hero.desc">
+   469→        بيئة تطوير ذكية في المتصفح. محرر Monaco، معاينة حية، ووكيل ذكاء اصطناعي بثلاثة أوضاع. محرك ترجمة فوري من العربية إلى الكود، ومحلل أمان سيبراني متقدم.
+   470→      </p>
+   471→      <div class="hero-actions">
+   472→        <a href="https://my-project-one-brown-97.vercel.app" target="_blank" rel="noopener" class="btn btn-primary">
+   473→          <span data-i="hero.cta1">جرّب الآن</span>
+   474→          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+   475→        </a>
+   476→        <a href="https://github.com/mo01115285816-cyber/testsprite-season3-entry" target="_blank" rel="noopener" class="btn btn-secondary">
+   477→          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+   478→          <span data-i="hero.cta2">GitHub</span>
+   479→        </a>
+   480→      </div>
+   481→      <div class="hero-meta">
+   482→        <div class="hero-meta-item">
+   483→          <div class="hero-meta-value">16</div>
+   484→          <div class="hero-meta-label" data-i="hero.m1">تكرار حلقة</div>
+   485→        </div>
+   486→        <div class="hero-meta-item">
+   487→          <div class="hero-meta-value">13</div>
+   488→          <div class="hero-meta-label" data-i="hero.m2">اختبار مجتاز</div>
+   489→        </div>
+   490→        <div class="hero-meta-item">
+   491→          <div class="hero-meta-value">3</div>
+   492→          <div class="hero-meta-label" data-i="hero.m3">أسطح متكاملة</div>
+   493→        </div>
+   494→      </div>
+   495→    </div>
+   496→
+   497→    <!-- Live code editor mockup (Glass Card + 3D) -->
+   498→    <div class="hero-visual">
+   499→      <div class="code-window glass-card 3d-card">
+   500→        <div class="code-titlebar">
+   501→          <div class="code-dots">
+   502→            <span class="code-dot r"></span>
+   503→            <span class="code-dot y"></span>
+   504→            <span class="code-dot g"></span>
+   505→          </div>
+   506→          <span class="code-filename">index.html</span>
+   507→        </div>
+   508→        
+   509→        <!-- I18n Safe Code Wrapping + Typing Target -->
+   510→        <div class="code-body typewriter-target lang-ar-only">
+   511→          <div class="code-line"><span class="code-ln">1</span><span class="code-content"><span class="s-comment">&lt;!-- اكتب HTML بالعربية --&gt;</span></span></div>
+   512→          <div class="code-line"><span class="code-ln">2</span><span class="code-content"><span class="s-tag">&lt;</span><span class="s-ar">حاوية</span> <span class="s-attr">كلاس</span><span class="s-kw">=</span><span class="s-str">"تطبيق"</span><span class="s-tag">&gt;</span></span></div>
+   513→          <div class="code-line"><span class="code-ln">3</span><span class="code-content">&nbsp;&nbsp;<span class="s-tag">&lt;</span><span class="s-ar">عنوان1</span><span class="s-tag">&gt;</span><span class="s-plain">مرحباً بك في NEXUS</span><span class="s-tag">&lt;/</span><span class="s-ar">عنوان1</span><span class="s-tag">&gt;</span></span></div>
+   514→          <div class="code-line"><span class="code-ln">4</span><span class="code-content">&nbsp;&nbsp;<span class="s-tag">&lt;</span><span class="s-ar">زر</span> <span class="s-attr">عند_الضغط</span><span class="s-kw">=</span><span class="s-str">"ابدأ()"</span><span class="s-tag">&gt;</span><span class="s-plain">اضغط هنا</span><span class="s-tag">&lt;/</span><span class="s-ar">زر</span><span class="s-tag">&gt;</span></span></div>
+   515→          <div class="code-line"><span class="code-ln">5</span><span class="code-content"><span class="s-tag">&lt;/</span><span class="s-ar">حاوية</span><span class="s-tag">&gt;</span></span></div>
+   516→          <div class="code-line"><span class="code-ln">6</span><span class="code-content"> </span></div>
+   517→          <div class="code-line"><span class="code-ln">7</span><span class="code-content"><span class="s-comment">/* يتحول تلقائياً إلى */</span></span></div>
+   518→          <div class="code-line"><span class="code-ln">8</span><span class="code-content"><span class="s-tag">&lt;</span><span class="s-en">div</span> <span class="s-attr">class</span><span class="s-kw">=</span><span class="s-str">"app"</span><span class="s-tag">&gt;</span></span></div>
+   519→          <div class="code-line"><span class="code-ln">9</span><span class="code-content">&nbsp;&nbsp;<span class="s-tag">&lt;</span><span class="s-en">h1</span><span class="s-tag">&gt;</span><span class="s-plain">مرحباً بك في NEXUS</span><span class="s-tag">&lt;/</span><span class="s-en">h1</span><span class="s-tag">&gt;</span></span></div>
+   520→          <div class="code-line"><span class="code-ln">10</span><span class="code-content">&nbsp;&nbsp;<span class="s-tag">&lt;</span><span class="s-en">button</span> <span class="s-attr">onClick</span><span class="s-kw">=</span><span class="s-str">"start()"</span><span class="s-tag">&gt;</span><span class="s-plain">اضغط هنا</span><span class="s-tag">&lt;/</span><span class="s-en">button</span><span class="s-tag">&gt;</span></span></div>
+   521→          <div class="code-line"><span class="code-ln">11</span><span class="code-content"><span class="s-tag">&lt;/</span><span class="s-en">div</span><span class="s-tag">&gt;</span></span></div>
+   522→        </div>
+   523→
+   524→        <div class="code-body typewriter-target lang-en-only">
+   525→          <div class="code-line"><span class="code-ln">1</span><span class="code-content"><span class="s-comment">&lt;!-- Write HTML natively --&gt;</span></span></div>
+   526→          <div class="code-line"><span class="code-ln">2</span><span class="code-content"><span class="s-tag">&lt;</span><span class="s-en">div</span> <span class="s-attr">class</span><span class="s-kw">=</span><span class="s-str">"app"</span><span class="s-tag">&gt;</span></span></div>
+   527→          <div class="code-line"><span class="code-ln">3</span><span class="code-content">&nbsp;&nbsp;<span class="s-tag">&lt;</span><span class="s-en">h1</span><span class="s-tag">&gt;</span><span class="s-plain">Welcome to NEXUS</span><span class="s-tag">&lt;/</span><span class="s-en">h1</span><span class="s-tag">&gt;</span></span></div>
+   528→          <div class="code-line"><span class="code-ln">4</span><span class="code-content">&nbsp;&nbsp;<span class="s-tag">&lt;</span><span class="s-en">button</span> <span class="s-attr">onClick</span><span class="s-kw">=</span><span class="s-str">"start()"</span><span class="s-tag">&gt;</span><span class="s-plain">Click here</span><span class="s-tag">&lt;/</span><span class="s-en">button</span><span class="s-tag">&gt;</span></span></div>
+   529→          <div class="code-line"><span class="code-ln">5</span><span class="code-content"><span class="s-tag">&lt;/</span><span class="s-en">div</span><span class="s-tag">&gt;</span></span></div>
+   530→        </div>
+   531→
+   532→        <div class="code-status">
+   533→          <div class="code-status-ok" data-i="hero.compiled">تم التحويل بنجاح</div>
+   534→          <div>HTML · UTF-8</div>
+   535→        </div>
+   536→      </div>
+   537→    </div>
+   538→
+   539→  </div>
+   540→</section>
+   541→
+   542→<!-- ================================================================
+   543→     SURFACES
+   544→     ================================================================ -->
+   545→<section class="surfaces" id="surfaces">
+   546→  <div class="surfaces-header reveal">
+   547→    <div class="eyebrow" data-i="s.label">ثلاثة أسطح متكاملة</div>
+   548→    <h2 class="surfaces-title"><span data-i="s.t1">كل أداة تحتاجها</span><br><span class="grad shimmer-text" data-i="s.t2">في مكان واحد</span></h2>
+   549→    <p class="surfaces-sub" data-i="s.sub">محرر، معاينة، ووكيل ذكاء اصطناعي. ثلاثة أسطح تعمل معاً بسلاسة تامة.</p>
+   550→  </div>
+   551→
+   552→  <div class="container">
+   553→
+   554→    <!-- Surface 1 -->
+   555→    <div class="surface-row reveal">
+   556→      <div class="surface-info">
+   557→        <div class="surface-number">01 — EDITOR</div>
+   558→        <h3 class="surface-name" data-i="s.editor.name">محرر الأكواد</h3>
+   559→        <p class="surface-desc" data-i="s.editor.desc">محرر متقدم مبني على Monaco. تمييز صيغة، أرقام أسطر، بحث واستبدال متقدم بدعم regex، نسخ دقيق بين سطرين، ومنسق أكواد ذكي.</p>
+   560→        <div class="surface-features">
+   561→          <div class="surface-feature"><span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span><span data-i="s.editor.f1">بحث واستبدال بـ regex</span></div>
+   562→          <div class="surface-feature"><span class="surface-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg></span><span data-i="s.editor.f2">نسخ دقيق للأكواد</span></div>
+   563→        </div>
+   564→      </div>
+   565→      <div class="surface-visual">
+   566→        <div class="mockup-frame glass-card 3d-card">
+   567→          <div class="mockup-titlebar">
+   568→            <span class="mockup-tab active">index.js</span>
+   569→          </div>
+   570→          <div class="mockup-body typewriter-target">
+   571→            <div class="mockup-editor-line"><span class="ln">1</span><span><span class="s-kw">const</span> <span class="s-fn">nexus</span> = () =&gt; {</span></div>
+   572→            <div class="mockup-editor-line"><span class="ln">2</span><span>&nbsp;&nbsp;<span class="s-kw">return</span> <span class="s-tag">&lt;div&gt;</span><span class="s-plain">NEXUS Core</span><span class="s-tag">&lt;/div&gt;</span>;</span></div>
+   573→            <div class="mockup-editor-line"><span class="ln">3</span><span>}</span></div>
+   574→          </div>
+   575→        </div>
+   576→      </div>
+   577→    </div>
+   578→
+   579→    <!-- Surface 2 -->
+   580→    <div class="surface-row reverse reveal">
+   581→      <div class="surface-info">
+   582→        <div class="surface-number">02 — PREVIEW</div>
+   583→        <h3 class="surface-name" data-i="s.preview.name">معاينة حية</h3>
+   584→        <p class="surface-desc" data-i="s.preview.desc">معاينة فورية لـ HTML و React مع ثلاثة أحجام أجهزة وفاحص عناصر CSS.</p>
+   585→      </div>
+   586→      <div class="surface-visual">
+   587→        <div class="mockup-frame glass-card 3d-card">
+   588→          <div class="mockup-preview-body">
+   589→            <div class="mockup-browser-bar">
+   590→              <span class="code-dot r"></span><span class="code-dot y"></span><span class="code-dot g"></span>
+   591→              <span class="mockup-url">localhost:3000</span>
+   592→            </div>
+   593→            <div class="mockup-preview-content">
+   594→              <div class="mockup-h1">NEXUS UI</div>
+   595→              <span class="mockup-btn">Live Element</span>
+   596→            </div>
+   597→          </div>
+   598→        </div>
+   599→      </div>
+   600→    </div>
+   601→
+   602→    <!-- Surface 3 -->
+   603→    <div class="surface-row reveal">
+   604→      <div class="surface-info">
+   605→        <div class="surface-number">03 — AGENT</div>
+   606→        <h3 class="surface-name" data-i="s.agent.name">وكيل الذكاء الاصطناعي</h3>
+   607→        <p class="surface-desc" data-i="s.agent.desc">أوضاع استشارة، هندسة أكواد، وتصميم واجهات بتوجيه ذكي.</p>
+   608→      </div>
+   609→      <div class="surface-visual">
+   610→        <div class="mockup-frame glass-card 3d-card">
+   611→          <div class="mockup-titlebar"><span class="mockup-tab active">AI Agent</span></div>
+   612→          <div class="mockup-chat">
+   613→            <div class="mockup-msg user">Build a login button</div>
+   614→            <div class="mockup-msg bot">
+   615→              <div class="mockup-mode code">CODE MODE</div>
+   616→              Generating React component with Tailwind...
+   617→            </div>
+   618→          </div>
+   619→        </div>
+   620→      </div>
+   621→    </div>
+   622→
+   623→  </div>
+   624→</section>
+   625→
+   626→<!-- ================================================================
+   627→     INNOVATIONS
+   628→     ================================================================ -->
+   629→<section class="innovations" id="innovations">
+   630→  <div class="innovations-inner">
+   631→    <div class="innovations-header reveal">
+   632→      <div class="eyebrow" data-i="in.label">ابتكارات حصرية</div>
+   633→      <h2 class="surfaces-title"><span data-i="in.t1">ما لا تجده</span><br><span class="grad shimmer-text" data-i="in.t2">في أي IDE آخر</span></h2>
+   634→    </div>
+   635→
+   636→    <!-- Innovation 1: Translation -->
+   637→    <div class="innovation-block reveal">
+   638→      <div class="innovation-info">
+   639→        <div class="innovation-num">01</div>
+   640→        <h3 class="innovation-name" data-i="in.ar.name">محرّم الترجمة من العربية إلى الكود</h3>
+   641→        <p class="innovation-desc" data-i="in.ar.desc">اكتب أكواد HTML و JSX بالعربية، ويتحول فوراً إلى كود صالح للتنفيذ.</p>
+   642→      </div>
+   643→      <div class="innovation-code-block glass-card 3d-card">
+   644→        <div class="innovation-code-header"><span class="innovation-code-title">map.ts</span></div>
+   645→        <div class="innovation-code-body typewriter-target lang-ar-only">
+   646→          <div><span class="s-ar">حاوية</span> <span class="s-arrow">→</span> <span class="s-en">div</span></div>
+   647→          <div><span class="s-ar">عنوان1</span> <span class="s-arrow">→</span> <span class="s-en">h1</span></div>
+   648→          <div><span class="s-ar">زر</span> <span class="s-arrow">→</span> <span class="s-en">button</span></div>
+   649→        </div>
+   650→        <div class="innovation-code-body typewriter-target lang-en-only">
+   651→          <div><span class="s-en">div</span> <span class="s-arrow">←</span> <span class="s-ar">Container</span></div>
+   652→          <div><span class="s-en">h1</span> <span class="s-arrow">←</span> <span class="s-ar">Header 1</span></div>
+   653→          <div><span class="s-en">button</span> <span class="s-arrow">←</span> <span class="s-ar">Button</span></div>
+   654→        </div>
+   655→      </div>
+   656→    </div>
+   657→
+   658→    <!-- Innovation 2: Security Analyzer -->
+   659→    <div class="innovation-block reverse reveal">
+   660→      <div class="innovation-info">
+   661→        <div class="innovation-num">02</div>
+   662→        <h3 class="innovation-name" data-i="in.sec.name">محلل الأمان السيبراني</h3>
+   663→        <p class="innovation-desc" data-i="in.sec.desc">تحليل عميق لتدفق التلوث وتسلسل الهجمات.</p>
+   664→      </div>
+   665→      <div class="innovation-code-block glass-card 3d-card">
+   666→        <div class="innovation-code-header"><span class="innovation-code-title">report.json</span></div>
+   667→        <div class="innovation-code-body typewriter-target">
+   668→          <div><span class="s-kw">CRITICAL</span> | CVSS <span class="s-str">9.8</span></div>
+   669→          <div><span class="s-attr">CWE-89</span> | SQL Injection</div>
+   670→          <div><span class="s-fn">taint_flow</span>: <span class="s-str">user_input → query</span></div>
+   671→        </div>
+   672→      </div>
+   673→    </div>
+   674→  </div>
+   675→</section>
+   676→
+   677→<!-- ================================================================
+   678→     THE LOOP — Animated Path Upgrade
+   679→     ================================================================ -->
+   680→<section class="loop" id="loop">
+   681→  <div class="loop-inner">
+   682→    <div class="loop-header reveal">
+   683→      <div class="eyebrow" data-i="l.label">الحلقة</div>
+   684→      <h2 class="surfaces-title"><span data-i="l.t1">اكتب، تحقق، أصلح،</span><br><span class="grad shimmer-text" data-i="l.t2">تحقق مرة أخرى</span></h2>
+   685→    </div>
+   686→
+   687→    <div class="loop-cycle reveal">
+   688→      <div class="loop-step"><div class="loop-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div class="loop-step-name" data-i="l.s1">اكتب</div></div>
+   689→      <div class="loop-connector"></div>
+   690→      <div class="loop-step"><div class="loop-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg></div><div class="loop-step-name" data-i="l.s2">تحقق</div></div>
+   691→      <div class="loop-connector"></div>
+   692→      <div class="loop-step"><div class="loop-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div><div class="loop-step-name" data-i="l.s3">أصلح</div></div>
+   693→      <div class="loop-connector"></div>
+   694→      <div class="loop-step"><div class="loop-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12a9 9 0 11-6.219-8.56M21 3v6h-6"/></svg></div><div class="loop-step-name" data-i="l.s4">مجدداً</div></div>
+   695→    </div>
+   696→
+   697→    <div class="loop-stats reveal">
+   698→      <div class="loop-stat glass-card-sm"><div class="loop-stat-inner"><div class="loop-stat-value">16</div><div class="loop-stat-label" data-i="l.st1">حلقة</div></div></div>
+   699→      <div class="loop-stat glass-card-sm"><div class="loop-stat-inner"><div class="loop-stat-value">13</div><div class="loop-stat-label" data-i="l.st2">اختبار</div></div></div>
+   700→      <div class="loop-stat glass-card-sm"><div class="loop-stat-inner"><div class="loop-stat-value">1</div><div class="loop-stat-label" data-i="l.st3">خلل</div></div></div>
+   701→      <div class="loop-stat glass-card-sm"><div class="loop-stat-inner"><div class="loop-stat-value">8</div><div class="loop-stat-label" data-i="l.st4">نجاح</div></div></div>
+   702→    </div>
+   703→  </div>
+   704→</section>
+   705→
+   706→<!-- ================================================================
+   707→     TECH STACK
+   708→     ================================================================ -->
+   709→<section class="tech" id="tech">
+   710→  <div class="tech-inner">
+   711→    <div class="tech-header reveal">
+   712→      <h2 class="surfaces-title" style="font-size:clamp(1.75rem,4vw,2.5rem)"><span data-i="t.t1">مبني على</span> <span class="grad" data-i="t.t2">أحدث التقنيات</span></h2>
+   713→    </div>
+   714→    <div class="tech-grid reveal">
+   715→      <div class="tech-pill glass-card-sm 3d-card"><span class="tech-pill-icon">N</span> Next.js</div>
+   716→      <div class="tech-pill glass-card-sm 3d-card"><span class="tech-pill-icon">R</span> React</div>
+   717→      <div class="tech-pill glass-card-sm 3d-card"><span class="tech-pill-icon">TS</span> TypeScript</div>
+   718→      <div class="tech-pill glass-card-sm 3d-card"><span class="tech-pill-icon">T</span> Tailwind</div>
+   719→    </div>
+   720→  </div>
+   721→</section>
+   722→
+   723→<!-- ================================================================
+   724→     FINAL CTA
+   725→     ================================================================ -->
+   726→<section class="cta">
+   727→  <div class="cta-inner reveal">
+   728→    <h2 class="cta-title"><span data-i="c.t1">ابدأ الكتابة</span><br><span class="grad shimmer-text" data-i="c.t2">بالعربية الآن</span></h2>
+   729→    <div class="cta-actions">
+   730→      <a href="https://my-project-one-brown-97.vercel.app" class="btn btn-primary"><span data-i="c.cta1">افتح التطبيق</span></a>
+   731→    </div>
+   732→  </div>
+   733→</section>
+   734→
+   735→<!-- ================================================================
+   736→     FOOTER
+   737→     ================================================================ -->
+   738→<footer class="footer">
+   739→  <div class="footer-inner">
+   740→    <div class="footer-brand"><span class="footer-brand-icon">N</span> NEXUS</div>
+   741→    <div class="footer-meta">Built by <span class="accent">MOAAMN SAYED</span></div>
+   742→  </div>
+   743→</footer>
+   744→
+   745→<script>
+   746→/* ================================================================
+   747→   I18N
+   748→   ================================================================ */
+   749→var I={
+   750→'nav.surfaces':{ar:'الأسطح',en:'Surfaces'},'nav.innovations':{ar:'الابتكارات',en:'Innovations'},'nav.loop':{ar:'الحلقة',en:'Loop'},'nav.tech':{ar:'التقنيات',en:'Tech'},'nav.launch':{ar:'افتح NEXUS',en:'Launch NEXUS'},
+   751→'hero.badge':{ar:'TestSprite Hackathon Season 3',en:'TestSprite Hackathon Season 3'},
+   752→'hero.t1':{ar:'اكتب بالعربية.',en:'Write in Arabic.'},'hero.t2':{ar:'NEXUS',en:'NEXUS'},'hero.t3':{ar:'يحوّلها لكود.',en:'compiles to code.'},
+   753→'hero.desc':{ar:'بيئة تطوير ذكية في المتصفح. محرر Monaco، معاينة حية، ووكيل ذكاء اصطناعي بثلاثة أوضاع.',en:'A smart IDE in the browser. Monaco editor, live preview, and a 3-mode AI agent.'},
+   754→'hero.cta1':{ar:'جرّب الآن',en:'Try Now'},'hero.cta2':{ar:'GitHub',en:'GitHub'},
+   755→'hero.m1':{ar:'تكرار حلقة',en:'Loop iterations'},'hero.m2':{ar:'اختبار مجتاز',en:'Tests passed'},'hero.m3':{ar:'أسطح متكاملة',en:'Integrated surfaces'},
+   756→'hero.compiled':{ar:'تم التحويل بنجاح',en:'Compiled successfully'},
+   757→'s.label':{ar:'ثلاثة أسطح متكاملة',en:'Three integrated surfaces'},'s.t1':{ar:'كل أداة تحتاجها',en:'Every tool you need'},'s.t2':{ar:'في مكان واحد',en:'in one place'},
+   758→'s.sub':{ar:'محرر، معاينة، ووكيل ذكاء اصطناعي. ثلاثة أسطح تعمل معاً بسلاسة تامة.',en:'Editor, preview, and AI agent. Three surfaces working together seamlessly.'},
+   759→'s.editor.name':{ar:'محرر الأكواد',en:'Code Editor'},'s.editor.desc':{ar:'محرر متقدم مبني على Monaco. تمييز صيغة، أرقام أسطر.',en:'Advanced editor built on Monaco. Syntax highlighting, line numbers.'},
+   760→'s.editor.f1':{ar:'بحث واستبدال بـ regex',en:'Regex search and replace'},'s.editor.f2':{ar:'نسخ دقيق للأكواد',en:'Precise code copy'},
+   761→'s.preview.name':{ar:'معاينة حية',en:'Live Preview'},'s.preview.desc':{ar:'معاينة فورية لـ HTML و React مع ثلاثة أحجام أجهزة.',en:'Instant HTML and React preview with three device sizes.'},
+   762→'s.preview.f1':{ar:'ثلاثة أحجام: سطح مكتب، لوحي، جوال',en:'Three sizes: desktop, tablet, mobile'},'s.preview.f2':{ar:'فاحص عناصر CSS تفاعلي',en:'Interactive CSS element inspector'},'s.preview.f3':{ar:'تحديث فوري عند الكتابة',en:'Instant update on type'},
+   763→'s.agent.name':{ar:'وكيل الذكاء الاصطناعي',en:'AI Agent'},'s.agent.desc':{ar:'أوضاع استشارة، هندسة أكواد، وتصميم واجهات.',en:'Consulting, code engineering, and UI design modes.'},
+   764→'s.agent.f1':{ar:'وضع CHAT للمشورة والنصائح',en:'CHAT mode for advice'},'s.agent.f2':{ar:'وضع CODE لكتابة وإصلاح الأكواد',en:'CODE mode for writing and fixing code'},'s.agent.f3':{ar:'وضع UI_ARTIST لتصميم الواجهات',en:'UI_ARTIST mode for interface design'},
+   765→'in.label':{ar:'ابتكارات حصرية',en:'Unique innovations'},'in.t1':{ar:'ما لا تجده',en:'What you won\'t find'},'in.t2':{ar:'في أي IDE آخر',en:'in any other IDE'},
+   766→'in.ar.name':{ar:'محرّم الترجمة من العربية إلى الكود',en:'Arabic-to-Code Translation Engine'},'in.ar.desc':{ar:'اكتب أكواد HTML و JSX بالعربية، ويتحول فوراً إلى كود صالح للتنفيذ.',en:'Write HTML and JSX in Arabic, and it instantly compiles to valid code.'},
+   767→'in.sec.name':{ar:'محلل الأمان السيبراني',en:'AI Security Analyzer'},'in.sec.desc':{ar:'تحليل عميق لتدفق التلوث وتسلسل الهجمات.',en:'Deep taint-flow analysis and attack chaining.'},
+   768→'l.label':{ar:'الحلقة',en:'The Loop'},'l.t1':{ar:'اكتب، تحقق، أصلح،',en:'Write, verify, fix,'},'l.t2':{ar:'تحقق مرة أخرى',en:'verify again'},
+   769→'l.s1':{ar:'اكتب',en:'Write'},'l.s2':{ar:'تحقق',en:'Verify'},'l.s3':{ar:'أصلح',en:'Fix'},'l.s4':{ar:'مجدداً',en:'Again'},
+   770→'l.st1':{ar:'حلقة',en:'Loops'},'l.st2':{ar:'اختبار',en:'Tests'},'l.st3':{ar:'خلل',en:'Bug'},'l.st4':{ar:'نجاح',en:'Passes'},
+   771→'t.label':{ar:'التقنيات',en:'Tech Stack'},'t.t1':{ar:'مبني على',en:'Built on'},'t.t2':{ar:'أحدث التقنيات',en:'modern tech'},
+   772→'c.t1':{ar:'ابدأ الكتابة',en:'Start coding'},'c.t2':{ar:'بالعربية الآن',en:'in Arabic now'},
+   773→'c.cta1':{ar:'افتح التطبيق',en:'Launch App'}
+   774→};
+   775→
+   776→(function(){
+   777→  var lang=window.__L__||'ar';
+   778→  document.querySelectorAll('[data-i]').forEach(function(el){
+   779→    var key=el.getAttribute('data-i');
+   780→    if(I[key]&&I[key][lang])el.textContent=I[key][lang];
+   781→  });
+   782→})();
+   783→
+   784→/* Scroll reveal & Parallax Background */
+   785→var obs=new IntersectionObserver(function(entries){
+   786→  entries.forEach(function(e){
+   787→    if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}
+   788→  });
+   789→},{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+   790→document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el)});
+   791→
+   792→window.addEventListener('scroll', function() {
+   793→  var scrolled = window.scrollY;
+   794→  var grid = document.querySelector('.hero-grid-bg');
+   795→  if (grid) grid.style.transform = 'perspective(800px) rotateX(25deg) scale(1.1) translateY(' + (-50 + scrolled * 0.12) + 'px)';
+   796→  
+   797→  var nav = document.querySelector('.nav');
+   798→  if(scrolled > 20) nav.classList.add('scrolled');
+   799→  else nav.classList.remove('scrolled');
+   800→}, {passive:true});
+   801→
+   802→/* Magnetic 3D Cards */
+   803→document.querySelectorAll('.3d-card').forEach(function(card) {
+   804→  card.addEventListener('mousemove', function(e) {
+   805→    var rect = card.getBoundingClientRect();
+   806→    var x = e.clientX - rect.left;
+   807→    var y = e.clientY - rect.top;
+   808→    var centerX = rect.width / 2;
+   809→    var centerY = rect.height / 2;
+   810→    var rotateX = ((y - centerY) / centerY) * -4; 
+   811→    var rotateY = ((x - centerX) / centerX) * 4;
+   812→    card.style.transform = 'perspective(1000px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateY(-5px)';
+   813→  });
+   814→  card.addEventListener('mouseleave', function() {
+   815→    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+   816→  });
+   817→});
+   818→
+   819→/* Professional Code Typing Animation */
+   820→var typingObserver = new IntersectionObserver(function(entries, observer) {
+   821→  entries.forEach(function(entry) {
+   822→    if (entry.isIntersecting) {
+   823→      var container = entry.target;
+   824→      var lines = container.querySelectorAll('.code-line');
+   825→      
+   826→      // Hide all lines initially
+   827→      lines.forEach(function(l) { l.style.display = 'none'; l.classList.remove('typing-cursor'); });
+   828→      
+   829→      var i = 0;
+   830→      function typeNextLine() {
+   831→        if (i > 0) lines[i-1].classList.remove('typing-cursor');
+   832→        
+   833→        if (i < lines.length) {
+   834→          lines[i].style.display = 'flex';
+   835→          lines[i].classList.add('typing-cursor');
+   836→          i++;
+   837→          // Randomize typing speed for realism (150ms - 400ms per line)
+   838→          setTimeout(typeNextLine, 150 + Math.random() * 250);
+   839→        }
+   840→      }
+   841→      // Start typing after a short delay
+   842→      setTimeout(typeNextLine, 300);
+   843→      observer.unobserve(container);
+   844→    }
+   845→  });
+   846→}, { threshold: 0.5 });
+   847→
+   848→document.querySelectorAll('.typewriter-target').forEach(function(el) {
+   849→  typingObserver.observe(el);
+   850→});
+   851→</script>
+   852→
+   853→</body>
+   854→</html>
