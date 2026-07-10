@@ -14,7 +14,8 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Inter:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="/nexus-logo.png" fetchpriority="high">
+<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -1168,7 +1169,7 @@ window.addEventListener('scroll',function(){var s=window.scrollY;var g=document.
 document.querySelectorAll('a[href^="#"]').forEach(function(l){l.addEventListener('click',function(e){var h=l.getAttribute('href');if(h.length>1){var t=document.querySelector(h);if(t){e.preventDefault();window.scrollTo({top:t.getBoundingClientRect().top+window.scrollY-64,behavior:'smooth'});}}});});
 
 /* 6. MAGNETIC 3D CARDS */
-document.querySelectorAll('.3d-card').forEach(function(c){c.addEventListener('mousemove',function(e){var r=c.getBoundingClientRect();var x=e.clientX-r.left,y=e.clientY-r.top;var cx=r.width/2,cy=r.height/2;var rx=((y-cy)/cy)*-4,ry=((x-cx)/cx)*4;c.style.transform='perspective(1000px) rotateX('+rx+'deg) rotateY('+ry+'deg) translateY(-5px)';});c.addEventListener('mouseleave',function(){c.style.transform='perspective(1000px) rotateX(0) rotateY(0) translateY(0)';});});
+try{document.querySelectorAll('[class~="3d-card"]').forEach(function(c){c.addEventListener('mousemove',function(e){var r=c.getBoundingClientRect();var x=e.clientX-r.left,y=e.clientY-r.top;var cx=r.width/2,cy=r.height/2;var rx=((y-cy)/cy)*-4,ry=((x-cx)/cx)*4;c.style.transform='perspective(1000px) rotateX('+rx+'deg) rotateY('+ry+'deg) translateY(-5px)';});c.addEventListener('mouseleave',function(){c.style.transform='perspective(1000px) rotateX(0) rotateY(0) translateY(0)';});});}catch(e){}
 
 /* 7. MAGNETIC BUTTONS */
 document.querySelectorAll('.magnetic-btn').forEach(function(b){b.addEventListener('mousemove',function(e){var r=b.getBoundingClientRect();var x=((e.clientX-r.left)/r.width)*100,y=((e.clientY-r.top)/r.height)*100;b.style.setProperty('--mouse-x',x+'%');b.style.setProperty('--mouse-y',y+'%');});});
@@ -1177,10 +1178,17 @@ document.querySelectorAll('.magnetic-btn').forEach(function(b){b.addEventListene
 var tObs=new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting){var c=e.target,ls=c.querySelectorAll('.code-line');ls.forEach(function(l){l.style.display='none';l.classList.remove('typing-cursor');});var i=0;function tn(){if(i>0)ls[i-1].classList.remove('typing-cursor');if(i<ls.length){ls[i].style.display='flex';ls[i].classList.add('typing-cursor');i++;setTimeout(tn,150+Math.random()*250);}}setTimeout(tn,300);o.unobserve(c);}});},{threshold:.5});
 document.querySelectorAll('.typewriter-target').forEach(function(e){tObs.observe(e);});
 
-/* 9. SLOT MACHINE NUMBERS */
+/* 9. SLOT MACHINE NUMBERS — with instant fallback */
 function createSlot(el,target){var ds=target.toString().split('');el.innerHTML='';ds.forEach(function(d,idx){var slot=document.createElement('span');slot.className='slot-digit';var inner=document.createElement('span');inner.className='slot-digit-inner';for(var i=0;i<=9;i++){var s=document.createElement('span');s.textContent=i;inner.appendChild(s);}var ts=document.createElement('span');ts.textContent=d;inner.appendChild(ts);slot.appendChild(inner);el.appendChild(slot);setTimeout(function(){inner.style.transform='translateY(-'+(parseInt(d)+10)*1.2+'em)';},100+idx*200);});}
 var sObs=new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting){var el=e.target,t=parseInt(el.getAttribute('data-target'),10);if(!isNaN(t))createSlot(el,t);o.unobserve(el);}});},{threshold:.5});
-document.querySelectorAll('.slot-number').forEach(function(e){sObs.observe(e);});
+function initSlotNumbers(){
+  document.querySelectorAll('.slot-number').forEach(function(e){
+    var t=parseInt(e.getAttribute('data-target'),10);
+    if(!isNaN(t)) e.textContent=t;
+    sObs.observe(e);
+  });
+}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initSlotNumbers);}else{initSlotNumbers();}
 
 /* 10. CUSTOM CURSOR */
 (function(){var d=document.createElement('div'),o=document.createElement('div'),s=document.createElement('div');d.className='custom-cursor-dot';o.className='custom-cursor-outline';s.className='spotlight-glow';document.body.appendChild(d);document.body.appendChild(o);document.body.appendChild(s);var mx=window.innerWidth/2,my=window.innerHeight/2,dx=mx,dy=my,ox=mx,oy=my,sx=mx,sy=my,moved=false,touchT=0;window.addEventListener('touchstart',function(){touchT=Date.now();if(moved){moved=false;document.documentElement.classList.remove('custom-cursor-active');d.style.opacity='0';o.style.opacity='0';s.style.opacity='0';}},{passive:true});window.addEventListener('mousemove',function(e){if(Date.now()-touchT<500)return;if(!moved){document.documentElement.classList.add('custom-cursor-active');moved=true;dx=e.clientX;dy=e.clientY;ox=e.clientX;oy=e.clientY;sx=e.clientX;sy=e.clientY;d.style.opacity='1';o.style.opacity='1';s.style.opacity='1';}mx=e.clientX;my=e.clientY;});document.addEventListener('mouseleave',function(){if(moved){d.style.opacity='0';o.style.opacity='0';s.style.opacity='0';}});document.addEventListener('mouseenter',function(){if(moved){d.style.opacity='1';o.style.opacity='1';s.style.opacity='1';}});function up(){if(moved){dx+=(mx-dx)*.3;dy+=(my-dy)*.3;ox+=(mx-ox)*.15;oy+=(my-oy)*.15;sx+=(mx-sx)*.05;sy+=(my-sy)*.05;d.style.transform='translate3d('+dx+'px,'+dy+'px,0)';o.style.transform='translate3d('+ox+'px,'+oy+'px,0)';s.style.transform='translate3d('+sx+'px,'+sy+'px,0)';}requestAnimationFrame(up);}up();document.querySelectorAll('a,button,[role="button"],input,select,textarea').forEach(function(el){el.addEventListener('mouseenter',function(){d.classList.add('hovered');o.classList.add('hovered');});el.addEventListener('mouseleave',function(){d.classList.remove('hovered');o.classList.remove('hovered');});});})();
