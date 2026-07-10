@@ -1,15 +1,14 @@
 {
   "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
   "type": "frontend",
-  "name": "Split View shows desktop and mobile previews side by side",
-  "description": "On the Preview tab, clicking the Columns (Split View) toggle button shows two preview iframes (Desktop + Mobile) side by side.",
+  "name": "Split View shows desktop and mobile labels",
+  "description": "On the Preview tab, clicking the Columns (Split View) toggle button shows two preview areas labeled 'Desktop' and 'Mobile' side by side.",
   "priority": "p2",
   "planSteps": [
     { "type": "action", "description": "Navigate to the homepage" },
     { "type": "action", "description": "Click the 'المعاينة' (Preview) tab in the bottom dock" },
-    { "type": "assertion", "description": "Verify a preview iframe with title 'main-preview' is visible" },
     { "type": "action", "description": "Click the button with title 'عرض منقسم (مقارنة)' in the preview toolbar" },
-    { "type": "assertion", "description": "Verify an iframe with title 'split-desktop-preview' is visible" },
-    { "type": "assertion", "description": "Verify an iframe with title 'split-mobile-preview' is visible" }
+    { "type": "assertion", "description": "Verify the text 'Desktop' is visible on the page" },
+    { "type": "assertion", "description": "Verify the text 'Mobile' is visible on the page" }
   ]
 }

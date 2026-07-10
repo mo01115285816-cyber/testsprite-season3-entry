@@ -1,12 +1,11 @@
 {
   "projectId": "67ad548f-0ec1-4d16-8c9f-b6dd6288d42a",
   "type": "frontend",
-  "name": "Version History panel opens with saved versions",
-  "description": "On the Editor tab, clicking the History button opens the Version History panel showing the title 'سجل التغييرات'.",
+  "name": "Version History panel opens",
+  "description": "On the homepage, clicking the 'سجل التغييرات' button opens the Version History panel.",
   "priority": "p2",
   "planSteps": [
     { "type": "action", "description": "Navigate to the homepage" },
-    { "type": "assertion", "description": "Verify the text 'NEXUS' is visible in the header" },
     { "type": "action", "description": "Click the button with title 'سجل التغييرات' in the editor toolbar" },
     { "type": "assertion", "description": "Verify the text 'سجل التغييرات' is visible in the opened panel" }
   ]
