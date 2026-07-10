@@ -244,7 +244,88 @@ button:hover {
  }
 };
 
+// Landing Page Wrapper — shows the landing HTML in an iframe
+// and intercepts "Launch" button clicks to transition to the IDE
+function LandingFrame({ onLaunch }: { onLaunch: () => void }) {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    const handleLoad = () => {
+      try {
+        const doc = iframe.contentWindow?.document;
+        if (!doc) return;
+        // Intercept clicks on all links that should launch the IDE
+        const launchLinks = doc.querySelectorAll('a.nav-cta, a.btn-primary');
+        launchLinks.forEach((link) => {
+          link.addEventListener('click', (e: Event) => {
+            e.preventDefault();
+            try {
+              localStorage.setItem('nexus-visited', 'true');
+            } catch {}
+            onLaunch();
+          });
+        });
+      } catch (err) {
+        // If cross-origin, the iframe script handles it via window.top
+      }
+    };
+
+    iframe.addEventListener('load', handleLoad);
+    return () => iframe.removeEventListener('load', handleLoad);
+  }, [onLaunch]);
+
+  return (
+    <iframe
+      ref={iframeRef}
+      src="/landing.html"
+      className="fixed inset-0 w-screen h-screen border-0"
+      style={{ zIndex: 9999 }}
+      title="NEXUS Landing"
+    />
+  );
+}
+
 export default function HTMLPreviewApp() {
+ const [showLanding, setShowLanding] = useState<boolean | null>(null);
+
+ // Landing page gate: first-time visitors see the landing page
+ useEffect(() => {
+   try {
+     const visited = localStorage.getItem('nexus-visited');
+     setShowLanding(visited !== 'true');
+   } catch {
+     setShowLanding(false);
+   }
+ }, []);
+
+ // Also listen for storage changes (if landing page sets the flag)
+ useEffect(() => {
+   const handler = () => {
+     try {
+       if (localStorage.getItem('nexus-visited') === 'true') {
+         setShowLanding(false);
+       }
+     } catch {}
+   };
+   window.addEventListener('storage', handler);
+   return () => window.removeEventListener('storage', handler);
+ }, []);
+
+ if (showLanding === null) {
+   return <div className="flex items-center justify-center min-h-screen bg-[#0a0a0b]" />;
+ }
+
+ if (showLanding) {
+   return <LandingFrame onLaunch={() => setShowLanding(false)} />;
+ }
+
+ return <NexusIDE />;
+}
+
+function NexusIDE() {
  const { t, dir, lang } = useI18n();
  const [activeTab, setActiveTab] = useState<'editor' | 'preview' | 'agent'>('editor');
  const [isFormatting, setIsFormatting] = useState(false);
