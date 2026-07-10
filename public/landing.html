@@ -128,7 +128,9 @@ body::after{
 }
 .nav-inner{ width:100%; max-width:1200px; display:flex; align-items:center; justify-content:space-between; gap:2rem; }
 .nav-brand{ display:flex; align-items:center; gap:0.625rem; font-weight:700; font-size:1.0625rem; letter-spacing:-0.02em; color:var(--text); }
-.nav-brand-icon{ width:28px; height:28px; background:var(--accent); border-radius:7px; display:grid; place-items:center; font-family:var(--ff-mono); font-weight:700; font-size:0.875rem; color:var(--bg); box-shadow:0 0 20px var(--accent-glow); }
+.nav-brand-icon{ width:32px; height:32px; border-radius:8px; overflow:hidden; display:grid; place-items:center; box-shadow:0 0 20px var(--accent-glow); }
+.nav-brand-icon img{ width:100%; height:100%; object-fit:cover; }
+.nav-brand-text{ font-weight:800; letter-spacing:-0.02em; }
 .nav-links{ display:flex; align-items:center; gap:0.25rem; }
 .nav-link{ font-size:0.875rem; font-weight:500; color:var(--text-secondary); padding:0.5rem 0.875rem; border-radius:8px; transition:all 0.2s var(--ease); }
 .nav-link:hover{ color:var(--text); background:var(--surface); }
@@ -220,6 +222,11 @@ html[lang="en"] .hero-title{ font-weight:800; }
 .hero-meta-value{ font-family:var(--ff-mono); font-size:1.5rem; font-weight:700; color:var(--text); letter-spacing:-0.02em; line-height:1; }
 .hero-meta-label{ font-size:0.8125rem; color:var(--text-tertiary); }
 .hero-visual{ position:relative; perspective: 1000px; }
+
+/* Floating particles around code window — depth & atmosphere */
+.hero-particle{ position:absolute; border-radius:50%; pointer-events:none; }
+.hero-particle.p1{ top:-20px;right:-20px; width:80px;height:80px; background:radial-gradient(circle,var(--accent-glow),transparent 70%); filter:blur(20px); }
+.hero-particle.p2{ bottom:-30px;left:-30px; width:120px;height:120px; background:radial-gradient(circle,rgba(139,233,253,0.08),transparent 70%); filter:blur(30px); }
 
 /* Code Window Inherits Glass Card */
 .code-window{
@@ -458,8 +465,8 @@ html[dir="rtl"] .tech-marquee-track{ animation:techScrollRTL 40s linear infinite
 <nav class="nav">
   <div class="nav-inner">
     <a href="#" class="nav-brand">
-      <span class="nav-brand-icon">N</span>
-      <span>NEXUS</span>
+      <span class="nav-brand-icon"><img src="/nexus-logo.png" alt="NEXUS" /></span>
+      <span class="nav-brand-text">NEXUS</span>
     </a>
     <div class="nav-links">
       <a href="#surfaces" class="nav-link" data-i="nav.surfaces">الأسطح</a>
@@ -516,6 +523,8 @@ html[dir="rtl"] .tech-marquee-track{ animation:techScrollRTL 40s linear infinite
 
     <!-- Live code editor mockup (Glass Card + 3D) -->
     <div class="hero-visual">
+      <div class="hero-particle p1"></div>
+      <div class="hero-particle p2"></div>
       <div class="code-window glass-card 3d-card">
         <div class="code-titlebar">
           <div class="code-dots">
