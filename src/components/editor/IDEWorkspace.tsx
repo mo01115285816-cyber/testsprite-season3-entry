@@ -10,6 +10,7 @@ import EditorTabs from '@/components/editor/EditorTabs';
 import MonacoEditor from '@/components/editor/MonacoEditor';
 import LinterPanel from '@/components/LinterPanel';
 import type { DiagnosticIssue } from '@/lib/diagnostics';
+import { useI18n } from '@/lib/i18n';
 
 interface IDEWorkspaceProps {
   lintIssues: DiagnosticIssue[];
@@ -44,6 +45,7 @@ export default function IDEWorkspace({
   // NOTE: code + setCode come from parent but we override with file-system active content
   code: _parentCode, setCode: _parentSetCode,
 }: IDEWorkspaceProps) {
+  const { t } = useI18n();
   const fs = useFileSystem();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [localCode, setLocalCode] = useState('');
@@ -133,7 +135,7 @@ export default function IDEWorkspace({
           <div className="flex items-center gap-1">
             <button
               type="button"
-              aria-label={sidebarOpen ? 'إخفاء الشريط الجانبي' : 'إظهار الشريط الجانبي'}
+              aria-label={sidebarOpen ? t('ide.hideSidebar') : t('ide.showSidebar')}
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="p-1.5 rounded hover:bg-brand-accent/10 text-zinc-400 hover:text-brand-accent transition-colors cursor-pointer"
             >
@@ -148,7 +150,7 @@ export default function IDEWorkspace({
           <div className="flex items-center gap-1">
             <button
               type="button"
-              aria-label="بحث في الكود (Ctrl+F)"
+              aria-label={t('ide.searchCodeAria')}
               onClick={() => {
                 // Monaco handles Ctrl+F internally; this button is a hint
                 const event = new KeyboardEvent('keydown', { key: 'f', ctrlKey: true, bubbles: true });
@@ -156,52 +158,52 @@ export default function IDEWorkspace({
               }}
               disabled={!fs.activeFile}
               className="magnetic p-1.5 rounded text-zinc-400 hover:text-brand-accent hover:bg-brand-accent/10 disabled:opacity-40 cursor-pointer"
-              title="بحث (Ctrl+F)"
+              title={t('ide.searchCodeTitle')}
             >
               <Search className="w-3.5 h-3.5" />
             </button>
             <button
               type="button"
-              aria-label="مكتبة الأيقونات"
+              aria-label={t('icons.title')}
               onClick={() => setIsIconModalOpen(true)}
               className="magnetic p-1.5 rounded text-zinc-400 hover:text-brand-accent hover:bg-brand-accent/10 cursor-pointer"
-              title="مكتبة الأيقونات"
+              title={t('icons.title')}
             >
               <Smile className="w-3.5 h-3.5" />
             </button>
             <button
               type="button"
-              aria-label="تنسيق الكود"
+              aria-label={t('ide.formatCodeAria')}
               onClick={handleFormat}
               disabled={isFormatting || !fs.activeFile}
               className="magnetic flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold text-zinc-300 hover:text-brand-accent hover:bg-brand-accent/10 disabled:opacity-40 cursor-pointer"
             >
               <Sparkles className="w-3 h-3" />
-              <span className="hidden md:inline">تنسيق</span>
+              <span className="hidden md:inline">{t('ide.formatShort')}</span>
             </button>
             <button
               type="button"
-              aria-label="فحص الأمان"
+              aria-label={t('linter.scan')}
               onClick={runDeepLint}
               disabled={isDeepLinting || !fs.activeFile}
               className="magnetic flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold text-zinc-300 hover:text-brand-accent hover:bg-brand-accent/10 disabled:opacity-40 cursor-pointer"
             >
               <Bug className="w-3 h-3" />
-              <span className="hidden md:inline">فحص</span>
+              <span className="hidden md:inline">{t('ide.scanShort')}</span>
             </button>
             <button
               type="button"
-              aria-label="حفظ الملف"
+              aria-label={t('ide.saveFileAria')}
               onClick={handleSave}
               disabled={!fs.activeFile}
               className="magnetic flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold text-zinc-300 hover:text-brand-accent hover:bg-brand-accent/10 disabled:opacity-40 cursor-pointer"
             >
               <Save className="w-3 h-3" />
-              <span className="hidden md:inline">حفظ</span>
+              <span className="hidden md:inline">{t('common.save')}</span>
             </button>
             <button
               type="button"
-              aria-label={isLintPanelOpen ? 'إخفاء الفاحص' : 'إظهار الفاحص'}
+              aria-label={isLintPanelOpen ? t('ide.hideLinter') : t('ide.showLinter')}
               onClick={() => setIsLintPanelOpen(!isLintPanelOpen)}
               className={`p-1.5 rounded transition-colors cursor-pointer ${
                 isLintPanelOpen ? 'bg-brand-accent/10 text-brand-accent' : 'text-zinc-400 hover:text-brand-accent hover:bg-brand-accent/10'
@@ -211,7 +213,7 @@ export default function IDEWorkspace({
             </button>
             <button
               type="button"
-              aria-label="مسح الكود"
+              aria-label={t('ide.clearCodeAria')}
               onClick={() => {
                 if (isConfirmingClear) {
                   setLocalCode('');
@@ -228,7 +230,7 @@ export default function IDEWorkspace({
               className={`magnetic p-1.5 rounded transition-colors cursor-pointer disabled:opacity-40 ${
                 isConfirmingClear ? 'bg-red-500/20 text-red-400' : 'text-zinc-400 hover:text-red-400 hover:bg-red-500/10'
               }`}
-              title={isConfirmingClear ? 'اضغط مرة أخرى للتأكيد' : 'مسح الكود'}
+              title={isConfirmingClear ? t('ide.pressAgainToConfirm') : t('ide.clearCodeAria')}
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>
@@ -259,7 +261,7 @@ export default function IDEWorkspace({
             <div className="flex flex-col items-center justify-center h-full bg-[#0f0f0f] text-center">
               <Sparkles className="w-6 h-6 text-brand-accent/30 mb-2" />
               <p className="text-[11px] text-zinc-600 max-w-xs">
-                افتح ملفاً من المستكشف لتبدأ
+                {t('ide.emptyState')}
               </p>
             </div>
           )}

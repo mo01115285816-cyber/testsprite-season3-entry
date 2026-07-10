@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import type { FileNode } from '@/lib/filesystem/types';
 import { getLanguageIcon } from '@/lib/filesystem/types';
+import { useI18n } from '@/lib/i18n';
 
 interface FileExplorerProps {
   files: FileNode[];
@@ -34,6 +35,7 @@ interface TreeNodeProps {
 function TreeNode({
   node, files, level, activeFileId, onOpenFile, onCreateFile, onCreateFolder, onDeleteFile, onRenameFile,
 }: TreeNodeProps) {
+  const { t } = useI18n();
   const [expanded, setExpanded] = useState(true);
   const [showActions, setShowActions] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
@@ -110,7 +112,7 @@ function TreeNode({
           <div className="flex items-center gap-0.5">
             <button
               type="button"
-              aria-label="ملف جديد"
+              aria-label={t('files.newFile')}
               onClick={(e) => { e.stopPropagation(); setIsCreating('file'); setExpanded(true); }}
               className="p-0.5 rounded hover:bg-brand-accent/20 text-zinc-500 hover:text-brand-accent"
             >
@@ -119,7 +121,7 @@ function TreeNode({
             {node.type === 'folder' && (
               <button
                 type="button"
-                aria-label="مجلد جديد"
+                aria-label={t('files.newFolder')}
                 onClick={(e) => { e.stopPropagation(); setIsCreating('folder'); setExpanded(true); }}
                 className="p-0.5 rounded hover:bg-brand-accent/20 text-zinc-500 hover:text-brand-accent"
               >
@@ -128,7 +130,7 @@ function TreeNode({
             )}
             <button
               type="button"
-              aria-label="إعادة تسمية"
+              aria-label={t('files.rename')}
               onClick={(e) => { e.stopPropagation(); setIsRenaming(true); setRenameValue(node.name); }}
               className="p-0.5 rounded hover:bg-brand-accent/20 text-zinc-500 hover:text-brand-accent"
             >
@@ -136,7 +138,7 @@ function TreeNode({
             </button>
             <button
               type="button"
-              aria-label="حذف"
+              aria-label={t('files.delete')}
               onClick={(e) => { e.stopPropagation(); onDeleteFile(node.id); }}
               className="p-0.5 rounded hover:bg-red-500/20 text-zinc-500 hover:text-red-400"
             >
@@ -159,7 +161,7 @@ function TreeNode({
             onChange={(e) => setNewItemName(e.target.value)}
             onBlur={handleCreateSubmit}
             onKeyDown={(e) => { if (e.key === 'Enter') handleCreateSubmit(); if (e.key === 'Escape') { setIsCreating(null); setNewItemName(''); } }}
-            placeholder={isCreating === 'file' ? 'اسم الملف' : 'اسم المجلد'}
+            placeholder={isCreating === 'file' ? t('files.fileNamePlaceholder') : t('files.folderNamePlaceholder')}
             className="flex-1 bg-brand-bg border border-brand-accent/30 rounded px-1 text-xs text-brand-text outline-none placeholder:text-zinc-600"
             autoFocus
           />
@@ -200,6 +202,7 @@ function TreeNode({
 export default function FileExplorer({
   files, activeFileId, onOpenFile, onCreateFile, onCreateFolder, onDeleteFile, onRenameFile,
 }: FileExplorerProps) {
+  const { t, dir } = useI18n();
   const [searchQuery, setSearchQuery] = useState('');
   const rootFiles = files.filter(f => f.parentId === null);
 
@@ -208,14 +211,14 @@ export default function FileExplorer({
     : rootFiles;
 
   return (
-    <div className="flex flex-col h-full bg-brand-bg border-l border-brand-accent/10 select-none" dir="rtl">
+    <div className="flex flex-col h-full bg-brand-bg border-l border-brand-accent/10 select-none" dir={dir}>
       {/* Header */}
       <div className="shrink-0 px-3 py-2.5 border-b border-brand-accent/10 flex items-center justify-between">
-        <span className="text-[10px] font-black text-zinc-400 uppercase tracking-wider">المستكشف</span>
+        <span className="text-[10px] font-black text-zinc-400 uppercase tracking-wider">{t('files.explorerTitle')}</span>
         <div className="flex items-center gap-0.5">
           <button
             type="button"
-            aria-label="ملف جديد"
+            aria-label={t('files.newFile')}
             onClick={() => onCreateFile(prompt('اسم الملف الجديد:') || '', null)}
             className="p-1 rounded hover:bg-brand-accent/10 text-zinc-500 hover:text-brand-accent transition-colors cursor-pointer"
           >
@@ -223,7 +226,7 @@ export default function FileExplorer({
           </button>
           <button
             type="button"
-            aria-label="مجلد جديد"
+            aria-label={t('files.newFolder')}
             onClick={() => onCreateFolder(prompt('اسم المجلد الجديد:') || '', null)}
             className="p-1 rounded hover:bg-brand-accent/10 text-zinc-500 hover:text-brand-accent transition-colors cursor-pointer"
           >
@@ -240,7 +243,7 @@ export default function FileExplorer({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="بحث في الملفات..."
+            placeholder={t('files.searchPlaceholder')}
             className="w-full bg-brand-card/50 border border-brand-accent/10 rounded-lg pr-7 pl-2 py-1.5 text-[11px] text-zinc-300 placeholder:text-zinc-600 outline-none focus:border-brand-accent/30"
           />
         </div>
@@ -251,7 +254,7 @@ export default function FileExplorer({
         {filteredFiles.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center px-4">
             <FileText className="w-8 h-8 text-zinc-700 mb-2" />
-            <p className="text-[10px] text-zinc-600">لا توجد ملفات</p>
+            <p className="text-[10px] text-zinc-600">{t('files.empty')}</p>
           </div>
         ) : searchQuery ? (
           // Flat list when searching
@@ -287,7 +290,7 @@ export default function FileExplorer({
 
       {/* Footer */}
       <div className="shrink-0 px-3 py-1.5 border-t border-brand-accent/10 text-[9px] text-zinc-600 font-mono text-center">
-        {files.length} عنصر
+        {files.length} {t('files.itemUnit')}
       </div>
     </div>
   );

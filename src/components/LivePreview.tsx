@@ -6,6 +6,7 @@ import {
  Eye, Globe, Lock, Columns, Activity, Cpu, Zap, ChevronDown, ChevronUp, X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useI18n } from '@/lib/i18n';
 
 interface LivePreviewProps {
   isReactActive: boolean;
@@ -28,6 +29,7 @@ export default function LivePreview({
   inspectModeActive,
   setInspectModeActive,
 }: LivePreviewProps) {
+  const { t, dir } = useI18n();
   const [isSplitView, setIsSplitView] = useState(false);
   const [showPerfMonitor, setShowPerfMonitor] = useState(true);
   const [perfCollapsed, setPerfCollapsed] = useState(false);
@@ -143,28 +145,28 @@ export default function LivePreview({
   );
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col bg-brand-bg relative overflow-hidden pt-6" dir="rtl">
+    <div className="flex-1 min-h-0 flex flex-col bg-brand-bg relative overflow-hidden pt-6" dir={dir}>
       {/* Toolbar */}
       <div className="shrink-0 max-w-5xl w-[calc(100%-2.5rem)] mx-auto bg-brand-card/90 backdrop-blur-md rounded-full border border-brand-accent/20 shadow-none px-4 h-[58px] flex items-center justify-between text-brand-text select-none mb-4 z-20">
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => { setPreviewSize('desktop'); setIsSplitView(false); }}
             className={`p-1.5 rounded-lg transition-all cursor-pointer ${previewSize === 'desktop' && !isSplitView ? 'bg-brand-accent/10 text-brand-accent border border-brand-accent/30' : 'text-zinc-400 hover:text-brand-accent hover:bg-[#141414]'}`}
-            title="سطح المكتب"
+            title={t('preview.desktop')}
           >
             <Monitor className="w-4 h-4" />
           </button>
           <button
             onClick={() => { setPreviewSize('tablet'); setIsSplitView(false); }}
             className={`p-1.5 rounded-lg transition-all cursor-pointer ${previewSize === 'tablet' && !isSplitView ? 'bg-brand-accent/10 text-brand-accent border border-brand-accent/30' : 'text-zinc-400 hover:text-brand-accent hover:bg-[#141414]'}`}
-            title="لوحي"
+            title={t('preview.tablet')}
           >
             <Tablet className="w-4 h-4" />
           </button>
           <button
             onClick={() => { setPreviewSize('mobile'); setIsSplitView(false); }}
             className={`p-1.5 rounded-lg transition-all cursor-pointer ${previewSize === 'mobile' && !isSplitView ? 'bg-brand-accent/10 text-brand-accent border border-brand-accent/30' : 'text-zinc-400 hover:text-brand-accent hover:bg-[#141414]'}`}
-            title="موبايل"
+            title={t('preview.mobile')}
           >
             <Smartphone className="w-4 h-4" />
           </button>
@@ -174,7 +176,7 @@ export default function LivePreview({
           <button
             onClick={() => setIsSplitView(!isSplitView)}
             className={`p-1.5 rounded-lg transition-all cursor-pointer ${isSplitView ? 'bg-brand-accent/10 text-brand-accent border border-brand-accent/30' : 'text-zinc-400 hover:text-brand-accent hover:bg-[#141414]'}`}
-            title="عرض منقسم (مقارنة)"
+            title={t('preview.split')}
           >
             <Columns className="w-4 h-4" />
           </button>
@@ -185,7 +187,7 @@ export default function LivePreview({
           <button
             onClick={() => setShowPerfMonitor(!showPerfMonitor)}
             className={`p-1.5 rounded-lg transition-all cursor-pointer ${showPerfMonitor ? 'bg-brand-accent/10 text-brand-accent border border-brand-accent/30' : 'text-zinc-400 hover:text-brand-accent hover:bg-[#141414]'}`}
-            title="لوحة الأداء"
+            title={t('preview.perfMonitor')}
           >
             <Activity className="w-4 h-4" />
           </button>
@@ -197,7 +199,7 @@ export default function LivePreview({
               className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border font-bold transition-all cursor-pointer select-none ${inspectModeActive ? 'bg-brand-accent/10 text-brand-accent border-brand-accent/30' : 'bg-brand-bg border-brand-accent/20 text-zinc-300 hover:text-brand-accent hover:border-brand-accent/40'}`}
             >
               <Eye className="w-3.5 h-3.5" />
-              <span>{inspectModeActive ? 'التفتيش نشط' : 'مفتش HTML'}</span>
+              <span>{inspectModeActive ? t('preview.inspectActive') : t('preview.inspector')}</span>
             </button>
           )}
         </div>

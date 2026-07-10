@@ -8,6 +8,7 @@ import {
  Settings, Trash2, Layers
 } from 'lucide-react';
 import JSZip from 'jszip';
+import { useI18n } from '@/lib/i18n';
 
 // Simple Stream-safe and client-safe TAR Builder
 class TarBuilder {
@@ -76,6 +77,7 @@ export interface LoadedFile {
 }
 
 export function CompressModal({ onClose }: { onClose: () => void }) {
+ const { t, dir } = useI18n();
  const [files, setFiles] = useState<LoadedFile[]>([]);
  const [isDragging, setIsDragging] = useState(false);
  const [format, setFormat] = useState<'zip' | 'tar'>('zip');
@@ -238,7 +240,7 @@ export function CompressModal({ onClose }: { onClose: () => void }) {
  };
 
  return (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4" dir="rtl">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4" dir={dir}>
  <motion.div 
  initial={{ opacity: 0 }} 
  animate={{ opacity: 1 }} 
@@ -256,7 +258,7 @@ export function CompressModal({ onClose }: { onClose: () => void }) {
  <div className="flex items-center justify-between px-5 py-4 border-b border-[#2a2a2a] bg-[#1a1a1a]">
  <div className="flex items-center gap-3">
  <FileArchive className="w-5 h-5 text-brand-accent" />
- <h2 className="text-base font-bold text-brand-text">أداة ضغط الملفات</h2>
+ <h2 className="text-base font-bold text-brand-text">{t('compress.modalTitle')}</h2>
  </div>
  <button 
  onClick={onClose}
@@ -297,10 +299,10 @@ export function CompressModal({ onClose }: { onClose: () => void }) {
  </motion.div>
  
  <h3 className="text-sm font-bold text-brand-text mb-2 tracking-wide font-sans">
- {isDragging ? 'أفلت الملفات الآن' : 'قم بتحميل وإفلات الملفات هنا'}
+ {isDragging ? t('compress.dropNow') : t('compress.dropHint')}
  </h3>
  <p className="text-brand-text/50 text-xs font-mono">
- الحد الأقصى: {MAX_FILES} ملف
+ {t('compress.maxFilesLabel')}: {MAX_FILES} {t('compress.fileUnit')}
  </p>
  </div>
 
@@ -314,7 +316,7 @@ export function CompressModal({ onClose }: { onClose: () => void }) {
  <div className="flex items-center gap-3">
  <div className="bg-[#1a1a1a] px-2.5 py-1.5 rounded text-xs flex items-center gap-1.5 border border-[#2a2a2a]">
  <FileType className="w-3.5 h-3.5 text-brand-accent" />
- <span className="text-brand-text/70">{files.length} ملف</span>
+ <span className="text-brand-text/70">{files.length} {t('compress.fileUnit')}</span>
  </div>
  <div className="bg-[#1a1a1a] px-2.5 py-1.5 rounded text-xs flex items-center gap-1.5 border border-[#2a2a2a]">
  <Layers className="w-3.5 h-3.5 text-brand-accent" />
@@ -337,7 +339,7 @@ export function CompressModal({ onClose }: { onClose: () => void }) {
  </div>}
  </div>
  <span className="text-xs text-brand-text/70 group-hover:text-brand-text transition-colors">
- تخزين فقط (للخطوط/الفيديو)
+ {t('compress.storeOnly')}
  </span>
  </label>
  )}
@@ -381,7 +383,7 @@ export function CompressModal({ onClose }: { onClose: () => void }) {
  <button 
  onClick={() => removeFile(idx)}
  className="p-1.5 text-brand-text/40 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors shrink-0"
- title="إزالة الملف"
+ title={t('compress.removeFile')}
  >
  <Trash2 className="w-3.5 h-3.5" />
  </button>
@@ -403,10 +405,10 @@ export function CompressModal({ onClose }: { onClose: () => void }) {
  </div>
  
  <h2 className="text-lg font-bold text-brand-text mb-2">
- تم الضغط بنجاح
+ {t('compress.successTitle')}
  </h2>
  <p className="text-brand-text/60 text-sm mb-6 max-w-[250px]">
- تم ضغط {files.length} ملفات جاهزة للتحميل والتأمين.
+ {t('compress.successDescStart')} {files.length} {t('compress.successDescEnd')}
  </p>
  
  <div className="flex w-full sm:flex-row flex-col justify-center gap-3">
@@ -415,7 +417,7 @@ export function CompressModal({ onClose }: { onClose: () => void }) {
  className="flex items-center justify-center gap-2 px-5 py-2.5 font-bold text-[#0f0f0f] bg-brand-accent hover:opacity-90 active:scale-95 rounded text-sm transition-all"
  >
  <FileArchive className="w-4 h-4" />
- <span>تحميل {format.toUpperCase()}</span>
+ <span>{t('compress.downloadFormat')} {format.toUpperCase()}</span>
  </button>
  
  <button
@@ -426,7 +428,7 @@ export function CompressModal({ onClose }: { onClose: () => void }) {
  }}
  className="flex items-center justify-center gap-2 px-5 py-2.5 font-bold text-brand-text border border-[#2a2a2a] bg-[#1a1a1a] hover:bg-[#2a2a2a] rounded text-sm transition-all active:scale-95"
  >
- <span>أداة جديدة</span>
+ <span>{t('compress.newTool')}</span>
  </button>
  </div>
  </motion.div>
@@ -444,12 +446,12 @@ export function CompressModal({ onClose }: { onClose: () => void }) {
  {isProcessing ? (
  <>
  <Loader2 className="w-4 h-4 text-[#0f0f0f] animate-spin" />
- <span>يتم الضغط ({progress}%)</span>
+ <span>{t('compress.compressing')} ({progress}%)</span>
  </>
  ) : (
  <>
  <Settings className="w-4 h-4" />
- <span>بدء الضغط</span>
+ <span>{t('compress.startCompress')}</span>
  </>
  )}
  

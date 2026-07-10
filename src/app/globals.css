@@ -2,6 +2,7 @@
 
 @theme {
  --font-sans: var(--font-almarai), ui-sans-serif, system-ui, sans-serif;
+ --font-sans-en: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
  --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
  --color-brand-bg: #0f0f0f;
  --color-brand-card: #202020;
@@ -14,6 +15,15 @@ body {
  font-family: var(--font-sans);
  background-color: #0f0f0f;
  color: #f8f8f8;
+}
+
+/* English font: applied when <html lang="en"> */
+html[lang="en"] body,
+html[lang="en"] input,
+html[lang="en"] textarea,
+html[lang="en"] button,
+html[lang="en"] select {
+ font-family: var(--font-sans-en);
 }
 
 /* Geometric backgrounds and visual depth layers */

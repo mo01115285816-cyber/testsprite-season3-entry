@@ -1,21 +1,30 @@
 import type {Metadata} from 'next';
-import { Almarai, JetBrains_Mono } from 'next/font/google';
+import { Almarai, Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
+import { I18nProvider } from '@/lib/i18n';
 
 const almarai = Almarai({
   weight: ['300', '400', '700', '800'],
   subsets: ['arabic'],
   variable: '--font-almarai',
+  display: 'swap',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
   title: 'NEXUS — AI-Powered Arabic IDE',
-  description: 'بيئة تطوير ذكية لكتابة ومعاينة الأكواد مع محرك أمان سيبراني متقدم مدعوم بالذكاء الاصطناعي',
+  description: 'A smart development environment for writing and previewing code with an AI-powered cybersecurity engine',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -27,7 +36,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'NEXUS — AI-Powered Arabic IDE',
-    description: 'بيئة تطوير ذكية لكتابة ومعاينة الأكواد مع محرك أمان سيبراني متقدم مدعوم بالذكاء الاصطناعي',
+    description: 'A smart development environment for writing and previewing code with an AI-powered cybersecurity engine',
     type: 'website',
     images: [{ url: '/nexus-logo.png', width: 512, height: 512 }],
   },
@@ -35,7 +44,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang="ar" dir="rtl" className={`${almarai.variable} ${jetbrainsMono.variable}`}>
+    <html lang="ar" dir="rtl" className={`${almarai.variable} ${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
@@ -43,7 +52,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/nexus-logo.png" />
       </head>
-      <body className="font-sans text-zinc-100 bg-[#020202]" suppressHydrationWarning>{children}</body>
+      <body className="font-sans text-zinc-100 bg-[#020202]" suppressHydrationWarning>
+        <I18nProvider>{children}</I18nProvider>
+      </body>
     </html>
   );
 }

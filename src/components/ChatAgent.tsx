@@ -22,9 +22,11 @@ import {
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'motion/react';
+import { useI18n } from '@/lib/i18n';
 
 // مفسر نصوص ذكي ومخصص لعرض النصوص العربية والماركدون بمحاذاة كاملة وانسيابية مذهلة
 const AppleMarkdownRenderer = ({ content, onCopy, copiedId }: { content: string, onCopy: (text: string, id: string) => void, copiedId: string | null }) => {
+ const { t } = useI18n();
  if (!content) return null;
  
  const lines = content.split('\n');
@@ -54,7 +56,7 @@ const AppleMarkdownRenderer = ({ content, onCopy, copiedId }: { content: string,
  <button 
  onClick={() => onCopy(completeCode, `code-${idx}`)}
  className="flex items-center justify-center p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white transition-all border border-white/5"
- title="نسخ الكود"
+ title={t('agent.copyCode')}
  >
  {isBlockCopied ? (
  <Check className="w-3.5 h-3.5 text-[#30D158]" />
@@ -230,6 +232,7 @@ export default function ChatAgent({
  isFullStack = false,
  setIsFullStack
 }: ChatAgentProps) {
+ const { t, dir, lang } = useI18n();
  const [copiedId, setCopiedId] = useState<string | null>(null);
  const [isInputFocused, setIsInputFocused] = useState(false);
  const [expandedMessages, setExpandedMessages] = useState<Record<string, boolean>>({});
@@ -397,7 +400,7 @@ export default function ChatAgent({
  };
 
  return (
- <div className="h-full w-full bg-[#0f0f0f] text-brand-text flex flex-col overflow-hidden antialiased selection:bg-brand-accent/20 selection:text-brand-text relative tech-dot-grid" dir="rtl">
+ <div className="h-full w-full bg-[#0f0f0f] text-brand-text flex flex-col overflow-hidden antialiased selection:bg-brand-accent/20 selection:text-brand-text relative tech-dot-grid" dir={dir}>
  
  {/* هيدر عائم فخم كلياً - متناسق الارتفاع مع حقل الإدخال وهو مغلق بدقة شديدة */}
  <div className="absolute top-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-b from-brand-bg via-brand-bg/95 to-transparent shrink-0 z-20 pointer-events-none">
@@ -428,7 +431,7 @@ export default function ChatAgent({
  <button 
  onClick={handleClearChat}
  className="h-[36px] w-[36px] rounded-full bg-zinc-900/40 hover:bg-rose-950/30 text-zinc-400 hover:text-rose-400 hover:border-rose-900/30 transition-all duration-300 border border-white/5 active:scale-90 flex items-center justify-center cursor-pointer"
- title="حذف وتفريغ الشات بالكامل"
+ title={t('agent.clearChatTooltip')}
  >
  <Trash2 className="w-3.5 h-3.5" />
  </button>
@@ -447,7 +450,7 @@ export default function ChatAgent({
  /* شات فاضي — مفيش رسائل */
  <div className="flex-1 flex items-center justify-center">
  <div className="text-center px-4">
- <p className="text-sm text-zinc-600">ابدأ بكتابة طلبك في الأسفل</p>
+ <p className="text-sm text-zinc-600">{t('agent.emptyState')}</p>
  </div>
  </div>
  ) : (
@@ -481,16 +484,16 @@ export default function ChatAgent({
  {/* شريط الأيقونات والتفاعل لرد المساعد */}
  {!msg.isGreeting && (
  <div className="mt-4 flex items-center gap-6 text-zinc-500 pr-1 select-none">
- <button className="hover:text-zinc-300 transition-colors cursor-pointer" title="أعجبني">
+ <button className="hover:text-zinc-300 transition-colors cursor-pointer" title={t('agent.likeTooltip')}>
  <ThumbsUp className="w-4 h-4" />
  </button>
- <button className="hover:text-zinc-300 transition-colors cursor-pointer" title="لم يعجبني">
+ <button className="hover:text-zinc-300 transition-colors cursor-pointer" title={t('agent.dislikeTooltip')}>
  <ThumbsDown className="w-4 h-4" />
  </button>
  <button
  onClick={() => copyToClipboard(msg.content, msg.id)}
  className="hover:text-zinc-300 transition-all flex items-center gap-1 cursor-pointer"
- title="نسخ الرسالة"
+ title={t('agent.copyMessageTooltip')}
  >
  {copiedId === msg.id ? (
  <Check className="w-4 h-4 text-[#30D158]" />
@@ -524,7 +527,7 @@ export default function ChatAgent({
  <button
  onClick={() => toggleExpandMessage(msg.id)}
  className="absolute left-4 bottom-3 h-8 w-8 rounded-full bg-zinc-900/90 hover:bg-zinc-800 text-zinc-300 border border-white/5 hover:text-white transition-all flex items-center justify-center shadow-lg cursor-pointer z-10"
- title={isExpanded ? "عرض أقل" : "عرض المزيد"}
+ title={isExpanded ? t('agent.showLess') : t('agent.showMore')}
  >
  {isExpanded ? (
  <ChevronUp className="w-4 h-4 stroke-[2.5]" />
@@ -559,7 +562,7 @@ export default function ChatAgent({
  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0A84FF] opacity-75"></span>
  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#0A84FF]"></span>
  </div>
- <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">{agentStatus || "الذكاء الاصطناعي يعمل الآن..."}</span>
+ <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">{agentStatus || t('agent.aiWorking')}</span>
  </div>
  
  {/* Real Model Indicator Badge - Dynamic and precise */}
@@ -582,9 +585,9 @@ export default function ChatAgent({
  <div className="space-y-1.5">
  {(() => {
  const fallbackSteps = [
- 'جاري تحليل السياق واستخراج التفاصيل...',
- 'تحليل طبيعة الطلب والتعديلات المطلوبة...',
- 'صياغة الكود النهائي والتأكد من جودته...'
+ t('agent.fallbackStep1'),
+ t('agent.fallbackStep2'),
+ t('agent.fallbackStep3')
  ];
  const renderSteps = dynamicSteps || fallbackSteps;
  return renderSteps.map((step, idx) => {
@@ -639,17 +642,17 @@ export default function ChatAgent({
  ? 'bg-[#22c55e]/10 border-[#22c55e]/30 text-[#22c55e] shadow-[0_0_8px_rgba(34,197,94,0.08)]'
  : 'bg-zinc-900/80 border-white/10 text-zinc-400 hover:text-zinc-200'
  }`}
- title="تغيير وضع التطوير والإنشاء"
+ title={t('agent.changeModeTooltip')}
  >
  {isFullStack ? (
  <>
  <Sparkles className="w-2.5 h-2.5 text-[#22c55e] shrink-0" />
- <span>مشروع كامل (Full-Stack) ⚡</span>
+ <span>{t('agent.fullStackMode')}</span>
  </>
  ) : (
  <>
  <Bot className="w-2.5 h-2.5 text-zinc-400 shrink-0" />
- <span>تعديل كود فردي 🌐</span>
+ <span>{t('agent.singleCodeMode')}</span>
  </>
  )}
  </button>
@@ -672,7 +675,7 @@ export default function ChatAgent({
  }`}
  >
  <Bot className="w-3 h-3" />
- <span>كود فردي</span>
+ <span>{t('agent.singleCodeShort')}</span>
  </button>
  <button
  type="button"
@@ -715,7 +718,7 @@ export default function ChatAgent({
  onClick={() => setIsPlusMenuOpen(!isPlusMenuOpen)}
  disabled={isAgentThinking}
  className="h-[36px] w-[36px] rounded-full bg-zinc-900/60 hover:bg-zinc-850 text-zinc-400 hover:text-white border border-white/5 active:scale-90 transition-all duration-300 flex items-center justify-center cursor-pointer shadow-sm relative group"
- title="خيارات إضافية وإرفاق ملفات"
+ title={t('agent.moreOptionsTooltip')}
  >
  <Plus className="w-4.5 h-4.5 stroke-[2.5] transition-transform duration-300 group-hover:rotate-90" />
  </button>
@@ -734,21 +737,21 @@ export default function ChatAgent({
  onClick={() => fileInputLocalRef.current?.click()}
  className="w-full px-3 py-2 text-xs text-zinc-350 hover:text-white hover:bg-zinc-900 rounded-xl transition-all flex items-center justify-between group cursor-pointer"
  >
- <span>إرفاق ملف كود/نص</span>
+ <span>{t('agent.attachCodeFile')}</span>
  <Paperclip className="w-3.5 h-3.5 text-zinc-500 group-hover:text-[#22c55e] transition-colors stroke-[2]" />
  </button>
  <button
  onClick={() => handleInsertTemplate('html')}
  className="w-full px-3 py-2 text-xs text-zinc-350 hover:text-white hover:bg-zinc-900 rounded-xl transition-all flex items-center justify-between group cursor-pointer"
  >
- <span>قالب صفحة HTML</span>
+ <span>{t('agent.htmlTemplate')}</span>
  <FileText className="w-3.5 h-3.5 text-zinc-500 group-hover:text-blue-400 transition-colors stroke-[2]" />
  </button>
  <button
  onClick={() => handleInsertTemplate('react')}
  className="w-full px-3 py-2 text-xs text-zinc-350 hover:text-white hover:bg-zinc-900 rounded-xl transition-all flex items-center justify-between group cursor-pointer"
  >
- <span>قالب مكون React</span>
+ <span>{t('agent.reactTemplate')}</span>
  <Terminal className="w-3.5 h-3.5 text-zinc-500 group-hover:text-[#22c55e] transition-colors stroke-[2]" />
  </button>
  </motion.div>
@@ -765,7 +768,7 @@ export default function ChatAgent({
  onBlur={() => setIsInputFocused(false)}
  onKeyDown={handleKeyPress}
  disabled={isAgentThinking}
- placeholder={isRecording ? "جاري الاستماع إليك بكل وضوح..." : "اكتب فكرتك أو استفسارك هنا..."}
+ placeholder={isRecording ? t('agent.listening') : t('agent.inputPlaceholderIdea')}
  className={`flex-1 bg-transparent border-none outline-none focus:ring-0 px-1 py-1.5 text-[14.5px] font-medium resize-none max-h-[140px] min-h-[36px] hide-scrollbar text-right leading-relaxed transition-all duration-300 ${
  isRecording ? 'text-[#30d158] placeholder-[#30d158]/50 animate-pulse font-bold' : 'text-brand-text placeholder-zinc-600'
  }`}
@@ -782,7 +785,7 @@ export default function ChatAgent({
  ? 'bg-rose-950/40 border-rose-500/40 text-rose-400 shadow-[0_0_15px_rgba(239,68,68,0.25)] animate-pulse' 
  : 'bg-zinc-900/60 hover:bg-zinc-800 border-white/5 text-zinc-400 hover:text-white'
  }`}
- title="إدخال صوتي ذكي باللغة العربية"
+ title={t('agent.voiceInputArabic')}
  >
  <Mic className="w-4.5 h-4.5 stroke-[2] transition-colors group-hover:scale-105" />
  </button>
@@ -796,7 +799,7 @@ export default function ChatAgent({
  ? 'bg-brand-accent hover:bg-brand-accent/90 hover:scale-105 text-[#0f0f0f] shadow-[0_0_12px_rgba(34,197,94,0.25)]' 
  : 'bg-zinc-900/40 opacity-30 text-zinc-600 border border-white/5'
  }`}
- title="إرسال"
+ title={t('agent.send')}
  >
  <ArrowUp className="w-5 h-5 stroke-[2.8]" />
  </button>

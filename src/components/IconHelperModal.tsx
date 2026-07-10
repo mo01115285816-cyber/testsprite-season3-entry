@@ -6,6 +6,7 @@ import {
   X, Search, Smile, Check, Info, Palette, Sliders, Type, Copy
 } from 'lucide-react';
 import { ICON_LIBRARY } from '../lib/icons';
+import { useI18n } from '@/lib/i18n';
 
 interface IconHelperModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export default function IconHelperModal({
   onClose,
   insertCodeAtCursor,
 }: IconHelperModalProps) {
+  const { t, dir } = useI18n();
   const [iconSearchQuery, setIconSearchQuery] = useState('');
   const [iconSize, setIconSize] = useState('24');
   const [iconStrokeWidth, setIconStrokeWidth] = useState('2');
@@ -53,7 +55,7 @@ export default function IconHelperModal({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" dir="rtl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" dir={dir}>
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -80,8 +82,8 @@ export default function IconHelperModal({
                   <Smile className="w-5 h-5 text-white" />
                 </div>
                 <div className="text-right">
-                  <h3 className="text-sm sm:text-base font-black text-zinc-100">مكتبة أيقونات Lucide الـ SVG</h3>
-                  <p className="text-[10px] sm:text-xs text-zinc-400 mt-0.5">خصص أيقونتك واضغط عليها لإدراج كود الـ SVG الخاص بها مباشرةً عند مؤشر الكتابة.</p>
+                  <h3 className="text-sm sm:text-base font-black text-zinc-100">{t('icons.modalTitle')}</h3>
+                  <p className="text-[10px] sm:text-xs text-zinc-400 mt-0.5">{t('icons.modalDesc')}</p>
                 </div>
               </div>
               <button
@@ -102,7 +104,7 @@ export default function IconHelperModal({
                 <div className="bg-[#09090b]/50 p-3 rounded-xl border border-white/5">
                   <label className="text-[11px] font-black text-zinc-400 flex items-center gap-1.5 mb-2.5">
                     <Type className="w-3.5 h-3.5 text-zinc-400" />
-                    <span>الحجم النهائي (Size PX)</span>
+                    <span>{t('icons.sizeLabel')}</span>
                   </label>
                   <input
                     type="range"
@@ -123,7 +125,7 @@ export default function IconHelperModal({
                 <div className="bg-[#09090b]/50 p-3 rounded-xl border border-white/5">
                   <label className="text-[11px] font-black text-zinc-400 flex items-center gap-1.5 mb-2.5">
                     <Sliders className="w-3.5 h-3.5 text-zinc-400" />
-                    <span>سُمك الإطار (Stroke Width)</span>
+                    <span>{t('icons.strokeWidthLabel')}</span>
                   </label>
                   <input
                     type="range"
@@ -145,20 +147,20 @@ export default function IconHelperModal({
                 <div className="bg-[#09090b]/50 p-3 rounded-xl border border-white/5 flex flex-col gap-2.5">
                   <label className="text-[11px] font-black text-zinc-400 flex items-center gap-1.5">
                     <Palette className="w-3.5 h-3.5 text-zinc-400" />
-                    <span>اللون النشط (Color)</span>
+                    <span>{t('icons.colorLabel')}</span>
                   </label>
                   <select
                     value={iconColor}
                     onChange={(e) => setIconColor(e.target.value)}
                     className="w-full bg-[#09090b] border border-white/5 text-xs text-zinc-200 rounded-lg py-1.5 px-2.5 focus:outline-none focus:border-zinc-500/50"
                   >
-                    <option value="currentColor">تلقائي (currentColor)</option>
-                    <option value="#ffffff">أبيض فاصع</option>
-                    <option value="#10b981">أخضر زمردي</option>
-                    <option value="#3b82f6">أزرق سماوي</option>
-                    <option value="#f59e0b">ذهبي لامع</option>
-                    <option value="#ef4444">أحمر داكن</option>
-                    <option value="custom">مخصص (Hex Code)</option>
+                    <option value="currentColor">{t('icons.colorAuto')}</option>
+                    <option value="#ffffff">{t('icons.colorWhite')}</option>
+                    <option value="#10b981">{t('icons.colorEmerald')}</option>
+                    <option value="#3b82f6">{t('icons.colorSky')}</option>
+                    <option value="#f59e0b">{t('icons.colorGold')}</option>
+                    <option value="#ef4444">{t('icons.colorDarkRed')}</option>
+                    <option value="custom">{t('icons.colorCustom')}</option>
                   </select>
 
                   {iconColor === 'custom' && (
@@ -183,7 +185,7 @@ export default function IconHelperModal({
                     type="text"
                     value={iconSearchQuery}
                     onChange={(e) => setIconSearchQuery(e.target.value)}
-                    placeholder="ابحث عن أيقونة... (مثال: home, user, شمس)"
+                    placeholder={t('icons.searchPlaceholder')}
                     className="w-full bg-[#09090b] border border-white/5 rounded-2xl pr-10 pl-4 py-2.5 text-xs text-zinc-200 placeholder-slate-650 focus:outline-[#10b981]/50 text-right leading-none font-sans font-bold"
                   />
                   <Search className="w-4 h-4 text-zinc-400 absolute top-3.5 right-3.5" />
@@ -223,12 +225,12 @@ export default function IconHelperModal({
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center text-center py-20 text-zinc-400">
-                      <p className="text-xs font-bold font-sans">لم يتم العثور على أيقونات مطابقة لبحثك.</p>
+                      <p className="text-xs font-bold font-sans">{t('icons.noMatches')}</p>
                       <button
                         onClick={() => setIconSearchQuery('')}
                         className="mt-2 text-xs text-white hover:underline font-bold cursor-pointer"
                       >
-                        عرض جميع الأيقونات
+                        {t('icons.showAll')}
                       </button>
                     </div>
                   )}
@@ -238,7 +240,7 @@ export default function IconHelperModal({
                 <div className="mt-4 pt-3 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-[9px] text-zinc-400 select-none shrink-0 gap-2">
                   <div className="flex items-center gap-1.5">
                     <Info className="w-3.5 h-3.5 text-zinc-400" />
-                    <span>نصيحة: يمكنك نسخ رابط Lucide CDN لتشغيل الأيقونات العادية بالكلاسات إذا رغبت.</span>
+                    <span>{t('icons.tip')}</span>
                   </div>
 
                   <button
@@ -246,7 +248,7 @@ export default function IconHelperModal({
                     className="flex items-center gap-1 bg-[#121215] hover:bg-slate-850 text-zinc-400 px-2.5 py-1.5 rounded-lg border border-white/5 transition-all cursor-pointer"
                   >
                     <Copy className="w-3 h-3" />
-                    <span>{copiedIconId === 'cdn' ? 'تم نسخ الرابط!' : 'نسخ كود Lucide CDN'}</span>
+                    <span>{copiedIconId === 'cdn' ? t('icons.linkCopied') : t('icons.copyCdn')}</span>
                   </button>
                 </div>
 

@@ -10,6 +10,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import Editor, { Monaco } from '@monaco-editor/react';
 import { DiagnosticIssue } from '../lib/diagnostics';
+import { useI18n } from '@/lib/i18n';
 
 // Virtual File System type definitions
 export interface WorkspaceFile {
@@ -89,6 +90,7 @@ export default function CodeEditor({
  onClearWorkspace,
 }: CodeEditorProps) {
 
+ const { t, dir, lang } = useI18n();
  const [isArabicHelpOpen, setIsArabicHelpOpen] = useState(false);
  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
  const [deleteConfirmPath, setDeleteConfirmPath] = useState<string | null>(null);
@@ -104,7 +106,7 @@ export default function CodeEditor({
  // Dynamic extraction of project name from active folders
  const getProjectName = (files: WorkspaceFiles) => {
  const paths = Object.keys(files);
- if (paths.length === 0) return "مشروع جديد";
+ if (paths.length === 0) return t('editor.defaultProjectName');
  const rootFolders = new Set<string>();
  paths.forEach(p => {
  const parts = p.split('/');
@@ -115,7 +117,7 @@ export default function CodeEditor({
  if (rootFolders.size > 0) {
  return Array.from(rootFolders)[0];
  }
- return "مشروعي";
+ return t('editor.myProject');
  };
 
  // States for creating files/folders
@@ -645,7 +647,7 @@ export default function CodeEditor({
  ? 'bg-brand-accent/15 border-brand-accent/40 text-brand-text shadow-none' 
  : 'bg-brand-bg border-brand-accent/20 text-zinc-400 hover:text-white hover:bg-white/5 hover:border-brand-accent/40'
  }`}
- title="مستكشف ملفات المشروع"
+ title={t('editor.fileExplorer')}
  >
  <BookOpen className="w-3.5 h-3.5" />
  </button>
@@ -659,7 +661,7 @@ export default function CodeEditor({
  ? 'bg-rose-500/10 border-rose-500/30 text-rose-400 shadow-md shadow-rose-550/5' 
  : 'bg-brand-bg border-brand-accent/20 text-zinc-400 hover:text-white hover:bg-white/5 hover:border-brand-accent/40'
  }`}
- title="فحص الأخطاء والمشاكل الأمنية"
+ title={t('editor.lint')}
  >
  <Bug className="w-3.5 h-3.5" />
  {errorsCount > 0 && (
@@ -679,10 +681,10 @@ export default function CodeEditor({
  <button
  onClick={() => setIsArabicHelpOpen(true)}
  className="text-[9.5px] font-black h-5.5 bg-brand-accent/10 border border-brand-accent/30 text-brand-accent px-2 rounded-md hover:bg-brand-accent/20 active:scale-95 transition-all flex items-center gap-1 cursor-pointer"
- title="دليل البرمجة باللغة العربية وتحميل القوالب"
+ title={t('editor.arabicHelpTooltip')}
  >
  <Sparkles className="w-2.5 h-2.5 text-brand-accent animate-pulse" />
- <span>البرمجة بالعربية 🌟</span>
+ <span>{t('editor.arabicCode')}</span>
  </button>
  </div>
 
@@ -698,7 +700,7 @@ export default function CodeEditor({
  ? 'bg-brand-accent/20 border border-brand-accent/50 text-brand-text shadow-none' 
  : 'bg-brand-bg border border-brand-accent/20 text-zinc-400 hover:text-white hover:bg-white/5 hover:border-brand-accent/40'
  }`}
- title="النسخ الدقيق للأكواد بين سطرين"
+ title={t('editor.copyRange')}
  >
  <Copy className="w-3.5 h-3.5" />
  </button>
@@ -714,7 +716,7 @@ export default function CodeEditor({
  ? 'bg-brand-accent/20 border border-brand-accent/50 text-brand-text shadow-none' 
  : 'bg-brand-bg border border-brand-accent/20 text-zinc-400 hover:text-white hover:bg-white/5 hover:border-brand-accent/40'
  }`}
- title="البحث والاستبدال المتقدم (Ctrl+F)"
+ title={t('editor.search')}
  >
  <Search className="w-3.5 h-3.5" />
  </button>
@@ -723,7 +725,7 @@ export default function CodeEditor({
  onClick={formatCode}
  disabled={isFormatting}
  className="flex items-center justify-center w-7 h-7 bg-brand-bg border border-brand-accent/20 rounded-md text-zinc-400 hover:text-white hover:bg-white/5 hover:border-brand-accent/40 disabled:opacity-40 select-none cursor-pointer duration-150 transition-all shadow-sm"
- title="تنسيق الأكواد تلقائياً"
+ title={t('editor.format')}
  >
  {isFormatting ? (
  <div className="w-3 h-3 border-2 border-zinc-500 border-t-transparent rounded-full animate-spin" />
@@ -735,7 +737,7 @@ export default function CodeEditor({
  <button
  onClick={() => setIsIconModalOpen(true)}
  className="flex items-center justify-center w-7 h-7 bg-brand-bg border border-brand-accent/20 rounded-md text-zinc-400 hover:text-white hover:bg-white/5 hover:border-brand-accent/40 select-none cursor-pointer duration-150 transition-all shadow-sm"
- title="مكتبة أيقونات (Lucide)"
+ title={t('editor.icons')}
  >
  <Smile className="w-3.5 h-3.5 text-brand-accent/90" />
  </button>
@@ -744,7 +746,7 @@ export default function CodeEditor({
  <button
  onClick={handleManualSave}
  className="flex items-center justify-center w-7 h-7 bg-brand-bg border border-brand-accent/20 rounded-md text-zinc-400 hover:text-brand-accent hover:bg-white/5 hover:border-brand-accent/40 select-none cursor-pointer duration-150 transition-all shadow-sm"
- title="حفظ نسخة يدوية"
+ title={t('editor.saveVersion')}
  >
  <Save className="w-3.5 h-3.5" />
  </button>
@@ -757,7 +759,7 @@ export default function CodeEditor({
      ? 'bg-brand-accent/20 border-brand-accent/50 text-brand-text'
      : 'bg-brand-bg border-brand-accent/20 text-zinc-400 hover:text-white hover:bg-white/5 hover:border-brand-accent/40'
  }`}
- title="سجل التغييرات"
+ title={t('editor.history')}
  >
  <History className="w-3.5 h-3.5" />
  {versionHistory.length > 0 && (
@@ -783,7 +785,7 @@ export default function CodeEditor({
  ? 'border-rose-500/30 text-rose-450 bg-rose-500/10 animate-pulse' 
  : 'border-brand-accent/20 text-zinc-400 hover:text-rose-450 hover:border-rose-500/30 hover:bg-rose-500/10'
  }`}
- title={isConfirmingClear ? 'تأكيد الحذف؟' : 'حذف الكود'}
+ title={isConfirmingClear ? t('editor.confirmClear') : t('editor.clearCode')}
  >
  <Trash2 className="w-3.5 h-3.5" />
  </button>
@@ -799,17 +801,17 @@ export default function CodeEditor({
  exit={{ height: 0, opacity: 0 }}
  transition={{ duration: 0.18, ease: 'easeOut' }}
  className="border-b border-brand-accent/15 bg-[#0a0a0c]/95 backdrop-blur-md px-5 py-4 flex flex-col gap-3.5 shrink-0 overflow-hidden relative z-20"
- dir="rtl"
+ dir={dir}
  >
  <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
  <div className="flex flex-wrap items-center gap-4 flex-1">
  <div className="flex items-center gap-2">
  <Copy className="w-4 h-4 text-brand-accent" />
- <span className="font-bold text-brand-text">النسخ الدقيق بين سطرين</span>
+ <span className="font-bold text-brand-text">{t('editor.copyPanelTitle')}</span>
  </div>
  
  <div className="flex items-center gap-2 bg-brand-bg border border-brand-accent/20 rounded-xl px-3 py-1.5 focus-within:border-brand-accent/50 focus-within:shadow-none transition-all">
- <span className="text-zinc-400 font-mono text-[10px]">من سطر:</span>
+ <span className="text-zinc-400 font-mono text-[10px]">{t('editor.fromLine')}</span>
  <input
  type="number"
  placeholder="1"
@@ -823,7 +825,7 @@ export default function CodeEditor({
  </div>
 
  <div className="flex items-center gap-2 bg-brand-bg border border-brand-accent/20 rounded-xl px-3 py-1.5 focus-within:border-brand-accent/50 focus-within:shadow-none transition-all">
- <span className="text-zinc-400 font-mono text-[10px]">إلى سطر:</span>
+ <span className="text-zinc-400 font-mono text-[10px]">{t('editor.toLine')}</span>
  <input
  type="number"
  placeholder={linesCount.toString()}
@@ -862,16 +864,16 @@ export default function CodeEditor({
  ? 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-400'
  : 'bg-brand-accent/15 border border-brand-accent/20 text-brand-text hover:bg-brand-accent/25 hover:border-brand-accent/40 shadow-none'
  }`}
- title="النسخ الدقيق للأكواد"
+ title={t('editor.copyRangeShort')}
  >
- {copySuccess ? 'تم النسخ بنجاح! ✓' : 'نسخ النطاق 🚀'}
+ {copySuccess ? t('toast.rangeCopied') : t('editor.copyRangeButton')}
  </button>
  </div>
 
  <button 
  onClick={() => setIsCopyPanelOpen(false)}
  className="p-1 hover:bg-rose-500/10 hover:text-rose-450 border border-transparent hover:border-rose-500/20 text-zinc-400 rounded-lg mr-auto cursor-pointer transition-all"
- title="إغلاق النسخ"
+ title={t('editor.closeCopy')}
  >
  <X className="w-4 h-4" />
  </button>
@@ -889,7 +891,7 @@ export default function CodeEditor({
  exit={{ height: 0, opacity: 0 }}
  transition={{ duration: 0.18, ease: 'easeOut' }}
  className="border-b border-brand-accent/15 bg-[#0a0a0c]/95 backdrop-blur-md px-5 py-4 flex flex-col gap-3.5 shrink-0 overflow-hidden relative z-20"
- dir="rtl"
+ dir={dir}
  >
  <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
  <div className="flex flex-wrap items-center gap-2.5 flex-1 max-w-4xl">
@@ -897,13 +899,13 @@ export default function CodeEditor({
  <button
  onClick={() => handleSearch(searchQuery)}
  className="p-1 hover:bg-brand-accent/15 rounded-lg text-zinc-400 hover:text-brand-accent duration-150 transition-all shrink-0 ml-1.5 cursor-pointer flex items-center justify-center border border-transparent hover:border-brand-accent/30"
- title="البحث الفوري والدقيق الآن 🚀"
+ title={t('search.title')}
  >
  <Search className="w-4 h-4 text-brand-accent animate-pulse" />
  </button>
  <input
  type="text"
- placeholder="ابحث عن نص أو كود..."
+ placeholder={t('search.placeholder')}
  value={searchQuery}
  onChange={(e) => handleSearch(e.target.value)}
  onKeyDown={(e) => {
@@ -927,7 +929,7 @@ export default function CodeEditor({
 
  {searchQuery && (
  <span className="px-2.5 py-1 text-[10px] bg-brand-accent/10 border border-brand-accent/20 text-brand-text rounded-lg font-mono font-extrabold select-none">
- {matches.length > 0 ? `${currentMatchIndex + 1} من ${matches.length}` : 'لا يوجد تطابق ⚠️'}
+ {matches.length > 0 ? `${currentMatchIndex + 1} ${t('search.matchOf')} ${matches.length}` : t('search.noMatch')}
  </span>
  )}
 
@@ -936,7 +938,7 @@ export default function CodeEditor({
  onClick={handlePrevMatch}
  disabled={matches.length === 0}
  className="p-1 text-zinc-400 hover:text-white hover:bg-white/5 rounded-lg disabled:opacity-30 cursor-pointer transition-colors"
- title="السابق"
+ title={t('search.prev')}
  >
  <ChevronLeft className="w-4 h-4" />
  </button>
@@ -944,7 +946,7 @@ export default function CodeEditor({
  onClick={handleNextMatch}
  disabled={matches.length === 0}
  className="p-1 text-zinc-400 hover:text-white hover:bg-white/5 rounded-lg disabled:opacity-30 cursor-pointer transition-colors"
- title="التالي"
+ title={t('search.next')}
  >
  <ChevronRight className="w-4 h-4" />
  </button>
@@ -958,7 +960,7 @@ export default function CodeEditor({
  ? 'bg-brand-accent/20 border-brand-accent/35 text-brand-text font-black' 
  : 'bg-transparent border-transparent text-zinc-500 hover:text-zinc-300'
  }`}
- title="حساسية حالة الأحرف (Aa)"
+ title={t('search.caseSensitive')}
  >
  Aa
  </button>
@@ -969,7 +971,7 @@ export default function CodeEditor({
  ? 'bg-brand-accent/20 border-brand-accent/35 text-brand-text font-black' 
  : 'bg-transparent border-transparent text-zinc-500 hover:text-zinc-300'
  }`}
- title="طابق الكلمة بالكامل فقط"
+ title={t('search.wholeWord')}
  >
  Ab
  </button>
@@ -980,7 +982,7 @@ export default function CodeEditor({
  ? 'bg-brand-accent/20 border-brand-accent/35 text-brand-text font-black' 
  : 'bg-transparent border-transparent text-zinc-500 hover:text-zinc-300'
  }`}
- title="البحث الذكي باستخدام التعبيرات النمطية (Regex)"
+ title={t('search.regex')}
  >
  .*
  </button>
@@ -993,7 +995,7 @@ export default function CodeEditor({
  handleSearch('');
  }}
  className="p-1 hover:bg-rose-500/10 hover:text-rose-450 border border-transparent hover:border-rose-500/20 text-zinc-400 rounded-lg mr-auto cursor-pointer transition-all"
- title="إغلاق البحث"
+ title={t('search.close')}
  >
  <X className="w-4 h-4" />
  </button>
@@ -1004,7 +1006,7 @@ export default function CodeEditor({
  <div className="relative flex items-center bg-brand-bg border border-brand-accent/20 rounded-xl px-3 py-1.5 focus-within:border-brand-accent/50 transition-all w-full sm:w-72">
  <input
  type="text"
- placeholder="استبدل النص الحالي بـ..."
+ placeholder={t('search.replacePlaceholder')}
  value={replaceQuery}
  onChange={(e) => setReplaceQuery(e.target.value)}
  className="bg-transparent text-white placeholder-zinc-500 outline-none text-xs w-full text-left font-mono"
@@ -1017,17 +1019,17 @@ export default function CodeEditor({
  onClick={handleReplace}
  disabled={currentMatchIndex < 0}
  className="px-4 py-1.5 rounded-xl border border-brand-accent/20 text-zinc-300 hover:text-white hover:bg-white/5 text-[10.5px] font-black duration-150 transition-all cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
- title="استبدال الجزء المحدد حالياً فقط"
+ title={t('search.replaceOneTooltip')}
  >
- استبدال فردي
+ {t('search.replaceOne')}
  </button>
  <button
  onClick={handleReplaceAll}
  disabled={matches.length === 0}
  className="px-4 py-1.5 rounded-xl bg-brand-accent/15 border border-brand-accent/20 text-brand-text hover:bg-brand-accent/25 hover:border-brand-accent/40 text-[10.5px] font-black duration-150 transition-all cursor-pointer disabled:opacity-30 disabled:pointer-events-none shadow-none"
- title="استبدال وتحديث كافة التطابقات فوراً وبدقة"
+ title={t('search.replaceAllTooltip')}
  >
- استبدال الكل بدقة 🚀
+ {t('search.replaceAll')}
  </button>
  </div>
  </div>
@@ -1047,7 +1049,7 @@ export default function CodeEditor({
  exit={{ width: 0, opacity: 0 }}
  transition={{ duration: 0.22, ease: "easeInOut" }}
  className="h-full bg-[#111114] border-l border-brand-accent/15 flex flex-col shrink-0 select-none z-10 overflow-hidden"
- dir="rtl"
+ dir={dir}
  >
  {/* Sidebar Header */}
  <div className="p-3 border-b border-brand-accent/10 flex items-center justify-between rounded-t-xl">
@@ -1058,21 +1060,21 @@ export default function CodeEditor({
  <button 
  onClick={() => setShowCreateInput({ isFolder: false, parentDir: '' })}
  className="p-1.5 hover:bg-brand-accent/15 hover:text-brand-accent text-zinc-400 rounded-lg transition-all cursor-pointer"
- title="ملف جديد"
+ title={t('editor.newFile')}
  >
  <FilePlus className="w-3.5 h-3.5" />
  </button>
  <button 
  onClick={() => setShowCreateInput({ isFolder: true, parentDir: '' })}
  className="p-1.5 hover:bg-brand-accent/15 hover:text-brand-accent text-zinc-400 rounded-lg transition-all cursor-pointer"
- title="مجلد جديد"
+ title={t('editor.newFolder')}
  >
  <FolderPlus className="w-3.5 h-3.5" />
  </button>
  <button 
  onClick={() => setIsConfirmWipeOpen(true)}
  className="p-1.5 hover:bg-red-500/15 hover:text-red-400 text-zinc-400 rounded-lg transition-all cursor-pointer"
- title="حذف المشروع بالكامل"
+ title={t('editor.deleteProject')}
  >
  <Trash2 className="w-3.5 h-3.5" />
  </button>
@@ -1085,7 +1087,7 @@ export default function CodeEditor({
  <Search className="w-3 h-3 text-zinc-500 ml-1.5" />
  <input
  type="text"
- placeholder="تصفية الملفات..."
+ placeholder={t('editor.filterFiles')}
  value={fileFilter}
  onChange={(e) => setFileFilter(e.target.value)}
  className="bg-transparent text-xs text-white placeholder-zinc-600 outline-none w-full"
@@ -1105,7 +1107,7 @@ export default function CodeEditor({
  <input
  autoFocus
  type="text"
- placeholder={showCreateInput.isFolder ? "اسم المجلد..." : "اسم الملف..."}
+ placeholder={showCreateInput.isFolder ? t('editor.folderNamePlaceholder') : t('editor.fileNamePlaceholder')}
  value={createName}
  onChange={(e) => setCreateName(e.target.value)}
  onKeyDown={(e) => {
@@ -1183,7 +1185,7 @@ export default function CodeEditor({
  setShowCreateInput({ isFolder: false, parentDir: path });
  }}
  className="p-0.5 hover:text-[#5dd62c]"
- title="ملف جديد داخل هذا المجلد"
+ title={t('editor.newFileIn')}
  >
  <FilePlus className="w-3 h-3" />
  </button>
@@ -1195,14 +1197,14 @@ export default function CodeEditor({
  setRenameValue(displayName);
  }}
  className="p-0.5 hover:text-amber-400"
- title="إعادة التسمية"
+ title={t('editor.rename')}
  >
  <Edit2 className="w-3 h-3" />
  </button>
  <button
  onClick={(e) => handleDeleteItem(path, e)}
  className="p-0.5 hover:text-rose-450"
- title="حذف"
+ title={t('editor.delete')}
  >
  <Trash2 className="w-3 h-3" />
  </button>
@@ -1220,7 +1222,7 @@ export default function CodeEditor({
  <input
  autoFocus
  type="text"
- placeholder={showCreateInput.isFolder ? "اسم المجلد..." : "اسم الملف..."}
+ placeholder={showCreateInput.isFolder ? t('editor.folderNamePlaceholder') : t('editor.fileNamePlaceholder')}
  value={createName}
  onChange={(e) => setCreateName(e.target.value)}
  onKeyDown={(e) => {
@@ -1243,7 +1245,7 @@ export default function CodeEditor({
 
  {visibleFilePaths.length === 0 && (
  <div className="text-center py-8 text-zinc-650 font-sans text-xs">
- لم يتم العثور على ملفات متطابقة
+ {t('files.noMatches')}
  </div>
  )}
  </div>
@@ -1276,7 +1278,7 @@ export default function CodeEditor({
  loading={
  <div className="absolute inset-0 bg-[#0f0f0f] flex flex-col items-center justify-center text-zinc-500 font-sans">
  <div className="border-2 border-brand-accent border-t-transparent w-6 h-6 rounded-full animate-spin mb-3" />
- <span className="text-xs">جاري تحميل محرك الأكواد المتطور...</span>
+ <span className="text-xs">{t('editor.loadingEngine')}</span>
  </div>
  }
  />
@@ -1284,10 +1286,10 @@ export default function CodeEditor({
  </div>
 
  {/* Editor Line Col Footer */}
- <div className="h-8 bg-brand-card border-t border-brand-accent/15 px-4 flex items-center justify-between text-[10px] text-zinc-400 select-none shrink-0 font-mono font-bold" dir="rtl">
+ <div className="h-8 bg-brand-card border-t border-brand-accent/15 px-4 flex items-center justify-between text-[10px] text-zinc-400 select-none shrink-0 font-mono font-bold" dir={dir}>
  <div className="flex items-center gap-3">
- <span>{linesCount} سطر</span>
- <span>{code.length} حرف</span>
+ <span>{linesCount} {t('editor.lines')}</span>
+ <span>{code.length} {t('editor.chars')}</span>
  <span className="text-[9px] bg-brand-accent/10 px-2 py-0.5 rounded text-brand-text font-bold uppercase select-none tracking-wider">{activeFile}</span>
  </div>
  <div className="flex items-center gap-2" dir="ltr">
@@ -1298,12 +1300,12 @@ export default function CodeEditor({
 
  {/* Modern Arabic Compiler Documentation & Template Modal */}
  {isArabicHelpOpen && (
- <div className="absolute inset-0 bg-[#070709]/95 z-30 flex flex-col p-6 overflow-y-auto" dir="rtl">
+ <div className="absolute inset-0 bg-[#070709]/95 z-30 flex flex-col p-6 overflow-y-auto" dir={dir}>
  {/* Header */}
  <div className="flex items-center justify-between border-b border-brand-accent/15 pb-4 mb-5">
  <div className="flex items-center gap-2">
  <Sparkles className="w-5 h-5 text-brand-accent animate-pulse" />
- <h2 className="text-sm font-black text-brand-text font-sans">البرمجة باللغة العربية الفصحى 🌟</h2>
+ <h2 className="text-sm font-black text-brand-text font-sans">{t('arabicHelp.title')}</h2>
  </div>
  <button 
  onClick={() => setIsArabicHelpOpen(false)}
@@ -1316,16 +1318,16 @@ export default function CodeEditor({
  {/* Description */}
  <div className="text-xs text-zinc-300 leading-relaxed mb-6 space-y-2 select-none font-sans">
  <p>
- أهلاً بك في <strong>NEXUS ARABIC</strong>! لقد قمنا بابتكار مترجم (Transpiler) فوري فخم مدمج في محرر الأكواد يترجم الكلمات والوسوم وحالات React العربية إلى رموز برمجية قياسية تعمل على المتصفح والـ DOM فوراً!
+ {t('arabicHelp.welcome')}
  </p>
  <p>
- اكتب الكود باللغة العربية بالكامل، وراقب المعاينة المتفاعلة تظهر بشكل حي في الجانب المقابل!
+ {t('arabicHelp.writeCode')}
  </p>
  </div>
 
  {/* Quick Loading Templates */}
  <div className="mb-6 font-sans">
- <h3 className="text-xs font-bold text-zinc-100 mb-3 flex items-center gap-1.5 border-r-2 border-brand-accent pr-2 select-none">قوالب جاهزة قابلة للتجربة الفورية كلياً:</h3>
+ <h3 className="text-xs font-bold text-zinc-100 mb-3 flex items-center gap-1.5 border-r-2 border-brand-accent pr-2 select-none">{t('arabicHelp.templatesTitle')}</h3>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <button
  onClick={() => {
@@ -1360,10 +1362,10 @@ export default function CodeEditor({
  >
  <div className="flex items-center gap-2 mb-2">
  <span className="text-base">🌐</span>
- <span className="font-extrabold text-xs text-brand-text group-hover:text-brand-accent transition-colors">قالب HTML5 بالعربية الفصحى</span>
+ <span className="font-extrabold text-xs text-brand-text group-hover:text-brand-accent transition-colors">{t('arabicHelp.templateHtml')}</span>
  </div>
  <p className="text-[10px] text-zinc-400 group-hover:text-zinc-300 leading-normal">
- مستند كامل مستقل يستخدم وسوم مثل &lt;حاوية&gt; و &lt;فقرة&gt; و &lt;زر&gt; والسمات المتأصلة.
+ {t('arabicHelp.templateHtmlDesc')}
  </p>
  </button>
 
@@ -1401,10 +1403,10 @@ export default function CodeEditor({
  >
  <div className="flex items-center gap-2 mb-2">
  <span className="text-base">⚛️</span>
- <span className="font-extrabold text-xs text-brand-text group-hover:text-brand-accent transition-colors">قالب React متفاعل بالعربية</span>
+ <span className="font-extrabold text-xs text-brand-text group-hover:text-brand-accent transition-colors">{t('arabicHelp.templateReact')}</span>
  </div>
  <p className="text-[10px] text-zinc-400 group-hover:text-zinc-300 leading-normal">
- أبلكيشن React متطور يستخدم العداد والتفاعلية الكاملة عبر تعيين الدوال والـ useState العربية.
+ {t('arabicHelp.templateReactDesc')}
  </p>
  </button>
  </div>
@@ -1412,14 +1414,14 @@ export default function CodeEditor({
 
  {/* Mapping Documentation Tables */}
  <div className="flex-1 min-h-0 overflow-y-auto border border-brand-accent/15 rounded-xl bg-brand-card/30 p-4 font-sans">
- <h4 className="text-xs font-black text-brand-accent mb-3 flex items-center gap-1 w-full border-b border-brand-accent/10 pb-2">📂 قاموس وسوم البرمجة والسمات العربية ومقابلها</h4>
+ <h4 className="text-xs font-black text-brand-accent mb-3 flex items-center gap-1 w-full border-b border-brand-accent/10 pb-2">{t('arabicHelp.dictTitle')}</h4>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[11px]">
  <div>
  <table className="w-full text-right my-2">
  <thead>
  <tr className="border-b border-brand-accent/15 text-zinc-400 bg-brand-card/40 text-[10px]">
- <th className="py-2 px-3 font-extrabold">الوسم العربي</th>
- <th className="py-2 px-3 font-extrabold">المقابل القياسي (HTML)</th>
+ <th className="py-2 px-3 font-extrabold">{t('arabicHelp.tagArabic')}</th>
+ <th className="py-2 px-3 font-extrabold">{t('arabicHelp.tagStandard')}</th>
  </tr>
  </thead>
  <tbody className="divide-y divide-zinc-800/65 text-zinc-300">
@@ -1436,8 +1438,8 @@ export default function CodeEditor({
  <table className="w-full text-right my-2">
  <thead>
  <tr className="border-b border-brand-accent/15 text-zinc-400 bg-brand-card/40 text-[10px]">
- <th className="py-2 px-3 font-extrabold">السمة/الكلمة العربية</th>
- <th className="py-2 px-3 font-extrabold">المقابل القياسي (JS/React)</th>
+ <th className="py-2 px-3 font-extrabold">{t('arabicHelp.attrArabic')}</th>
+ <th className="py-2 px-3 font-extrabold">{t('arabicHelp.attrStandard')}</th>
  </tr>
  </thead>
  <tbody className="divide-y divide-zinc-800/65 text-zinc-300">
@@ -1475,7 +1477,7 @@ export default function CodeEditor({
  exit={{ opacity: 0, scale: 0.95, y: 15 }}
  transition={{ type: "spring", duration: 0.3 }}
  className="relative w-full max-w-sm bg-[#121215] border border-red-500/30 rounded-2xl p-6 shadow-[0_20px_50px_rgba(239,68,68,0.15)] overflow-hidden text-right"
- dir="rtl"
+ dir={dir}
  >
  {/* Top Warning Icon Accent */}
  <div className="mx-auto w-12 h-12 bg-red-500/10 border border-red-500/30 text-red-500 rounded-full flex items-center justify-center mb-4">
@@ -1484,12 +1486,12 @@ export default function CodeEditor({
 
  {/* Header */}
  <h3 className="text-sm font-black text-white mb-2 text-center">
- تأكيد حذف الملف نهائياً ⚠️
+ {t('modal.confirmDeleteTitle')}
  </h3>
  
  {/* Description */}
  <p className="text-xs text-zinc-400 leading-relaxed text-center mb-6">
- هل أنت متأكد تماماً من رغبتك في حذف <span className="font-bold font-mono text-red-400">"{deleteConfirmPath}"</span> بشكل نهائي وكل محتوياته؟ لا يمكن التراجع عن هذا الإجراء أبداً.
+ {t('modal.confirmDeleteDescStart')} <span className="font-bold font-mono text-red-400">"{deleteConfirmPath}"</span> {t('modal.confirmDeleteDescEnd')}
  </p>
 
  {/* Action Buttons */}
@@ -1498,13 +1500,13 @@ export default function CodeEditor({
  onClick={() => setDeleteConfirmPath(null)}
  className="flex-1 py-2 px-4 bg-zinc-900 border border-zinc-800 text-zinc-300 rounded-xl text-xs font-bold hover:bg-zinc-850 hover:text-white transition-all cursor-pointer"
  >
- إلغاء الأمر
+ {t('modal.cancel')}
  </button>
  <button
  onClick={handleConfirmDelete}
  className="flex-1 py-2 px-4 bg-red-500/20 border border-red-500/40 text-red-400 rounded-xl text-xs font-black hover:bg-red-500/35 hover:text-red-300 transition-all cursor-pointer shadow-[0_4px_15px_rgba(239,68,68,0.2)]"
  >
- نعم، احذف 🗑️
+ {t('modal.confirmDelete')}
  </button>
  </div>
  </motion.div>
@@ -1530,18 +1532,18 @@ export default function CodeEditor({
  exit={{ opacity: 0, scale: 0.95, y: 15 }}
  transition={{ type: "spring", duration: 0.3 }}
  className="relative w-full max-w-sm bg-[#121215] border border-amber-500/30 rounded-2xl p-6 shadow-[0_20px_50px_rgba(245,158,11,0.15)] overflow-hidden text-right"
- dir="rtl"
+ dir={dir}
  >
  <div className="mx-auto w-12 h-12 bg-amber-500/10 border border-amber-500/30 text-amber-500 rounded-full flex items-center justify-center mb-4">
  <AlertCircle className="w-6 h-6 animate-bounce" />
  </div>
 
  <h3 className="text-sm font-black text-white mb-2 text-center">
- إعادة تهيئة بيئة العمل ⚠️
+ {t('modal.confirmWipeTitle')}
  </h3>
  
  <p className="text-xs text-zinc-400 leading-relaxed text-center mb-6">
- هل أنت متأكد تماماً من رغبتك في <span className="font-bold text-amber-400">مسح وتفريغ كافة ملفات المجلد</span> والبدء من الصفر تماماً؟ لا يمكن التراجع عن هذا الإجراء أبداً.
+ {t('modal.confirmWipeDescStart')} <span className="font-bold text-amber-400">{t('modal.wipeAction')}</span> {t('modal.confirmWipeDescEnd')}
  </p>
 
  <div className="flex gap-3">
@@ -1549,7 +1551,7 @@ export default function CodeEditor({
  onClick={() => setIsConfirmWipeOpen(false)}
  className="flex-1 py-2 px-4 bg-zinc-900 border border-zinc-800 text-zinc-300 rounded-xl text-xs font-bold hover:bg-zinc-850 hover:text-white transition-all cursor-pointer"
  >
- إلغاء الأمر
+ {t('modal.cancel')}
  </button>
  <button
  onClick={() => {
@@ -1563,7 +1565,7 @@ export default function CodeEditor({
  }}
  className="flex-1 py-2 px-4 bg-amber-500/20 border border-amber-500/40 text-amber-400 rounded-xl text-xs font-black hover:bg-amber-500/35 hover:text-amber-300 transition-all cursor-pointer shadow-[0_4px_15px_rgba(245,158,11,0.2)]"
  >
- نعم، مسح الكل 🧹
+ {t('modal.confirmWipe')}
  </button>
  </div>
  </motion.div>
@@ -1580,12 +1582,12 @@ export default function CodeEditor({
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
           className="absolute top-12 left-4 right-4 z-50 bg-brand-card/95 backdrop-blur-md border border-brand-accent/20 rounded-2xl overflow-hidden shadow-lg"
-          dir="rtl"
+          dir={dir}
         >
           <div className="flex items-center justify-between px-4 py-2.5 border-b border-brand-accent/10">
             <div className="flex items-center gap-2">
               <History className="w-3.5 h-3.5 text-brand-accent" />
-              <span className="text-xs font-bold text-brand-text">سجل التغييرات</span>
+              <span className="text-xs font-bold text-brand-text">{t('history.title')}</span>
             </div>
             <button onClick={() => setShowVersionHistory(false)} className="text-zinc-500 hover:text-white cursor-pointer">
               <X className="w-3.5 h-3.5" />
@@ -1593,7 +1595,7 @@ export default function CodeEditor({
           </div>
           <div className="max-h-64 overflow-y-auto custom-scrollbar p-2">
             {versionHistory.length === 0 ? (
-              <div className="text-center py-8 text-xs text-zinc-500">لا توجد نسخ محفوظة بعد</div>
+              <div className="text-center py-8 text-xs text-zinc-500">{t('history.empty')}</div>
             ) : (
               <div className="space-y-1.5">
                 {versionHistory.map((v, idx) => (
@@ -1604,7 +1606,7 @@ export default function CodeEditor({
                       </div>
                       <div>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[11px] font-bold text-zinc-200">{v.label}</span>
+                          <span className="text-[11px] font-bold text-zinc-200">{v.label === 'يدوي' ? t('history.manual') : (v.label === 'تلقائي' ? t('history.auto') : v.label)}</span>
                           <span className="text-[9px] text-zinc-500 font-mono">{formatSize(v.size)}</span>
                         </div>
                         <div className="flex items-center gap-1 text-[9px] text-zinc-500 mt-0.5">
@@ -1615,7 +1617,7 @@ export default function CodeEditor({
                     </div>
                     <button onClick={() => restoreVersion(v)} className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-accent/10 border border-brand-accent/20 text-brand-accent text-[10px] font-bold hover:bg-brand-accent/20 hover:border-brand-accent/40 transition-all cursor-pointer opacity-0 group-hover:opacity-100">
                       <RotateCcw className="w-3 h-3" />
-                      <span>استعادة</span>
+                      <span>{t('history.restore')}</span>
                     </button>
                   </div>
                 ))}
@@ -1630,7 +1632,7 @@ export default function CodeEditor({
     <AnimatePresence>
       {restoreNotice && (
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute top-14 left-1/2 -translate-x-1/2 z-50 bg-brand-accent/20 border border-brand-accent/40 text-brand-accent px-4 py-2 rounded-full text-xs font-bold backdrop-blur-md">
-          ✓ تم استعادة النسخة بنجاح
+          {t('history.restored')}
         </motion.div>
       )}
     </AnimatePresence>

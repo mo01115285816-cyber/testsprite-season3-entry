@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Link from 'next/link';
+import { useI18n } from '@/lib/i18n';
 import { isZipBytes, extractZipArchive, ancestors, type StoredFile } from '../lib/zip';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
@@ -244,6 +245,7 @@ button:hover {
 };
 
 export default function HTMLPreviewApp() {
+ const { t, dir, lang } = useI18n();
  const [activeTab, setActiveTab] = useState<'editor' | 'preview' | 'agent'>('editor');
  const [isFormatting, setIsFormatting] = useState(false);
  const [isDragging, setIsDragging] = useState(false);
@@ -1847,12 +1849,12 @@ ${lang === 'html' ? `
  <div className="w-16 h-16 bg-brand-accent/10 border border-brand-accent/30 rounded-2xl flex items-center justify-center mx-auto mb-6 relative">
  <Upload className="w-8 h-8 text-brand-accent animate-bounce" />
  </div>
- <h3 className="text-xl font-bold text-brand-text mb-2 font-sans">أفلت الملف هنا للرفع</h3>
+ <h3 className="text-xl font-bold text-brand-text mb-2 font-sans">{t('dropzone.title')}</h3>
  <p className="text-zinc-400 text-xs sm:text-sm font-medium leading-relaxed mb-4">
- سيتم قراءة محتوى الملف وتحديث المحرر فوراً بكل سهولة وأمان بلمح البصر.
+ {t('dropzone.description')}
  </p>
  <span className="text-[10px] bg-brand-bg border border-brand-accent/25 text-brand-accent px-3 py-1 rounded-full font-mono font-bold mt-1 inline-block">
- دعم كامل لـ .html, .css, .js, .tsx, .txt, .json, .zip
+ {t('dropzone.supportedTypes')}
  </span>
  </motion.div>
  </motion.div>
@@ -1891,38 +1893,38 @@ ${lang === 'html' ? `
  <button
  onClick={() => setIsCompressModalOpen(true)}
  className="flex items-center gap-1.5 bg-[#0f0f0f] hover:bg-brand-bg/85 border border-brand-accent/30 hover:border-brand-accent/60 text-brand-text transition-all px-3.5 py-1.5 rounded-full text-xs font-bold active:scale-95 cursor-pointer h-9"
- title="أداة ضغط الملفات"
+ title={t('header.compressTooltip')}
  >
  <FileArchive className="w-3.5 h-3.5 text-brand-accent" />
- <span className="hidden md:inline">ضغط الملفات</span>
+ <span className="hidden md:inline">{t('header.compress')}</span>
  </button>
  <button
  type="button"
  onClick={() => setIsLoopDashboardOpen(true)}
  aria-label="Open Loop Dashboard"
  className="magnetic flex items-center gap-1.5 bg-gradient-to-l from-brand-accent/20 to-brand-deep/20 hover:from-brand-accent/30 hover:to-brand-deep/30 border border-brand-accent/40 hover:border-brand-accent/60 text-brand-accent transition-all px-3.5 py-1.5 rounded-full text-xs font-extrabold active:scale-95 shadow-none cursor-pointer h-9"
- title="لوحة الحلقة"
+ title={t('header.loopTooltip')}
  >
  <Activity className="w-3.5 h-3.5" />
- <span className="hidden md:inline">الحلقة</span>
+ <span className="hidden md:inline">{t('header.loop')}</span>
  </button>
  <button
  type="button"
  onClick={() => setIsTestRunnerOpen(true)}
  aria-label="Open Test Runner"
  className="magnetic flex items-center gap-1.5 bg-[#0f0f0f] hover:bg-brand-bg/85 border border-brand-accent/30 hover:border-brand-accent/60 text-brand-accent transition-all px-3.5 py-1.5 rounded-full text-xs font-bold active:scale-95 cursor-pointer h-9"
- title="مشغّل الاختبارات"
+ title={t('header.testsTooltip')}
  >
  <TerminalSquare className="w-3.5 h-3.5" />
- <span className="hidden md:inline">الاختبارات</span>
+ <span className="hidden md:inline">{t('header.tests')}</span>
  </button>
  <button 
  onClick={triggerFileInput}
  className="flex items-center gap-1.5 bg-brand-bg hover:bg-brand-bg/85 hover:border-brand-accent/40 text-brand-text transition-all px-3.5 py-1.5 rounded-full text-xs font-bold active:scale-95 cursor-pointer border border-brand-accent/20 h-9"
- title="رفع ملف أو مشروع ZIP"
+ title={t('header.uploadTooltip')}
  >
  <Upload className="w-3.5 h-3.5 text-brand-accent" />
- <span className="hidden md:inline">رفع ملف</span>
+ <span className="hidden md:inline">{t('header.upload')}</span>
  </button>
 
  <div className="relative" ref={menuRef}>
@@ -1931,7 +1933,7 @@ ${lang === 'html' ? `
  className="flex items-center gap-1.5 bg-[#0f0f0f] border border-brand-accent/30 hover:border-brand-accent/60 text-brand-text transition-all px-3.5 py-1.5 rounded-full text-xs font-extrabold active:scale-95 cursor-pointer h-9"
  >
  <Download className="w-3.5 h-3.5 text-brand-accent" />
- <span>تنزيل</span>
+ <span>{t('header.download')}</span>
  <ChevronDown className="w-3.5 h-3.5 text-brand-accent" />
  </button>
 
@@ -1944,13 +1946,13 @@ ${lang === 'html' ? `
  transition={{ duration: 0.15, ease: 'easeOut' }}
  className="absolute left-0 mt-2.5 w-64 bg-[#121215]/95 rounded-2xl shadow-2xl border border-white/10 overflow-hidden z-50 text-zinc-100 backdrop-blur-xl"
  >
- <div className="p-2 gap-1 flex flex-col" dir="rtl">
+ <div className="p-2 gap-1 flex flex-col" dir={dir}>
  <button
  onClick={() => handleDownload('code')}
  className="flex items-center gap-2.5 px-3 py-2.5 text-xs font-bold hover:bg-[#5dd62c]/10 text-zinc-200 hover:text-[#5dd62c] rounded-xl transition-all w-full text-right cursor-pointer"
  >
  <Download className="w-4 h-4 text-[#5dd62c]" />
- تنزيل الملف المفتوح
+ {t('menu.downloadCurrent')}
  </button>
 
  <button
@@ -1958,7 +1960,7 @@ ${lang === 'html' ? `
  className="flex items-center gap-2.5 px-3 py-2.5 text-xs font-bold hover:bg-[#5dd62c]/10 text-zinc-200 hover:text-[#5dd62c] rounded-xl transition-all w-full text-right cursor-pointer"
  >
  <FileArchive className="w-4 h-4 text-[#5dd62c]" />
- تحميل المشروع بالكامل (.ZIP)
+ {t('menu.downloadProjectZip')}
  </button>
 
  <button
@@ -1966,7 +1968,7 @@ ${lang === 'html' ? `
  className="flex items-center gap-2.5 px-3 py-2.5 text-xs font-bold hover:bg-[#5dd62c]/10 text-zinc-200 hover:text-[#5dd62c] rounded-xl transition-all w-full text-right cursor-pointer"
  >
  <FileText className="w-4 h-4 text-[#5dd62c]" />
- تنزيل كمستند توثيق .md
+ {t('menu.downloadAsMd')}
  </button>
 
  <div className="border-t border-white/5 my-1" />
@@ -1976,7 +1978,7 @@ ${lang === 'html' ? `
  className="flex items-center gap-2.5 px-3 py-2.5 text-xs font-bold hover:bg-zinc-800 text-zinc-300 hover:text-white rounded-xl transition-all w-full text-right cursor-pointer"
  >
  {isCopied ? <Check className="w-4 h-4 text-[#5dd62c]" /> : <Copy className="w-4 h-4 text-zinc-400" />}
- {isCopied ? 'تم نسخ الكود!' : 'نسخ الكود بالكامل'}
+ {isCopied ? t('menu.codeCopied') : t('menu.copyAllCode')}
  </button>
  </div>
  </motion.div>
@@ -2117,9 +2119,9 @@ ${lang === 'html' ? `
  <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-sm w-[calc(100%-2.5rem)] select-none">
  <div className="bg-brand-card/95 backdrop-blur-md rounded-full shadow-none border border-brand-accent/25 px-2 py-1.5 flex justify-between items-center h-14 relative w-full">
  {[
- { id: 'editor', label: 'المحرر', icon: Code2 },
- { id: 'preview', label: 'المعاينة', icon: Play },
- { id: 'agent', label: 'الذكاء', icon: Bot, isNew: true },
+ { id: 'editor', label: t('nav.editor'), icon: Code2 },
+ { id: 'preview', label: t('nav.preview'), icon: Play },
+ { id: 'agent', label: t('nav.agent'), icon: Bot, isNew: true },
  ].map(tab => (
  <button
  key={tab.id}

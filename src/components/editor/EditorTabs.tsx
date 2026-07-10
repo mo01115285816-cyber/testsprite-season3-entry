@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
 import { getLanguageIcon } from '@/lib/filesystem/types';
 import type { EditorTab } from '@/lib/filesystem/types';
+import { useI18n } from '@/lib/i18n';
 
 interface EditorTabsProps {
   tabs: EditorTab[];
@@ -19,10 +20,11 @@ export default function EditorTabs({
   onSelectTab,
   onCloseTab,
 }: EditorTabsProps) {
+  const { t } = useI18n();
   if (tabs.length === 0) {
     return (
       <div className="flex items-center h-9 bg-brand-bg border-b border-brand-accent/10 px-4">
-        <span className="text-[11px] text-zinc-600 font-mono">لا توجد ملفات مفتوحة</span>
+        <span className="text-[11px] text-zinc-600 font-mono">{t('editorTabs.noOpenFiles')}</span>
       </div>
     );
   }
@@ -53,7 +55,7 @@ export default function EditorTabs({
               </span>
               <button
                 type="button"
-                aria-label={`إغلاق ${tab.name}`}
+                aria-label={`${t('common.close')} ${tab.name}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   onCloseTab(tab.id);

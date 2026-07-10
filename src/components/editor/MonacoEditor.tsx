@@ -4,19 +4,25 @@ import dynamic from 'next/dynamic';
 import React, { useCallback } from 'react';
 import type { editor } from 'monaco-editor';
 import { nexusTheme, NEXUS_THEME_NAME } from '@/lib/monaco/theme';
+import { useI18n } from '@/lib/i18n';
 
 // CRITICAL: dynamic import with ssr:false — this is what makes Monaco work
 // reliably on mobile and avoids hydration issues.
-const MonacoEditorLoader = dynamic(() => import('@monaco-editor/react'), {
-  ssr: false,
-  loading: () => (
+function MonacoLoadingState() {
+  const { t } = useI18n();
+  return (
     <div className="flex h-full w-full items-center justify-center bg-[#0f0f0f] text-zinc-500 font-mono text-xs">
       <div className="flex flex-col items-center gap-2">
         <div className="w-5 h-5 border-2 border-brand-accent/30 border-t-brand-accent rounded-full animate-spin" />
-        <span>...تحميل المحرر</span>
+        <span>{t('monaco.loading')}</span>
       </div>
     </div>
-  ),
+  );
+}
+
+const MonacoEditorLoader = dynamic(() => import('@monaco-editor/react'), {
+  ssr: false,
+  loading: MonacoLoadingState,
 });
 
 interface MonacoEditorProps {

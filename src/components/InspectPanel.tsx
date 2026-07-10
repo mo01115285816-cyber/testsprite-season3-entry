@@ -3,16 +3,17 @@
 import React from 'react';
 import { Sliders, Type, Check, Copy, Eye } from 'lucide-react';
 import { parseInlineStyles, serializeInlineStyles } from '../lib/styles';
+import { useI18n } from '@/lib/i18n';
 
 export const CSS_FIELDS = [
-  { id: 'color', label: 'اللون (Color)', placeholder: 'red, #000' },
-  { id: 'background-color', label: 'الخلفية (Background)', placeholder: '#ffffff, transparent' },
-  { id: 'padding', label: 'التباعد الداخلي (Padding)', placeholder: '10px, 1rem' },
-  { id: 'margin', label: 'الهامش الخارجي (Margin)', placeholder: '5px, auto' },
-  { id: 'font-size', label: 'حجم الخط (Size)', placeholder: '14px, 1.25rem' },
-  { id: 'text-align', label: 'محاذاة النص (Align)', placeholder: 'center, right' },
-  { id: 'border-radius', label: 'انحناء الحواف (Radius)', placeholder: '8px, 50%' },
-  { id: 'border', label: 'الإطار (Border)', placeholder: '1px solid #ccc' },
+  { id: 'color', labelKey: 'inspect.field.color', placeholder: 'red, #000' },
+  { id: 'background-color', labelKey: 'inspect.field.background', placeholder: '#ffffff, transparent' },
+  { id: 'padding', labelKey: 'inspect.field.padding', placeholder: '10px, 1rem' },
+  { id: 'margin', labelKey: 'inspect.field.margin', placeholder: '5px, auto' },
+  { id: 'font-size', labelKey: 'inspect.field.fontSize', placeholder: '14px, 1.25rem' },
+  { id: 'text-align', labelKey: 'inspect.field.textAlign', placeholder: 'center, right' },
+  { id: 'border-radius', labelKey: 'inspect.field.borderRadius', placeholder: '8px, 50%' },
+  { id: 'border', labelKey: 'inspect.field.border', placeholder: '1px solid #ccc' },
 ];
 
 export interface SelectedElement {
@@ -45,6 +46,7 @@ export default function InspectPanel({
   isCSSCopied,
   inspectModeActive,
 }: InspectPanelProps) {
+  const { t, dir } = useI18n();
   if (!inspectModeActive) return null;
 
   return (
@@ -52,11 +54,11 @@ export default function InspectPanel({
       {/* Desktop view Panel: Sidebar layout */}
       <div className="hidden md:flex w-96 border-l border-white/5 bg-[#121215] backdrop-blur-sm flex-col shrink-0 overflow-y-auto h-full shadow-lg z-10 p-5 gap-4">
         {selectedElement ? (
-          <div className="flex flex-col gap-4 font-sans text-right" dir="rtl">
+          <div className="flex flex-col gap-4 font-sans text-right" dir={dir}>
             {/* Header details */}
             <div className="bg-[#09090b] border border-white/5 text-white rounded-2xl p-4 shadow-inner flex flex-col gap-1.5 select-text">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono text-zinc-400">العنصر المحدَّد</span>
+                <span className="text-[10px] font-mono text-zinc-400">{t('inspect.selected')}</span>
                 <span className="bg-zinc-500 text-[9px] font-extrabold px-2 py-0.5 rounded-md text-white uppercase font-mono">
                   {selectedElement.tagName}
                 </span>
@@ -77,14 +79,14 @@ export default function InspectPanel({
               }`}
             >
               {isCSSCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-              <span>{isCSSCopied ? 'تم نسخ التنسيق!' : 'نسخ كود CSS المعدَّل'}</span>
+              <span>{isCSSCopied ? t('inspect.copied') : t('inspect.copyModified')}</span>
             </button>
 
             {/* Style inputs list mapped dynamically */}
             <div className="bg-[#09090b] p-3.5 rounded-2xl border border-white/5 flex flex-col gap-3">
               <div className="flex items-center gap-1.5 border-b border-white/5 pb-2 mb-1">
                 <Sliders className="w-4 h-4 text-white animate-pulse" />
-                <h4 className="text-xs font-extrabold text-[#f1f5f9]">التنسيقات المباشرة (CSS Property)</h4>
+                <h4 className="text-xs font-extrabold text-[#f1f5f9]">{t('inspect.liveStyles')}</h4>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 {CSS_FIELDS.map((f) => {
@@ -98,7 +100,7 @@ export default function InspectPanel({
                   };
                   return (
                     <div key={f.id} className="flex flex-col gap-1">
-                      <label className="text-[10px] font-bold text-zinc-400">{f.label}</label>
+                      <label className="text-[10px] font-bold text-zinc-400">{t(f.labelKey)}</label>
                       <input
                         type="text"
                         value={val}
@@ -114,7 +116,7 @@ export default function InspectPanel({
 
             {/* Inline styles script textarea */}
             <div className="bg-[#09090b] border border-white/5 p-3.5 rounded-2xl flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold text-zinc-400">التنسيق المضمن الشامل (Raw CSS Inline)</label>
+              <label className="text-[11px] font-bold text-zinc-400">{t('inspect.rawInline')}</label>
               <textarea
                 value={selectedElement.styleAttr}
                 onChange={(e) => updateSelectedElementInOriginalCode({ styleAttr: e.target.value })}
@@ -128,7 +130,7 @@ export default function InspectPanel({
             {/* ID, Class inputs */}
             <div className="bg-[#09090b] border border-white/5 p-3.5 rounded-2xl grid grid-cols-2 gap-2">
               <div className="flex flex-col gap-1">
-                <label className="text-[11px] font-bold text-zinc-400">مُعرف العنصر (ID)</label>
+                <label className="text-[11px] font-bold text-zinc-400">{t('inspect.id')}</label>
                 <input
                   type="text"
                   value={selectedElement.id}
@@ -137,7 +139,7 @@ export default function InspectPanel({
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-[11px] font-bold text-zinc-400">الكلاسات (Classes)</label>
+                <label className="text-[11px] font-bold text-zinc-400">{t('inspect.classes')}</label>
                 <input
                   type="text"
                   value={selectedElement.classes}
@@ -151,7 +153,7 @@ export default function InspectPanel({
             <div className="bg-[#09090b] border border-white/5 p-3.5 rounded-2xl flex flex-col gap-1.5">
               <div className="flex items-center gap-1.5 border-b border-white/5 pb-1.5">
                 <Type className="w-3.5 h-3.5 text-white" />
-                <label className="text-xs font-bold text-zinc-300">تعديل النص (Text Content)</label>
+                <label className="text-xs font-bold text-zinc-300">{t('inspect.textContent')}</label>
               </div>
               <textarea
                 value={selectedElement.innerText}
@@ -164,19 +166,19 @@ export default function InspectPanel({
         ) : (
           <div className="my-auto text-center flex flex-col items-center justify-center gap-2 py-10 selection:bg-transparent">
             <Eye className="w-10 h-10 text-white opacity-20 animate-pulse" />
-            <h5 className="text-xs font-extrabold text-[#f1f5f9]">لم يتم تحديد عنصر</h5>
-            <p className="text-[11px] text-zinc-400 max-w-[200px]">انقر فوق أي عنصر في شاشة المحاكاة لتعديله بالبث الحي!</p>
+            <h5 className="text-xs font-extrabold text-[#f1f5f9]">{t('inspect.noElement')}</h5>
+            <p className="text-[11px] text-zinc-400 max-w-[200px]">{t('inspect.noElementDesc')}</p>
           </div>
         )}
       </div>
 
       {/* Mobile view Panel: Sheet Drawer layout floating bottom */}
-      <div className="md:hidden fixed bottom-24 inset-x-4 max-h-[420px] bg-[#121215] border border-white/5 rounded-3xl overflow-y-auto shadow-2xl z-40 p-4 shrink-0 flex flex-col gap-4 font-sans text-right" dir="rtl">
+      <div className="md:hidden fixed bottom-24 inset-x-4 max-h-[420px] bg-[#121215] border border-white/5 rounded-3xl overflow-y-auto shadow-2xl z-40 p-4 shrink-0 flex flex-col gap-4 font-sans text-right" dir={dir}>
         {selectedElement ? (
           <div className="flex flex-col gap-3.5">
             <div className="bg-[#09090b] text-white rounded-xl p-3 flex flex-col gap-1 select-text">
               <div className="flex items-center justify-between">
-                <span className="text-[9px] text-zinc-400 font-bold">العنصر المحدَّد</span>
+                <span className="text-[9px] text-zinc-400 font-bold">{t('inspect.selected')}</span>
                 <span className="bg-zinc-500 text-[9px] font-black px-1.5 py-0.5 rounded text-white uppercase">
                   {selectedElement.tagName}
                 </span>
@@ -192,13 +194,13 @@ export default function InspectPanel({
               className="w-full py-2 bg-zinc-500 hover:bg-zinc-600 font-black text-black rounded-xl text-xs transition-all flex items-center justify-center gap-1 cursor-pointer"
             >
               <Copy className="w-3.5 h-3.5" />
-              <span>نسخ كود CSS المعدَّل</span>
+              <span>{t('inspect.copyModified')}</span>
             </button>
 
             <div className="bg-[#09090b] p-3 rounded-xl border border-white/5 flex flex-col gap-2">
               <span className="text-[10px] font-black text-zinc-400 flex items-center gap-1.5 pb-1 border-b border-white/5">
                 <Sliders className="w-3.5 h-3.5 text-white" />
-                <span>القيم المباشرة</span>
+                <span>{t('inspect.liveValues')}</span>
               </span>
               <div className="grid grid-cols-2 gap-2">
                 {CSS_FIELDS.slice(0, 4).map((f) => {
@@ -212,7 +214,7 @@ export default function InspectPanel({
                   };
                   return (
                     <div key={f.id} className="flex flex-col gap-0.5">
-                      <label className="text-[9px] font-semibold text-zinc-400">{f.label}</label>
+                      <label className="text-[9px] font-semibold text-zinc-400">{t(f.labelKey)}</label>
                       <input
                         type="text"
                         value={val}
@@ -229,8 +231,8 @@ export default function InspectPanel({
         ) : (
           <div className="text-center flex flex-col items-center justify-center gap-1 py-12">
             <Eye className="w-8 h-8 text-white opacity-20" />
-            <h5 className="text-[11px] font-extrabold text-zinc-300">لم يتم تحديد عنصر لبدء تخصيص التنسيق</h5>
-            <p className="text-[9px] text-zinc-400">انقر فوق أي جزء في شاشة المحاكاة بالأسفل للمعالجة بالبث المباشر.</p>
+            <h5 className="text-[11px] font-extrabold text-zinc-300">{t('inspect.noElementMobileTitle')}</h5>
+            <p className="text-[9px] text-zinc-400">{t('inspect.noElementMobileDesc')}</p>
           </div>
         )}
       </div>
